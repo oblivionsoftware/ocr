@@ -25,6 +25,19 @@ struct ocr_pool {
     void (*free)(ocr_pool_t *pool, void *memory);
 };
 
+/**
+ * Allocates memory using the specified pool.
+ *
+ * @param pool The pool to use to allocate.
+ * @param size The amount of memory to allocate.
+ * @return The allocated memory, NULL if the pool was unable to allocate.
+ */
 void *ocr_alloc(ocr_pool_t *pool, size_t size);
 
+/**
+ * Frees memory allocated from the pool.
+ *
+ * @param pool The pool used to allocate the memory.
+ * @param memory The memory to free.
+ */
 void ocr_free(ocr_pool_t *pool, void *memory);

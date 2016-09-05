@@ -10,6 +10,11 @@ target_include_directories(ocr PUBLIC
     $<INSTALL_INTERFACE:include>
     PRIVATE src)
 
+if ((${CMAKE_COMPILER_IS_GNUC}) OR (${CMAKE_C_COMPILER_ID} MATCHES "Clang"))
+    target_compile_options(ocr PRIVATE
+        -std=c99 -Wall -Werror -pedantic)
+endif()
+
 install(TARGETS ocr EXPORT OcrConfig
     ARCHIVE DESTINATION lib
     LIBRARY DESTINATION lib
