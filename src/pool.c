@@ -19,11 +19,15 @@
 #include <assert.h>
 #include <stdio.h>
 
+#include <ocr/log.h>
+
 ocr_pool_t *ocr_pool_create(size_t size)
 {
+    OCR_INFO("allocating pool of size: %zu", size);
+
     ocr_pool_t *pool = malloc(sizeof(ocr_pool_t) + size);
     if (!pool) {
-        fprintf(stderr, "pool allocation failed of size: %zu\n", size);
+        OCR_ERROR("pool allocation failed, size: %zu", size);
         abort();
     }
 
@@ -35,6 +39,7 @@ ocr_pool_t *ocr_pool_create(size_t size)
 
 void ocr_pool_destroy(ocr_pool_t *pool)
 {
+    OCR_INFO("destroying pool");
     free(pool);
 }
 

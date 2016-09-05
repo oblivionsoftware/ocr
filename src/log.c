@@ -15,3 +15,31 @@
  */
 
 #include <ocr/log.h>
+
+#include <stdarg.h>
+#include <stdio.h>
+
+static const char *ocr_strlevel(ocr_log_level_t level)
+{
+    switch (level) {
+    case OCR_LOG_TRACE: return "TRACE";
+    case OCR_LOG_DEBUG: return "DEBUG";
+    case OCR_LOG_INFO: return "INFO";
+    case OCR_LOG_WARN: return "WARN";
+    case OCR_LOG_ERROR: return "ERROR";
+    default: return "INVALID";
+    }
+}
+
+void ocr_log(ocr_log_level_t level, const char *file, int line, const char *format, ...)
+{
+    va_list args;
+    va_start(args, format);
+
+    char buffer[256];
+    vsnprintf(buffer, sizeof(buffer), format, args);
+
+    va_end(args);
+
+    printf("%s - %s:%d - %s\n", ocr_strlevel(level), file, line, buffer);
+}

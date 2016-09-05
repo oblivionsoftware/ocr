@@ -29,4 +29,8 @@ add_executable(ocr_test
     test/main.cpp)
 
 target_link_libraries(ocr_test ocr)
-add_test(ocr_test ocr_test)
+
+add_custom_target(check COMMAND ${CMAKE_CTEST_COMMAND} -V DEPENDS ocr_test)
+
+enable_testing()
+add_test(unit ocr_test)
