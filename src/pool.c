@@ -18,13 +18,12 @@
 
 void *ocr_alloc(ocr_pool_t *pool, size_t size)
 {
-  return pool->alloc(pool, size);
+    return pool->alloc(pool, size);
 }
 
 void ocr_free(ocr_pool_t *pool, void *memory)
 {
-  pool->free(pool, memory);
-  
+    pool->free(pool, memory);
 }
 
 
