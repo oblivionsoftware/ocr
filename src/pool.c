@@ -16,14 +16,39 @@
 
 #include <ocr/pool.h>
 
+#include <assert.h>
+#include <stdio.h>
+
+ocr_pool_t *ocr_pool_create(size_t size)
+{
+    ocr_pool_t *pool = malloc(sizeof(ocr_pool_t) + size);
+    if (!pool) {
+        fprintf(stderr, "pool allocation failed of size: %zu\n", size);
+        abort();
+    }
+
+    pool->size = size;
+    pool->offset = 0;
+
+    return pool;
+}
+
+void ocr_pool_destroy(ocr_pool_t *pool)
+{
+    free(pool);
+}
+
 void *ocr_alloc(ocr_pool_t *pool, size_t size)
 {
-    return pool->alloc(pool, size);
+    assert(pool->offset + size < pool->size);
+
+    void *result = pool->memory + pool->offset;
+    pool->offset += size;
+
+    return result;
 }
 
-void ocr_free(ocr_pool_t *pool, void *memory)
+void ocr_pool_clear(ocr_pool_t *pool)
 {
-    pool->free(pool, memory);
+    pool->offset = 0;
 }
-
-
