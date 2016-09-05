@@ -17,9 +17,9 @@
 #pragma once
 
 typedef enum ocr_log_level {
-  OCR_LOG_TRACE,
-  OCR_LOG_DEBUG,
-  OCR_LOG_INFO,
-  OCR_LOG_WARN,
-  OCR_LOG_ERROR
+    OCR_LOG_TRACE,
+    OCR_LOG_DEBUG,
+    OCR_LOG_INFO,
+    OCR_LOG_WARN,
+    OCR_LOG_ERROR
 } ocr_log_level_t;

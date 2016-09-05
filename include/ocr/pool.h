@@ -21,8 +21,8 @@
 typedef struct ocr_pool ocr_pool_t;
 
 struct ocr_pool {
-  void *(*alloc)(ocr_pool_t *pool, size_t size);
-  void (*free)(ocr_pool_t *pool, void *memory);
+    void *(*alloc)(ocr_pool_t *pool, size_t size);
+    void (*free)(ocr_pool_t *pool, void *memory);
 };
 
 void *ocr_alloc(ocr_pool_t *pool, size_t size);
