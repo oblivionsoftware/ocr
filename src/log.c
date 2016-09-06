@@ -31,6 +31,19 @@ static const char *ocr_strlevel(ocr_log_level_t level)
     }
 }
 
+static const char *ocr_clrlevel(ocr_log_level_t level)
+{
+    switch (level) {
+    case OCR_LOG_TRACE: return "\x1b[37m";
+    case OCR_LOG_DEBUG: return "\x1b[37m";
+    case OCR_LOG_INFO: return "\x1b[32m";
+    case OCR_LOG_WARN: return "\x1b[33m";
+    case OCR_LOG_ERROR: return "\x1b[31m";
+    default: return "\x1b[31m";
+    }
+}
+
+
 void ocr_log(ocr_log_level_t level, const char *file, int line, const char *format, ...)
 {
     va_list args;
@@ -41,5 +54,8 @@ void ocr_log(ocr_log_level_t level, const char *file, int line, const char *form
 
     va_end(args);
 
-    printf("%s - %s:%d - %s\n", ocr_strlevel(level), file, line, buffer);
+    printf("%s%s\x1b[0m - %s:%d - %s\n",
+           ocr_clrlevel(level),
+           ocr_strlevel(level),
+           file, line, buffer);
 }
