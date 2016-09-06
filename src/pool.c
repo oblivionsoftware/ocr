@@ -21,6 +21,7 @@
 
 #include <ocr/log.h>
 
+
 ocr_pool_t *ocr_pool_create(size_t size)
 {
     OCR_INFO("allocating pool of size: %zu", size);
@@ -37,11 +38,13 @@ ocr_pool_t *ocr_pool_create(size_t size)
     return pool;
 }
 
+
 void ocr_pool_destroy(ocr_pool_t *pool)
 {
     OCR_INFO("destroying pool");
     free(pool);
 }
+
 
 void *ocr_alloc(ocr_pool_t *pool, size_t size)
 {
@@ -52,6 +55,7 @@ void *ocr_alloc(ocr_pool_t *pool, size_t size)
 
     return result;
 }
+
 
 void ocr_pool_clear(ocr_pool_t *pool)
 {

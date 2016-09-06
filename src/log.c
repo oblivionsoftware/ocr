@@ -19,6 +19,7 @@
 #include <stdarg.h>
 #include <stdio.h>
 
+
 static const char *ocr_strlevel(ocr_log_level_t level)
 {
     switch (level) {
@@ -30,6 +31,7 @@ static const char *ocr_strlevel(ocr_log_level_t level)
     default: return "INVALID";
     }
 }
+
 
 static const char *ocr_clrlevel(ocr_log_level_t level)
 {
