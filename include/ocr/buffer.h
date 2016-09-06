@@ -16,7 +16,18 @@
 
 #pragma once
 
-#include "ocr/buffer.h"
-#include "ocr/file.h"
-#include "ocr/log.h"
+#include "ocr/common.h"
 #include "ocr/pool.h"
+
+OCR_EXTERN_C_BEGIN
+
+typedef struct {
+    u8 *data;
+    u64 size;
+} ocr_buffer_t;
+
+ocr_status_t ocr_buffer_init(ocr_buffer_t *buffer, ocr_pool_t *pool, u64 size);
+
+void ocr_buffer_destroy(ocr_buffer_t *buffer);
+
+OCR_EXTERN_C_END

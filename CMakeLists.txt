@@ -2,7 +2,9 @@ cmake_minimum_required(VERSION 3.5 FATAL_ERROR)
 project(ocr VERSION 0.1 LANGUAGES C CXX)
 
 add_library(ocr
+    src/buffer.c
     src/common.c
+    src/file.c
     src/log.c
     src/pool.c)
 

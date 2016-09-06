@@ -14,9 +14,20 @@
  * limitations under the License.
  */
 
-#pragma once
-
 #include "ocr/buffer.h"
-#include "ocr/file.h"
-#include "ocr/log.h"
-#include "ocr/pool.h"
+
+
+ocr_status_t ocr_buffer_init(ocr_buffer_t *buffer, ocr_pool_t *pool, u64 size)
+{
+    buffer->data = ocr_alloc(pool, size);
+    buffer->size = size;
+
+    return OCR_OK;
+}
+
+
+void ocr_buffer_destroy(ocr_buffer_t *buffer)
+{
+}
+
+

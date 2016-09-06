@@ -23,11 +23,19 @@
 #include "ocr/log.h"
 
 
-ocr_status_t ocr_pool_create(size_t size, ocr_pool_t **pool_out)
+ocr_status_t ocr_pool_create(size_t size, ocr_pool_t *parent, ocr_pool_t **pool_out)
 {
     OCR_INFO("allocating pool of size: %zu", size);
 
-    ocr_pool_t *pool = malloc(sizeof(ocr_pool_t) + size);
+    u64 pool_size = sizeof(ocr_pool_t) + size;
+
+    ocr_pool_t *pool;
+    if (parent) {
+        pool = ocr_alloc(parent, pool_size);
+    } else {
+        pool = malloc(pool_size);
+    }
+
     if (!pool) {
         OCR_ERROR("pool allocation failed, size: %zu", size);
         return OCR_NO_MEMORY;
@@ -35,6 +43,7 @@ ocr_status_t ocr_pool_create(size_t size, ocr_pool_t **pool_out)
 
     pool->size = size;
     pool->offset = 0;
+    pool->parent = parent;
 
     *pool_out = pool;
 
@@ -45,7 +54,9 @@ ocr_status_t ocr_pool_create(size_t size, ocr_pool_t **pool_out)
 void ocr_pool_destroy(ocr_pool_t *pool)
 {
     OCR_INFO("destroying pool");
-    free(pool);
+    if (pool->parent == NULL) {
+        free(pool);
+    }
 }
 
 

@@ -19,6 +19,7 @@
 #include <stdint.h>
 #include <stdlib.h>
 
+#define OCR_INLINE static __inline 
 
 #ifdef __cplusplus
     #define OCR_EXTERN_C_BEGIN extern "C" {
@@ -64,6 +65,7 @@ typedef enum ocr_status {
     OCR_IO_ERROR,
 } ocr_status_t;
 
+
 /**
  * Gets a static string description of a status code.
  *
@@ -71,5 +73,41 @@ typedef enum ocr_status {
  * @return The string representation of the code. "unknown error" if the code is not recognized.
  */
 const char *ocr_strerror(ocr_status_t status);
+
+
+/**
+ * Gets the number of bytes in a number of kilobytes.
+ *
+ * @param kb The number of kilobytes.
+ * @return The number of bytes.
+ */
+OCR_INLINE u64 ocr_kb(u64 kb)
+{
+    return kb * 1024;
+}
+
+
+/**
+ * Gets the number of bytes in a number of megabytes.
+ *
+ * @param mb The number of megabytes.
+ * @return The number of bytes.
+ */
+OCR_INLINE u64 ocr_mb(u64 mb)
+{
+    return ocr_kb(mb) * 1024;
+}
+
+
+/**
+ * Gets the number of bytes in a number of gigabytes.
+ *
+ * @param gb The number of gigabytes.
+ * @return The number of bytes.
+ */
+OCR_INLINE u64 ocr_gb(u64 gb)
+{
+    return ocr_mb(gb) * 1024;
+}
 
 OCR_EXTERN_C_END

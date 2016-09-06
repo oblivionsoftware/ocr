@@ -19,6 +19,8 @@
 #include <stdarg.h>
 #include <stdio.h>
 
+#define MAX_LOG 4096
+
 
 static const char *ocr_strlevel(u8 level)
 {
@@ -51,9 +53,9 @@ void ocr_log(u8 level, const char *file, int line, const char *format, ...)
     va_list args;
     va_start(args, format);
 
-    char buffer[256];
+    char buffer[MAX_LOG + 1];
     vsnprintf(buffer, sizeof(buffer), format, args);
-    buffer[255] = '\0';
+    buffer[MAX_LOG] = '\0';
 
     va_end(args);
 

@@ -14,9 +14,33 @@
  * limitations under the License.
  */
 
-#pragma once
-
-#include "ocr/buffer.h"
 #include "ocr/file.h"
+
+#include <stdio.h>
+
 #include "ocr/log.h"
-#include "ocr/pool.h"
+
+ocr_status_t ocr_read_file(const char *path, ocr_pool_t *pool, ocr_buffer_t *buffer)
+{
+    FILE *file = fopen(path, "rb");
+    if (!file) {
+        OCR_ERROR("unable to open file: %s", path);
+        return OCR_IO_ERROR;
+    }
+
+    fseek(file, 0, SEEK_END);
+    u64 size = ftell(file);
+    fseek(file, 0, SEEK_SET);
+    OCR_INFO("file size: %zu", size);
+
+    ocr_buffer_init(buffer, pool, size + 1);
+    if (fread(buffer->data, size, 1, file) != 1) {
+        fclose(file);
+        return OCR_IO_ERROR;
+    }
+
+    buffer->data[size] = '\0';
+    fclose(file);
+
+    return OCR_OK;
+}

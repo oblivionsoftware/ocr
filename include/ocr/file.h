@@ -16,7 +16,19 @@
 
 #pragma once
 
+#include "ocr/common.h"
 #include "ocr/buffer.h"
-#include "ocr/file.h"
-#include "ocr/log.h"
-#include "ocr/pool.h"
+
+OCR_EXTERN_C_BEGIN
+
+/**
+ * Reads the entire contents of a file into a buffer.
+ *
+ * @param path The path to the file.
+ * @param pool The pool to use to allocate the buffer.
+ * @param buffer The output buffer.
+ * @return OK on success, IO_ERROR on failure.
+ */
+ocr_status_t ocr_read_file(const char *path, ocr_pool_t *pool, ocr_buffer_t *buffer);
+
+OCR_EXTERN_C_END

@@ -20,20 +20,24 @@
 
 OCR_EXTERN_C_BEGIN
 
-typedef struct ocr_pool {
+typedef struct ocr_pool ocr_pool_t;
+
+struct ocr_pool {
     size_t size;
     size_t offset;
+    ocr_pool_t *parent;
     u8 memory[1];
-} ocr_pool_t;
+};
 
 /**
  * Creates a new pool.
  *
  * @param size The size of the pool.
+ * @param parent The parent pool.
  * @param pool_out Output parameter for the newly created pool.
  * @return OK on success, NO_MEMORY if pool allocation failed.
  */
-ocr_status_t ocr_pool_create(size_t size, ocr_pool_t **pool_out);
+ocr_status_t ocr_pool_create(size_t size, ocr_pool_t *parent, ocr_pool_t **pool_out);
 
 /**
  * Destroys the specified pool.
