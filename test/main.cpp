@@ -2,7 +2,14 @@
 
 #include <ocr/ocr.h>
 
-TEST(General, PoolAllocation)
+TEST(Pool, Creation)
+{
+    ocr_pool_t *pool;
+    ASSERT_EQ(OCR_OK, ocr_pool_create(ocr_mb(32), NULL, &pool));
+    ocr_pool_destroy(pool);
+}
+
+TEST(File, ReadFile)
 {
     ocr_pool_t *pool;
     if (OCR_SUCCEEDED(ocr_pool_create(ocr_mb(32), NULL, &pool))) {
@@ -11,11 +18,15 @@ TEST(General, PoolAllocation)
             OCR_INFO("Read Buffer: %s", buffer.data);
         }
 
+        void *dataValue = buffer.data;
+
         ocr_pool_clear(pool);
 
         if (OCR_SUCCEEDED(ocr_read_file(__FILE__, pool, &buffer))) {
             OCR_INFO("Read Buffer: %s", buffer.data);
         }
+
+        ASSERT_EQ(dataValue, buffer.data);
 
         ocr_pool_destroy(pool);
     }
