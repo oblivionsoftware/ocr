@@ -2,8 +2,10 @@
 
 int main(int argc, char **argv)
 {
-    ocr_pool_t *pool = ocr_pool_create(4096);
-    ocr_pool_destroy(pool);
+    ocr_pool_t *pool;
+    if (OCR_SUCCEEDED(ocr_pool_create(4096, &pool))) {
+        ocr_pool_destroy(pool);
+    }
 
     OCR_TRACE("Test Message");
     OCR_DEBUG("Test Message");

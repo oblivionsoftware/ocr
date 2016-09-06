@@ -16,9 +16,9 @@
 
 #pragma once
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+#include "ocr/common.h"
+
+OCR_EXTERN_C_BEGIN
 
 /**
  * The global logging level, any messages at a lower level than this are discarded at compile time.
@@ -88,6 +88,4 @@ typedef enum ocr_log_level {
  */
 void ocr_log(ocr_log_level_t level, const char *file, int line, const char *format, ...);
 
-#ifdef __cplusplus
-}
-#endif
+OCR_EXTERN_C_END

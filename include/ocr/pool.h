@@ -16,26 +16,24 @@
 
 #pragma once
 
-#include <stdint.h>
-#include <stdlib.h>
+#include "ocr/common.h"
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+OCR_EXTERN_C_BEGIN
 
 typedef struct ocr_pool {
     size_t size;
     size_t offset;
-    uint8_t memory[1];
+    u8 memory[1];
 } ocr_pool_t;
 
 /**
  * Creates a new pool.
  *
  * @param size The size of the pool.
- * @return The newly created pool.
+ * @param pool_out Output parameter for the newly created pool.
+ * @return OK on success, NO_MEMORY if pool allocation failed.
  */
-ocr_pool_t *ocr_pool_create(size_t size);
+ocr_status_t ocr_pool_create(size_t size, ocr_pool_t **pool_out);
 
 /**
  * Destroys the specified pool.
@@ -60,6 +58,4 @@ void *ocr_alloc(ocr_pool_t *pool, size_t size);
  */
 void ocr_pool_clear(ocr_pool_t *pool);
 
-#ifdef __cplusplus
-}
-#endif
+OCR_EXTERN_C_END

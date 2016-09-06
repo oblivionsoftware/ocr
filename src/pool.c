@@ -14,28 +14,31 @@
  * limitations under the License.
  */
 
-#include <ocr/pool.h>
+#include "ocr/pool.h"
 
 #include <assert.h>
 #include <stdio.h>
+#include <stdlib.h>
 
-#include <ocr/log.h>
+#include "ocr/log.h"
 
 
-ocr_pool_t *ocr_pool_create(size_t size)
+ocr_status_t ocr_pool_create(size_t size, ocr_pool_t **pool_out)
 {
     OCR_INFO("allocating pool of size: %zu", size);
 
     ocr_pool_t *pool = malloc(sizeof(ocr_pool_t) + size);
     if (!pool) {
         OCR_ERROR("pool allocation failed, size: %zu", size);
-        abort();
+        return OCR_NO_MEMORY;
     }
 
     pool->size = size;
     pool->offset = 0;
 
-    return pool;
+    *pool_out = pool;
+
+    return OCR_OK;
 }
 
 

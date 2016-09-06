@@ -14,7 +14,15 @@
  * limitations under the License.
  */
 
-#pragma once
+#include "ocr/common.h"
 
-#include "ocr/log.h"
-#include "ocr/pool.h"
+
+const char *ocr_strerror(ocr_status_t status)
+{
+    switch (status) {
+    case OCR_OK: return "ok";
+    case OCR_NO_MEMORY: return "out of memory";
+    case OCR_IO_ERROR: return "i/o error";
+    default: return "unknown error";
+    }
+}
