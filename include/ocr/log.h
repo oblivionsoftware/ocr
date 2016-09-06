@@ -20,6 +20,12 @@
 
 OCR_EXTERN_C_BEGIN
 
+#define OCR_LOG_TRACE 0
+#define OCR_LOG_DEBUG 1
+#define OCR_LOG_INFO 2
+#define OCR_LOG_WARN 3
+#define OCR_LOG_ERROR 4
+
 /**
  * The global logging level, any messages at a lower level than this are discarded at compile time.
  */
@@ -70,14 +76,6 @@ OCR_EXTERN_C_BEGIN
     #define OCR_ERROR(...)
 #endif
 
-typedef enum ocr_log_level {
-    OCR_LOG_TRACE,
-    OCR_LOG_DEBUG,
-    OCR_LOG_INFO,
-    OCR_LOG_WARN,
-    OCR_LOG_ERROR
-} ocr_log_level_t;
-
 /**
  * Logs the specified output to the default log sink.
  *
@@ -86,6 +84,6 @@ typedef enum ocr_log_level {
  * @param line The line number.
  * @param format The message format.
  */
-void ocr_log(ocr_log_level_t level, const char *file, int line, const char *format, ...);
+void ocr_log(u8 level, const char *file, int line, const char *format, ...);
 
 OCR_EXTERN_C_END

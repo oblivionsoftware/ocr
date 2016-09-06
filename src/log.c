@@ -20,7 +20,7 @@
 #include <stdio.h>
 
 
-static const char *ocr_strlevel(ocr_log_level_t level)
+static const char *ocr_strlevel(u8 level)
 {
     switch (level) {
     case OCR_LOG_TRACE: return "TRACE";
@@ -33,7 +33,7 @@ static const char *ocr_strlevel(ocr_log_level_t level)
 }
 
 
-static const char *ocr_clrlevel(ocr_log_level_t level)
+static const char *ocr_clrlevel(u8 level)
 {
     switch (level) {
     case OCR_LOG_TRACE: return "\x1b[36m";
@@ -46,13 +46,14 @@ static const char *ocr_clrlevel(ocr_log_level_t level)
 }
 
 
-void ocr_log(ocr_log_level_t level, const char *file, int line, const char *format, ...)
+void ocr_log(u8 level, const char *file, int line, const char *format, ...)
 {
     va_list args;
     va_start(args, format);
 
     char buffer[256];
     vsnprintf(buffer, sizeof(buffer), format, args);
+    buffer[255] = '\0';
 
     va_end(args);
 
