@@ -17,6 +17,8 @@
 #pragma once
 
 #include <stdint.h>
+#include <stdlib.h>
+
 
 #ifdef __cplusplus
     #define OCR_EXTERN_C_BEGIN extern "C" {
