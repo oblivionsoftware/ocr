@@ -3,6 +3,8 @@ include(ExternalProject)
 cmake_minimum_required(VERSION 3.5 FATAL_ERROR)
 project(ocr VERSION 0.1 LANGUAGES C CXX)
 
+find_package(Threads REQUIRED)
+
 add_library(ocr
     src/buffer.c
     src/common.c
@@ -43,7 +45,9 @@ SET(GTEST_LIBRARY "${CMAKE_CURRENT_BINARY_DIR}/gtest/lib/${CMAKE_STATIC_LIBRARY_
 
 add_executable(ocr_test
     test/main.cpp)
+target_link_libraries(ocr_test ocr ${CMAKE_THREAD_LIBS_INIT})
 
+add_dependencies(ocr_test googletest)
 target_include_directories(ocr_test PRIVATE ${GTEST_INCLUDE_DIR})
 target_link_libraries(ocr_test ocr)
 target_link_libraries(ocr_test ${GTEST_LIBRARY})
