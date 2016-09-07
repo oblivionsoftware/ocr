@@ -41,3 +41,16 @@ TEST_CASE("all log levels compile", "[log]")
     OCR_WARN("Test Message");
     OCR_ERROR("Test Message");
 }
+
+TEST_CASE("event loop can run", "[event]")
+{
+    ocr_pool_t *pool;
+    REQUIRE(OCR_OK == ocr_pool_create(ocr_mb(32), NULL, &pool));
+
+    ocr_event_loop_t *loop;
+    REQUIRE(OCR_OK == ocr_event_loop_create(pool, &loop));
+    ocr_event_loop_run(loop);
+    ocr_event_loop_destroy(loop);
+
+    ocr_pool_destroy(pool);
+}

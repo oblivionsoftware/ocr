@@ -16,8 +16,17 @@
 
 #pragma once
 
-#include "ocr/buffer.h"
-#include "ocr/event.h"
-#include "ocr/file.h"
-#include "ocr/log.h"
+#include "ocr/common.h"
 #include "ocr/pool.h"
+
+OCR_EXTERN_C_BEGIN
+
+typedef struct ocr_event_loop ocr_event_loop_t;
+
+ocr_status_t ocr_event_loop_create(ocr_pool_t *pool, ocr_event_loop_t **loop_out);
+
+void ocr_event_loop_destroy(ocr_event_loop_t *loop);
+
+void ocr_event_loop_run(ocr_event_loop_t *loop);
+
+OCR_EXTERN_C_END

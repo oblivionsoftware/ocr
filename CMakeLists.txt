@@ -10,7 +10,8 @@ add_library(ocr
     src/common.c
     src/file.c
     src/log.c
-    src/pool.c)
+    src/pool.c
+    src/windows/event.c)
 
 target_include_directories(ocr PUBLIC
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>

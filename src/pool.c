@@ -54,6 +54,7 @@ ocr_status_t ocr_pool_create(size_t size, ocr_pool_t *parent, ocr_pool_t **pool_
 void ocr_pool_destroy(ocr_pool_t *pool)
 {
     OCR_INFO("destroying pool");
+
     if (pool->parent == NULL) {
         free(pool);
     }

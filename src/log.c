@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-#include <ocr/log.h>
+#include "ocr/log.h"
 
 #include <stdarg.h>
 #include <stdio.h>

@@ -16,6 +16,7 @@
 
 #pragma once
 
+#include <stdbool.h>
 #include <stdint.h>
 #include <stdlib.h>
 
@@ -83,6 +84,7 @@ typedef enum ocr_status {
     OCR_OK,
     OCR_NO_MEMORY,
     OCR_IO_ERROR,
+    OCR_GENERAL_ERROR
 } ocr_status_t;
 
 
