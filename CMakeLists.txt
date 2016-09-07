@@ -5,7 +5,7 @@ project(ocr VERSION 0.1 LANGUAGES C CXX)
 
 find_package(Threads REQUIRED)
 
-add_library(ocr
+set(OCR_SOURCES
     src/buffer.c
     src/common.c
     src/file.c
@@ -13,6 +13,20 @@ add_library(ocr
     src/pool.c
     src/mac/event.c
     src/windows/event.c)
+
+if (NOT WIN32)
+    list(FILTER OCR_SOURCES EXCLUDE REGEX ".+/windows/.+")
+endif()
+
+if (NOT APPLE)
+    list(FILTER OCR_SOURCES EXCLUDE REGEX ".+/mac/.+")
+endif()
+
+if (UNIX AND NOT APPLE)
+    list(FILTER OCR_SOURCES EXCLUDE REGEX ".+/linux/.+")
+endif()
+
+add_library(ocr ${OCR_SOURCES})
 
 target_include_directories(ocr PUBLIC
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>

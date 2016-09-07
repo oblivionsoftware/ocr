@@ -16,8 +16,6 @@
 
 #include "ocr/event.h"
 
-#if OCR_PLATFORM == OCR_PLATFORM_MAC
-
 #include <sys/event.h>
 #include <unistd.h>
 
@@ -79,6 +77,3 @@ void ocr_event_loop_run(ocr_event_loop_t *loop)
         }
     }
 }
-
-
-#endif
