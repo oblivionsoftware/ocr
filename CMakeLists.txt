@@ -11,6 +11,7 @@ add_library(ocr
     src/file.c
     src/log.c
     src/pool.c
+    src/mac/event.c
     src/windows/event.c)
 
 target_include_directories(ocr PUBLIC
