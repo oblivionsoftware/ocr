@@ -32,25 +32,9 @@ install(DIRECTORY include/ DESTINATION include)
 install(EXPORT OcrConfig DESTINATION share/ocr/cmake)
 export(TARGETS ocr FILE OcrConfig.cmake)
 
-# Testing
-
-ExternalProject_Add(googletest
-    GIT_REPOSITORY https://github.com/google/googletest.git
-    GIT_TAG release-1.8.0
-    CMAKE_ARGS -DCMAKE_INSTALL_PREFIX:PATH=${CMAKE_CURRENT_BINARY_DIR}/gtest
-    )
-
-SET(GTEST_INCLUDE_DIR "${CMAKE_CURRENT_BINARY_DIR}/gtest/include")
-SET(GTEST_LIBRARY "${CMAKE_CURRENT_BINARY_DIR}/gtest/lib/${CMAKE_STATIC_LIBRARY_PREFIX}gtest${CMAKE_STATIC_LIBRARY_SUFFIX}")
-
 add_executable(ocr_test
     test/main.cpp)
 target_link_libraries(ocr_test ocr ${CMAKE_THREAD_LIBS_INIT})
-
-add_dependencies(ocr_test googletest)
-target_include_directories(ocr_test PRIVATE ${GTEST_INCLUDE_DIR})
-target_link_libraries(ocr_test ocr)
-target_link_libraries(ocr_test ${GTEST_LIBRARY})
 
 add_custom_target(check COMMAND ${CMAKE_CTEST_COMMAND} -V DEPENDS ocr_test)
 

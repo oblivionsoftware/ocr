@@ -101,7 +101,7 @@ const char *ocr_strerror(ocr_status_t status);
  * @param kb The number of kilobytes.
  * @return The number of bytes.
  */
-OCR_INLINE u64 ocr_kb(u64 kb)
+OCR_INLINE size_t ocr_kb(size_t kb)
 {
     return kb * 1024;
 }
@@ -113,7 +113,7 @@ OCR_INLINE u64 ocr_kb(u64 kb)
  * @param mb The number of megabytes.
  * @return The number of bytes.
  */
-OCR_INLINE u64 ocr_mb(u64 mb)
+OCR_INLINE size_t ocr_mb(size_t mb)
 {
     return ocr_kb(mb) * 1024;
 }
@@ -125,7 +125,7 @@ OCR_INLINE u64 ocr_mb(u64 mb)
  * @param gb The number of gigabytes.
  * @return The number of bytes.
  */
-OCR_INLINE u64 ocr_gb(u64 gb)
+OCR_INLINE size_t ocr_gb(size_t gb)
 {
     return ocr_mb(gb) * 1024;
 }

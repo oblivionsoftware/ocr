@@ -17,7 +17,7 @@
 #include "ocr/buffer.h"
 
 
-ocr_status_t ocr_buffer_init(ocr_buffer_t *buffer, ocr_pool_t *pool, u64 size)
+ocr_status_t ocr_buffer_init(ocr_buffer_t *buffer, ocr_pool_t *pool, size_t size)
 {
     buffer->data = ocr_alloc(pool, size);
     buffer->size = size;

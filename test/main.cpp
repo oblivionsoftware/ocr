@@ -1,15 +1,16 @@
-#include <gtest/gtest.h>
+#define CATCH_CONFIG_MAIN
+#include "catch.hpp"
 
 #include <ocr/ocr.h>
 
-TEST(Pool, Creation)
+TEST_CASE("pools can be created and destroyed", "[pool]")
 {
     ocr_pool_t *pool;
-    ASSERT_EQ(OCR_OK, ocr_pool_create(ocr_mb(32), NULL, &pool));
+    REQUIRE(OCR_OK == ocr_pool_create(ocr_mb(32), NULL, &pool));
     ocr_pool_destroy(pool);
 }
 
-TEST(File, ReadFile)
+TEST_CASE("read entire file uses a pool correctly", "[file]")
 {
     ocr_pool_t *pool;
     if (OCR_SUCCEEDED(ocr_pool_create(ocr_mb(32), NULL, &pool))) {
@@ -26,23 +27,17 @@ TEST(File, ReadFile)
             OCR_INFO("Read Buffer: %s", buffer.data);
         }
 
-        ASSERT_EQ(dataValue, buffer.data);
+        REQUIRE(dataValue == buffer.data);
 
         ocr_pool_destroy(pool);
     }
 }
 
-TEST(General, LogLevels)
+TEST_CASE("all log levels compile", "[log]")
 {
     OCR_TRACE("Test Message");
     OCR_DEBUG("Test Message");
     OCR_INFO("Test Message");
     OCR_WARN("Test Message");
     OCR_ERROR("Test Message");
-}
-
-int main(int argc, char **argv)
-{
-    ::testing::InitGoogleTest(&argc, argv);
-    return RUN_ALL_TESTS();
 }
