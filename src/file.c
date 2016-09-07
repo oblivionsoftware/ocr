@@ -29,7 +29,7 @@ ocr_status_t ocr_read_file(const char *path, ocr_pool_t *pool, ocr_buffer_t *buf
     }
 
     fseek(file, 0, SEEK_END);
-    u64 size = ftell(file);
+    size_t size = ftell(file);
     fseek(file, 0, SEEK_SET);
     OCR_INFO("file size: %zu", size);
 

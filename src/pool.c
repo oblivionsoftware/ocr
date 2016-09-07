@@ -27,7 +27,7 @@ ocr_status_t ocr_pool_create(size_t size, ocr_pool_t *parent, ocr_pool_t **pool_
 {
     OCR_INFO("allocating pool of size: %zu", size);
 
-    u64 pool_size = sizeof(ocr_pool_t) + size;
+    size_t pool_size = sizeof(ocr_pool_t) + size;
 
     ocr_pool_t *pool;
     if (parent) {

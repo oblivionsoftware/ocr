@@ -20,6 +20,11 @@ target_include_directories(ocr PUBLIC
 if ((${CMAKE_COMPILER_IS_GNUC}) OR (${CMAKE_C_COMPILER_ID} MATCHES "Clang"))
     target_compile_options(ocr PRIVATE
         -std=c99 -Wall -Werror -pedantic)
+else()
+    target_compile_options(ocr PRIVATE
+        /W3 /WX)
+    target_compile_definitions(ocr PRIVATE
+        -D_CRT_SECURE_NO_WARNINGS)
 endif()
 
 install(TARGETS ocr EXPORT OcrConfig
