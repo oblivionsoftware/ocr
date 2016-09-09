@@ -23,7 +23,7 @@ if (NOT APPLE)
     list(FILTER OCR_SOURCES EXCLUDE REGEX ".+/mac/.+")
 endif()
 
-if (NOT UNIX AND NOT APPLE)
+if ((NOT UNIX) OR APPLE)
     list(FILTER OCR_SOURCES EXCLUDE REGEX ".+/linux/.+")
 endif()
 
