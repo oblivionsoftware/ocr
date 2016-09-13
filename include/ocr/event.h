@@ -23,10 +23,27 @@ OCR_EXTERN_C_BEGIN
 
 typedef struct ocr_event_loop ocr_event_loop_t;
 
+/**
+ * Creates a new event loop.
+ *
+ * @param pool The allocation pool.
+ * @param loop_out Output parameter for the newly created loop.
+ * return OK on success, a valid error code otherwise.
+ */
 ocr_status_t ocr_event_loop_create(ocr_pool_t *pool, ocr_event_loop_t **loop_out);
 
+/**
+ * Destroys the event loop.
+ *
+ * @param loop The loop to destroy.
+ */
 void ocr_event_loop_destroy(ocr_event_loop_t *loop);
 
+/**
+ * Runs the event loop.
+ *
+ * @param loop The loop to run.
+ */
 void ocr_event_loop_run(ocr_event_loop_t *loop);
 
 OCR_EXTERN_C_END

@@ -48,6 +48,7 @@ void ocr_event_loop_destroy(ocr_event_loop_t *loop)
     }
 }
 
+
 static struct timespec ocr_ms(u64 ms)
 {
     struct timespec result;
@@ -56,6 +57,7 @@ static struct timespec ocr_ms(u64 ms)
 
     return result;
 }
+
 
 void ocr_event_loop_run(ocr_event_loop_t *loop)
 {
@@ -66,14 +68,9 @@ void ocr_event_loop_run(ocr_event_loop_t *loop)
 
     for (int i = 0; i < 10; ++i) {
         struct kevent event;
-
         struct timespec timeout = ocr_ms(100);
 
         int event_count = kevent(loop->kq, &change, 1, &event, 1, &timeout);
-        if (event_count > 0) {
-            OCR_INFO("got %d events", event_count);
-        } else {
-            OCR_INFO("no events from kqueue");
-        }
+        OCR_INFO("got %d events", event_count);
     }
 }
