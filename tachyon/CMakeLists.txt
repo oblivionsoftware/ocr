@@ -1,13 +1,14 @@
 cmake_minimum_required(VERSION 3.5 FATAL_ERROR)
 project(tachyon VERSION 0.1 LANGUAGES CXX)
 
-set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${tetris_SOURCE_DIR}/cmake")
+set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${tachyon_SOURCE_DIR}/cmake")
 
 find_package(SDL2 REQUIRED)
 
 
 set(TACHYON_SOURCES
     src/core/common.cpp
+    src/core/context.cpp
     src/core/exception.cpp
     src/core/string.cpp)
 

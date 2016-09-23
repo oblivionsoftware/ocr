@@ -14,22 +14,20 @@
  * limitations under the License.
  */
 
-#include <cstdio>
-#include <cstdlib>
+#include "tachyon/core/context.h"
 
-#include <tachyon/tachyon.h>
+namespace tachyon {
 
-int main(int argc, char **argv)
+Context::Context()
 {
-    using namespace tachyon;
+}
 
-    try {
-        Context ctx;
-        ctx.update(0.1f);
+Context::~Context()
+{
+}
 
-        return EXIT_SUCCESS;
-    } catch (Exception &ex) {
-        fprintf(stderr, "unhandled exception: %s\n", ex.what());
-        return EXIT_FAILURE;
-    }
+void Context::update(r32 dt)
+{
+}
+
 }

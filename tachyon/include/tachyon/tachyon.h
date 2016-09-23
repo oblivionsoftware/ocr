@@ -16,6 +16,7 @@
 
 #pragma once
 
-#include "core/common.h"
-#include "core/exception.h"
-#include "core/string.h"
+#include "tachyon/core/common.h"
+#include "tachyon/core/context.h"
+#include "tachyon/core/exception.h"
+#include "tachyon/core/string.h"

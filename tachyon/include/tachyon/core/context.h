@@ -14,22 +14,36 @@
  * limitations under the License.
  */
 
-#include <cstdio>
-#include <cstdlib>
+#pragma once
 
-#include <tachyon/tachyon.h>
+#include "tachyon/core/common.h"
 
-int main(int argc, char **argv)
-{
-    using namespace tachyon;
+namespace tachyon {
 
-    try {
-        Context ctx;
-        ctx.update(0.1f);
+/**
+ * The central engine context class.
+ */
+class Context {
+public:
 
-        return EXIT_SUCCESS;
-    } catch (Exception &ex) {
-        fprintf(stderr, "unhandled exception: %s\n", ex.what());
-        return EXIT_FAILURE;
-    }
+    /**
+     * Initializes the engine context.
+     */
+    Context();
+
+    /**
+     * Cleans up engine resources.
+     */
+    ~Context();
+
+    /**
+     * Invoked once per frame to update the engine.
+     *
+     * @param dt The amount of elapsed time (in seconds).
+     */
+    void update(r32 dt);
+
+};
+
+
 }
