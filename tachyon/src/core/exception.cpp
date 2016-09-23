@@ -20,7 +20,7 @@ Exception::Exception(const char* file, const char* function, i32 line, const cha
 {
     va_list args;
     va_start(args, format);
-    _message = formatString(format, args);
+    _message = formatStringVarArgs(format, args);
     va_end(args);
 
     _fullMessage = formatString("%s - %s - %s(%d)", _message.c_str(), function, file, line);
