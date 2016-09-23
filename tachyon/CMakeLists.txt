@@ -10,7 +10,9 @@ set(TACHYON_SOURCES
     src/core/common.cpp
     src/core/context.cpp
     src/core/exception.cpp
-    src/core/string.cpp)
+    src/core/string.cpp
+    src/platform/sdl_platform.cpp
+)
 
 if (NOT WIN32)
     list(FILTER TACHYON_SOURCES EXCLUDE REGEX ".+/windows/.+")

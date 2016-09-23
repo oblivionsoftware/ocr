@@ -18,14 +18,15 @@
 #include <cstdlib>
 
 #include <tachyon/tachyon.h>
+#include <tachyon/platform/sdl_platform.h>
 
 int main(int argc, char **argv)
 {
     using namespace tachyon;
 
     try {
-        Context ctx;
-        ctx.update(0.1f);
+        SdlPlatform platform("Seeds of Fate", 640, 480);
+        platform.run();
 
         return EXIT_SUCCESS;
     } catch (Exception &ex) {

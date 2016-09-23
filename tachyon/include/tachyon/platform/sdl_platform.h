@@ -16,32 +16,42 @@
 
 #pragma once
 
+#include <SDL2/SDL.h>
+
 #include "tachyon/core/common.h"
 
 namespace tachyon {
 
 /**
- * The central engine context class.
+ * SDL platform implementation.
  */
-class Context {
+class SdlPlatform {
 public:
 
     /**
-     * Initializes the engine context.
-     */
-    Context();
-
-    /**
-     * Cleans up engine resources.
-     */
-    ~Context();
-
-    /**
-     * Invoked once per frame to update the engine.
+     * Initializes SDL with the specified window title and dimensions.
      *
-     * @param dt The amount of elapsed time (in seconds).
+     * @param title The window title.
+     * @param width The window width.
+     * @param height The window height.
      */
-    void update(r32 dt);
+    SdlPlatform(const char *title, u32 width, u32 height);
+
+    /**
+     * Cleans up SDL.
+     */
+    ~SdlPlatform();
+
+    /**
+     * Runs the platform.
+     */
+    void run();
+
+private:
+
+    SDL_Window *_window;
+
+    bool _running {false};
 
 };
 

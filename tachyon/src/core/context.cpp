@@ -16,6 +16,8 @@
 
 #include "tachyon/core/context.h"
 
+#include "tachyon/core/exception.h"
+
 namespace tachyon {
 
 Context::Context()
