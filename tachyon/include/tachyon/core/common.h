@@ -18,6 +18,23 @@
 
 #include <cstdint>
 
+#define TACHYON_PLATFORM_WINDOWS 0
+#define TACHYON_PLATFORM_LINUX 1
+#define TACHYON_PLATFORM_MAC 2
+
+#ifdef _WIN32
+    #define TACHYON_PLATFORM TACHYON_PLATFORM_WINDOWS
+    #define TACHYON_PLATFORM_NAME "Windows"
+#elif __APPLE__
+    #define TACHYON_PLATFORM TACHYON_PLATFORM_MAC
+    #define TACHYON_PLATFORM_NAME "Mac OSX"
+#elif __linux__
+    #define TACHYON_PLATFOMR TACHYON_PLATFORM_LINUX
+    #define TACHYON_PLATFORM_NAME "Linux"
+#else
+    #error "Unsupported Platform"
+#endif
+
 namespace tachyon {
 
 typedef uint8_t u8;
@@ -32,3 +49,20 @@ typedef float r32;
 typedef double r64;
 
 }
+
+#define OCR_PLATFORM_WINDOWS 0
+#define OCR_PLATFORM_LINUX 1
+#define OCR_PLATFORM_MAC 2
+
+#ifdef _WIN32
+#define OCR_PLATFORM OCR_PLATFORM_WINDOWS
+#define OCR_PLATFORM_NAME "Windows"
+#elif __APPLE__
+#define OCR_PLATFORM OCR_PLATFORM_MAC
+#define OCR_PLATFORM_NAME "Mac OSX"
+#elif __linux__
+#define OCR_PLATFOMR OCR_PLATFORM_LINUX
+#define OCR_PLATFORM_NAME "Linux"
+#else
+#error "Unsupported Platform"
+#endif

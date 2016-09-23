@@ -16,6 +16,7 @@
 
 #include "tachyon/platform/sdl_platform.h"
 
+#include "tachyon/core/context.h"
 #include "tachyon/core/exception.h"
 
 namespace tachyon {
@@ -27,7 +28,6 @@ SdlPlatform::SdlPlatform(const char *title, u32 width, u32 height)
     }
 
     u32 flags = SDL_WINDOW_OPENGL;
-
     _window = SDL_CreateWindow(title, SDL_WINDOWPOS_UNDEFINED,
                                SDL_WINDOWPOS_UNDEFINED, width, height, flags);
     if (!_window) {
@@ -45,7 +45,14 @@ void SdlPlatform::run()
 {
     _running = true;
 
+    u32 start = SDL_GetTicks();
+
+    Context context;
+
     while (_running) {
+        r32 dt = (SDL_GetTicks() - start) / 1000.0f;
+        start = SDL_GetTicks();
+
         SDL_Event event;
         while (SDL_PollEvent(&event)) {
             switch (event.type) {
@@ -54,6 +61,8 @@ void SdlPlatform::run()
                 break;
             }
         }
+
+        context.frame(dt);
     }
 }
 

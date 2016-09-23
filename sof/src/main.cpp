@@ -25,7 +25,7 @@ int main(int argc, char **argv)
     using namespace tachyon;
 
     try {
-        SdlPlatform platform("Seeds of Fate", 640, 480);
+        SdlPlatform platform("Seeds of Fate", 1280, 720);
         platform.run();
 
         return EXIT_SUCCESS;

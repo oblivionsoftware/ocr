@@ -37,11 +37,11 @@ public:
     ~Context();
 
     /**
-     * Invoked once per frame to update the engine.
+     * Invoked once per frame to frame the engine.
      *
      * @param dt The amount of elapsed time (in seconds).
      */
-    void update(r32 dt);
+    void frame(r32 dt);
 
 };
 

@@ -28,7 +28,7 @@ Context::~Context()
 {
 }
 
-void Context::update(r32 dt)
+void Context::frame(r32 dt)
 {
 }
 
