@@ -16,42 +16,20 @@
 
 #pragma once
 
-#include <SDL.h>
-
 #include "tachyon/core/common.h"
 
 namespace tachyon {
 
-/**
- * SDL platform implementation.
- */
-class SdlPlatform {
+class GLRenderer {
 public:
 
-    /**
-     * Initializes SDL with the specified window title and dimensions.
-     *
-     * @param title The window title.
-     * @param width The window width.
-     * @param height The window height.
-     */
-    SdlPlatform(const char *title, u32 width, u32 height);
+    GLRenderer(u32 width, u32 height);
 
-    /**
-     * Cleans up SDL.
-     */
-    ~SdlPlatform();
+    ~GLRenderer();
 
-    /**
-     * Runs the platform.
-     */
-    void run();
+    void flush();
 
-private:
-
-    SDL_Window *_window;
-
-    bool _running {false};
+    void present();
 
 };
 

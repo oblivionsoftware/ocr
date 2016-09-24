@@ -7,6 +7,7 @@ find_package(SDL2 REQUIRED)
 
 
 set(TACHYON_SOURCES
+    src/glew.c
     src/core/common.cpp
     src/core/context.cpp
     src/core/exception.cpp
