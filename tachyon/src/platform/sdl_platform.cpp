@@ -18,7 +18,6 @@
 
 #include "tachyon/core/context.h"
 #include "tachyon/core/exception.h"
-#include "tachyon/renderer/opengl.h"
 
 namespace tachyon {
 
@@ -28,7 +27,7 @@ SdlPlatform::SdlPlatform(const char *title, u32 width, u32 height)
         TACHYON_THROW("SDL initialization failed: %s", SDL_GetError());
     }
 
-    u32 flags = SDL_WINDOW_OPENGL;
+    u32 flags {SDL_WINDOW_OPENGL};
     _window = SDL_CreateWindow(title, SDL_WINDOWPOS_UNDEFINED,
                                SDL_WINDOWPOS_UNDEFINED, width, height, flags);
     if (!_window) {
@@ -51,8 +50,6 @@ void SdlPlatform::run()
     Context context;
     SdlGlContext glContext {_window, 4, 1};
 
-    glClearColor(0.0f, 0.0f, 1.0f, 1.0f);
-
     while (_running) {
         r32 dt {(SDL_GetTicks() - start) / 1000.0f};
         start = SDL_GetTicks();
@@ -66,15 +63,13 @@ void SdlPlatform::run()
             }
         }
 
-        glClear(GL_COLOR_BUFFER_BIT);
-
         context.frame(dt);
         glContext.present();
     }
 }
 
 SdlGlContext::SdlGlContext(SDL_Window *window, u32 major, u32 minor)
-    : _window(window)
+    : _window {window}
 {
     SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, major);
     SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, minor);
