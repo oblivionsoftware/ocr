@@ -4,6 +4,7 @@ project(tachyon VERSION 0.1 LANGUAGES CXX)
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${tachyon_SOURCE_DIR}/cmake")
 
 find_package(SDL2 REQUIRED)
+find_package(OpenGL REQUIRED)
 
 
 set(TACHYON_SOURCES
@@ -32,10 +33,13 @@ add_library(tachyon ${TACHYON_SOURCES})
 target_include_directories(tachyon PUBLIC
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
     $<BUILD_INTERFACE:${SDL2_INCLUDE_DIR}>
+    $<BUILD_INTERFACE:${OPENGL_INCLUDE_DIR}>
     $<INSTALL_INTERFACE:include>
     PRIVATE src)
 
-target_link_libraries(tachyon ${SDL2_LIBRARY})
+target_link_libraries(tachyon
+    ${OPENGL_LIBRARIES}
+    ${SDL2_LIBRARY})
 
 if ((${CMAKE_COMPILER_IS_GNUCXX}) OR (${CMAKE_CXX_COMPILER_ID} MATCHES "Clang"))
     target_compile_options(tachyon PRIVATE
