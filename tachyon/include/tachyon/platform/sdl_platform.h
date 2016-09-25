@@ -55,4 +55,25 @@ private:
 
 };
 
+/**
+ * OpenGL context implementation using SDL.
+ */
+class SdlGlContext {
+public:
+
+    SdlGlContext(SDL_Window *window, u32 major, u32 minor);
+
+    ~SdlGlContext();
+
+    void present();
+
+private:
+
+    SDL_Window *_window;
+
+    SDL_GLContext _context;
+
+};
+
+
 }

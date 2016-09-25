@@ -66,4 +66,29 @@ void SdlPlatform::run()
     }
 }
 
+SdlGlContext::SdlGlContext(SDL_Window *window, u32 major, u32 minor)
+    : _window(window)
+{
+    SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, major);
+    SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, minor);
+    SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 24);
+    SDL_GL_SetAttribute(SDL_GL_STENCIL_SIZE, 8);
+    SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
+
+    _context = SDL_GL_CreateContext(_window);
+    if (!_context) {
+        TACHYON_THROW("OpenGL Context creation failed: %s", SDL_GetError());
+    }
+}
+
+SdlGlContext::~SdlGlContext()
+{
+    SDL_GL_DeleteContext(_context);
+}
+
+void SdlGlContext::present()
+{
+    SDL_GL_SwapWindow(_window);
+}
+
 }
