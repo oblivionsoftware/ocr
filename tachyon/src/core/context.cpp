@@ -17,10 +17,12 @@
 #include "tachyon/core/context.h"
 
 #include "tachyon/core/exception.h"
+#include "tachyon/renderer/renderer.h"
 
 namespace tachyon {
 
-Context::Context()
+Context::Context(Renderer *renderer)
+    : _renderer {renderer}
 {
 }
 
@@ -30,6 +32,7 @@ Context::~Context()
 
 void Context::frame(r32 dt)
 {
+    _renderer->present();
 }
 
 }

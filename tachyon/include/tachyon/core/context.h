@@ -20,6 +20,8 @@
 
 namespace tachyon {
 
+class Renderer;
+
 /**
  * The central engine context class.
  */
@@ -28,8 +30,10 @@ public:
 
     /**
      * Initializes the engine context.
+     *
+     * @param renderer The renderer instance.
      */
-    Context();
+    explicit Context(Renderer *renderer);
 
     /**
      * Cleans up engine resources.
@@ -42,6 +46,10 @@ public:
      * @param dt The amount of elapsed time (in seconds).
      */
     void frame(r32 dt);
+
+private:
+
+    Renderer *_renderer;
 
 };
 

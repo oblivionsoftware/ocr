@@ -68,9 +68,10 @@ void SdlPlatform::run()
 
     u32 start {SDL_GetTicks()};
 
-    Context context;
     SdlGlContext glContext {_window, 4, 1};
     GlRenderer glRenderer {&glContext, 1280, 720};
+
+    Context context {&glRenderer};
 
     while (_running) {
         r32 dt {(SDL_GetTicks() - start) / 1000.0f};
@@ -86,7 +87,6 @@ void SdlPlatform::run()
         }
 
         context.frame(dt);
-        glRenderer.present();
     }
 }
 

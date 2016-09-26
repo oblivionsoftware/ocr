@@ -17,6 +17,7 @@
 #pragma once
 
 #include "tachyon/core/common.h"
+#include "tachyon/renderer/renderer.h"
 
 namespace tachyon {
 
@@ -31,16 +32,14 @@ public:
 
 };
 
-class GlRenderer {
+class GlRenderer : public Renderer {
 public:
 
     GlRenderer(GlContext *context, u32 width, u32 height);
 
     ~GlRenderer();
 
-    void flush();
-
-    void present();
+    virtual void present() override;
 
 private:
 

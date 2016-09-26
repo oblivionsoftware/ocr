@@ -37,10 +37,6 @@ GlRenderer::~GlRenderer()
 {
 }
 
-void GlRenderer::flush()
-{
-}
-
 void GlRenderer::present()
 {
     glClear(GL_COLOR_BUFFER_BIT);

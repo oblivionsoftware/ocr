@@ -17,7 +17,18 @@
 #pragma once
 
 #include "tachyon/core/common.h"
-#include "tachyon/core/context.h"
-#include "tachyon/core/exception.h"
-#include "tachyon/core/string.h"
-#include "tachyon/renderer/renderer.h"
+
+namespace tachyon {
+
+class Renderer {
+public:
+
+    Renderer() = default;
+
+    virtual ~Renderer() = default;
+
+    virtual void present() = 0;
+
+};
+
+}
