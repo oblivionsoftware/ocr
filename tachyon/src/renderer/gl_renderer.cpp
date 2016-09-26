@@ -14,46 +14,37 @@
  * limitations under the License.
  */
 
-#pragma once
+#include "tachyon/renderer/gl_renderer.h"
 
-#include <SDL.h>
-
-#include "tachyon/core/common.h"
+#include "tachyon/core/exception.h"
+#include "tachyon/renderer/opengl.h"
 
 namespace tachyon {
 
-/**
- * SDL platform implementation.
- */
-class SdlPlatform {
-public:
+GlRenderer::GlRenderer(GlContext *context, u32 width, u32 height)
+    : _context {context}
+{
+    glewExperimental = GL_TRUE;
+    GLenum glewError = glewInit();
+    if (glewError != GLEW_OK) {
+        TACHYON_THROW("glewInit failed: %s", glewGetErrorString(glewError));
+    }
 
-    /**
-     * Initializes SDL with the specified window title and dimensions.
-     *
-     * @param title The window title.
-     * @param width The window width.
-     * @param height The window height.
-     */
-    SdlPlatform(const char *title, u32 width, u32 height);
+    glClearColor(0.0f, 0.0f, 1.0f, 1.0f);
+}
 
-    /**
-     * Cleans up SDL.
-     */
-    ~SdlPlatform();
+GlRenderer::~GlRenderer()
+{
+}
 
-    /**
-     * Runs the platform.
-     */
-    void run();
+void GlRenderer::flush()
+{
+}
 
-private:
-
-    SDL_Window *_window;
-
-    bool _running {false};
-
-};
-
+void GlRenderer::present()
+{
+    glClear(GL_COLOR_BUFFER_BIT);
+    _context->present();
+}
 
 }

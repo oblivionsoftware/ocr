@@ -20,16 +20,31 @@
 
 namespace tachyon {
 
-class GLRenderer {
+class GlContext {
 public:
 
-    GLRenderer(u32 width, u32 height);
+    GlContext() = default;
 
-    ~GLRenderer();
+    virtual ~GlContext() = default;
+
+    virtual void present() = 0;
+
+};
+
+class GlRenderer {
+public:
+
+    GlRenderer(GlContext *context, u32 width, u32 height);
+
+    ~GlRenderer();
 
     void flush();
 
     void present();
+
+private:
+
+    GlContext *_context;
 
 };
 

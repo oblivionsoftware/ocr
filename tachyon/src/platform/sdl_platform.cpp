@@ -18,8 +18,29 @@
 
 #include "tachyon/core/context.h"
 #include "tachyon/core/exception.h"
+#include "tachyon/renderer/gl_renderer.h"
 
 namespace tachyon {
+
+/**
+ * OpenGL context implementation using SDL.
+ */
+class SdlGlContext : public GlContext {
+public:
+
+    SdlGlContext(SDL_Window *window, u32 major, u32 minor);
+
+    ~SdlGlContext();
+
+    virtual void present() override;
+
+private:
+
+    SDL_Window *_window;
+
+    SDL_GLContext _context;
+
+};
 
 SdlPlatform::SdlPlatform(const char *title, u32 width, u32 height)
 {
@@ -49,6 +70,7 @@ void SdlPlatform::run()
 
     Context context;
     SdlGlContext glContext {_window, 4, 1};
+    GlRenderer glRenderer {&glContext, 1280, 720};
 
     while (_running) {
         r32 dt {(SDL_GetTicks() - start) / 1000.0f};
@@ -64,7 +86,7 @@ void SdlPlatform::run()
         }
 
         context.frame(dt);
-        glContext.present();
+        glRenderer.present();
     }
 }
 

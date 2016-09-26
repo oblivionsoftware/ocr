@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.5 FATAL_ERROR)
-project(tachyon VERSION 0.1 LANGUAGES CXX)
+project(tachyon VERSION 0.1 LANGUAGES C CXX)
 
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${tachyon_SOURCE_DIR}/cmake")
 
@@ -14,6 +14,7 @@ set(TACHYON_SOURCES
     src/core/exception.cpp
     src/core/string.cpp
     src/platform/sdl_platform.cpp
+    src/renderer/gl_renderer.cpp
 )
 
 if (NOT WIN32)
@@ -48,7 +49,7 @@ else()
     target_compile_options(tachyon PRIVATE
         /W3 /WX)
     target_compile_definitions(tachyon PRIVATE
-        -D_CRT_SECURE_NO_WARNINGS)
+        -D_CRT_SECURE_NO_WARNINGS -DGLEW_STATIC)
 endif()
 
 install(TARGETS tachyon EXPORT TachyonConfig
