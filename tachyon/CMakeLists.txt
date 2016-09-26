@@ -44,7 +44,8 @@ target_link_libraries(tachyon
 
 if ((${CMAKE_COMPILER_IS_GNUCXX}) OR (${CMAKE_CXX_COMPILER_ID} MATCHES "Clang"))
     target_compile_options(tachyon PRIVATE
-        -std=c++14 -Wall -Werror -pedantic)
+        -Wall -Werror -pedantic
+        $<$<COMPILE_LANGUAGE:CXX>:-std=c++14>)
 else()
     target_compile_options(tachyon PRIVATE
         /W3 /WX)

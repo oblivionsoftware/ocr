@@ -21,8 +21,8 @@
 
 namespace tachyon {
 
-Context::Context(Renderer *renderer)
-    : _renderer {renderer}
+Context::Context(std::unique_ptr<Renderer> renderer)
+    : _renderer {std::move(renderer)}
 {
 }
 

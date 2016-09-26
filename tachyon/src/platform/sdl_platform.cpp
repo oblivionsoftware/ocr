@@ -16,6 +16,8 @@
 
 #include "tachyon/platform/sdl_platform.h"
 
+#include <memory>
+
 #include "tachyon/core/context.h"
 #include "tachyon/core/exception.h"
 #include "tachyon/renderer/gl_renderer.h"
@@ -43,6 +45,8 @@ private:
 };
 
 SdlPlatform::SdlPlatform(const char *title, u32 width, u32 height)
+    : _width {width},
+      _height {height}
 {
     if (SDL_Init(SDL_INIT_VIDEO) != 0) {
         TACHYON_THROW("SDL initialization failed: %s", SDL_GetError());
@@ -62,16 +66,19 @@ SdlPlatform::~SdlPlatform()
     SDL_Quit();
 }
 
+static std::unique_ptr<Renderer> createRenderer(SDL_Window *window, u32 width, u32 height)
+{
+    auto glContext {std::make_unique<SdlGlContext>(window, 4, 1)};
+    return std::make_unique<GlRenderer>(std::move(glContext), width, height);
+}
+
 void SdlPlatform::run()
 {
     _running = true;
 
     u32 start {SDL_GetTicks()};
 
-    SdlGlContext glContext {_window, 4, 1};
-    GlRenderer glRenderer {&glContext, 1280, 720};
-
-    Context context {&glRenderer};
+    Context context {createRenderer(_window, _width, _height)};
 
     while (_running) {
         r32 dt {(SDL_GetTicks() - start) / 1000.0f};

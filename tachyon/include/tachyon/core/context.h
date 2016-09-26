@@ -16,6 +16,8 @@
 
 #pragma once
 
+#include <memory>
+
 #include "tachyon/core/common.h"
 
 namespace tachyon {
@@ -33,7 +35,7 @@ public:
      *
      * @param renderer The renderer instance.
      */
-    explicit Context(Renderer *renderer);
+    explicit Context(std::unique_ptr<Renderer> renderer);
 
     /**
      * Cleans up engine resources.
@@ -49,7 +51,7 @@ public:
 
 private:
 
-    Renderer *_renderer;
+    std::unique_ptr<Renderer> _renderer;
 
 };
 

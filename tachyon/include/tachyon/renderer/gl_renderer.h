@@ -16,6 +16,8 @@
 
 #pragma once
 
+#include <memory>
+
 #include "tachyon/core/common.h"
 #include "tachyon/renderer/renderer.h"
 
@@ -35,15 +37,17 @@ public:
 class GlRenderer : public Renderer {
 public:
 
-    GlRenderer(GlContext *context, u32 width, u32 height);
-
-    ~GlRenderer();
+    GlRenderer(std::unique_ptr<GlContext> context, u32 width, u32 height);
 
     virtual void present() override;
 
 private:
 
-    GlContext *_context;
+    std::unique_ptr<GlContext> _context;
+
+    u32 _width;
+
+    u32 _height;
 
 };
 

@@ -21,8 +21,10 @@
 
 namespace tachyon {
 
-GlRenderer::GlRenderer(GlContext *context, u32 width, u32 height)
-    : _context {context}
+GlRenderer::GlRenderer(std::unique_ptr<GlContext> context, u32 width, u32 height)
+    : _context {std::move(context)},
+      _width {width},
+      _height {height}
 {
     glewExperimental = GL_TRUE;
     GLenum glewError = glewInit();
@@ -30,16 +32,14 @@ GlRenderer::GlRenderer(GlContext *context, u32 width, u32 height)
         TACHYON_THROW("glewInit failed: %s", glewGetErrorString(glewError));
     }
 
-    glClearColor(0.0f, 0.0f, 1.0f, 1.0f);
-}
-
-GlRenderer::~GlRenderer()
-{
+    glViewport(0, 0, _width, _height);
+    glClearColor(0.2f, 0.2f, 0.2f, 1.0f);
 }
 
 void GlRenderer::present()
 {
     glClear(GL_COLOR_BUFFER_BIT);
+
     _context->present();
 }
 

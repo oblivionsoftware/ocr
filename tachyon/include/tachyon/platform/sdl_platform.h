@@ -51,6 +51,10 @@ private:
 
     SDL_Window *_window;
 
+    u32 _width;
+
+    u32 _height;
+
     bool _running {false};
 
 };
