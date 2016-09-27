@@ -14,6 +14,7 @@ set(TACHYON_SOURCES
     src/core/string.cpp
     src/platform/sdl_platform.cpp
     src/renderer/gl_renderer.cpp
+    src/renderer/image.cpp
 )
 
 if (NOT WIN32)
