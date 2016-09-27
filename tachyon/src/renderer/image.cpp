@@ -16,6 +16,8 @@
 
 #include "tachyon/renderer/image.h"
 
+#include <memory>
+
 #define STB_IMAGE_IMPLEMENTATION
 #include "stb_image.h"
 

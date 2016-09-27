@@ -57,13 +57,14 @@ GlVertexArray::GlVertexArray(const GlVertexFormat &format)
     glBindVertexArray(_id);
 
     u32 offset = 0;
-    for (auto i = 0; i < format.elements().size(); ++i) {
-        auto &element = format.elements()[i];
+    u32 index = 0;
 
-        glVertexAttribPointer(i, element.count(), element.type(), GL_FALSE, format.size(), bufferOffset(offset));
-        glEnableVertexAttribArray(i);
+    for (auto &element : format.elements()) {
+        glVertexAttribPointer(index, element.count(), element.type(), GL_FALSE, format.size(), bufferOffset(offset));
+        glEnableVertexAttribArray(index);
 
         offset += element.size();
+        ++index;
     }
 }
 
