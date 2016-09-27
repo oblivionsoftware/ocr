@@ -48,6 +48,8 @@ if ((${CMAKE_COMPILER_IS_GNUCXX}) OR (${CMAKE_CXX_COMPILER_ID} MATCHES "Clang"))
     target_compile_options(tachyon PRIVATE
         -Wall -Werror -pedantic
         $<$<COMPILE_LANGUAGE:CXX>:-std=c++14>)
+
+    set_source_files_properties(src/renderer/image.cpp PROPERTIES COMPILE_FLAGS -Wno-misleading-indentation)
 else()
     target_compile_options(tachyon PRIVATE
         /W3 /WX)
