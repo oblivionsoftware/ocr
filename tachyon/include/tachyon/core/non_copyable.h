@@ -16,44 +16,21 @@
 
 #pragma once
 
-#include <memory>
-
-#include "tachyon/core/common.h"
-#include "tachyon/core/non_copyable.h"
-
 namespace tachyon {
 
-class Renderer;
+class NonCopyable {
 
-/**
- * The central engine context class.
- */
-class Context : private NonCopyable {
 public:
 
-    /**
-     * Initializes the engine context.
-     *
-     * @param renderer The renderer instance.
-     */
-    explicit Context(std::unique_ptr<Renderer> renderer);
-
-    /**
-     * Cleans up engine resources.
-     */
-    ~Context();
-
-    /**
-     * Invoked once per frame to frame the engine.
-     *
-     * @param dt The amount of elapsed time (in seconds).
-     */
-    void frame(r32 dt);
+    NonCopyable() = default;
 
 private:
 
-    std::unique_ptr<Renderer> _renderer;
+    NonCopyable(const NonCopyable &other) = delete;
+
+    NonCopyable &operator =(const NonCopyable &other) = delete;
 
 };
+
 
 }

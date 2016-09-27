@@ -16,43 +16,30 @@
 
 #pragma once
 
-#include <memory>
-
-#include "tachyon/core/common.h"
 #include "tachyon/core/non_copyable.h"
+#include "tachyon/renderer/opengl.h"
 
 namespace tachyon {
 
-class Renderer;
+class GlFragmentShader;
+class GlVertexShader;
 
-/**
- * The central engine context class.
- */
-class Context : private NonCopyable {
+class GlProgram : private NonCopyable {
 public:
 
-    /**
-     * Initializes the engine context.
-     *
-     * @param renderer The renderer instance.
-     */
-    explicit Context(std::unique_ptr<Renderer> renderer);
+    GlProgram(const char *vertexShaderText, const char *fragmentShaderText);
 
-    /**
-     * Cleans up engine resources.
-     */
-    ~Context();
+    GlProgram(const GlVertexShader &vertexShader, const GlFragmentShader &fragmentShader);
 
-    /**
-     * Invoked once per frame to frame the engine.
-     *
-     * @param dt The amount of elapsed time (in seconds).
-     */
-    void frame(r32 dt);
+    ~GlProgram();
+
+    GLuint id() const {
+        return _id;
+    }
 
 private:
 
-    std::unique_ptr<Renderer> _renderer;
+    GLuint _id;
 
 };
 

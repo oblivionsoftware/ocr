@@ -19,11 +19,12 @@
 #include <memory>
 
 #include "tachyon/core/common.h"
+#include "tachyon/core/non_copyable.h"
 #include "tachyon/renderer/renderer.h"
 
 namespace tachyon {
 
-class GlContext {
+class GlContext : private NonCopyable {
 public:
 
     GlContext() = default;
@@ -34,7 +35,7 @@ public:
 
 };
 
-class GlRenderer : public Renderer {
+class GlRenderer : public Renderer, private NonCopyable {
 public:
 
     GlRenderer(std::unique_ptr<GlContext> context, u32 width, u32 height);

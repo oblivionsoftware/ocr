@@ -17,6 +17,8 @@
 #include "tachyon/renderer/gl_renderer.h"
 
 #include "tachyon/core/exception.h"
+#include "tachyon/renderer/gl_program.h"
+#include "tachyon/renderer/gl_shader.h"
 #include "tachyon/renderer/opengl.h"
 
 namespace tachyon {
