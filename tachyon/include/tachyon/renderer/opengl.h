@@ -33,7 +33,17 @@
     #include <GL/glu.h>
 #endif
 
+#include <tachyon/core/common.h>
+
 #ifndef APIENTRY
     #define APIENTRY
 #endif
 
+namespace tachyon {
+
+static inline void *bufferOffset(u32 offset)
+{
+    return reinterpret_cast<void*>(offset);
+}
+
+}

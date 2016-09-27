@@ -16,41 +16,68 @@
 
 #pragma once
 
+#include <vector>
+
 #include "tachyon/core/common.h"
 #include "tachyon/core/non_copyable.h"
 #include "tachyon/renderer/opengl.h"
 
 namespace tachyon {
 
-enum class GlBufferUsage {
-    Dynamic,
-    Static
-};
-
-class GlBuffer : private NonCopyable {
+class GlVertexElement {
 public:
 
-    GlBuffer(GLenum type, u32 capacity, GlBufferUsage usage);
+    GlVertexElement(u32 count, GLenum type);
 
-    ~GlBuffer();
+    u32 size() const;
+
+    u32 count() const {
+        return _count;
+    }
+
+    GLenum type() const {
+        return _type;
+    }
+
+private:
+
+    u32 _count;
+
+    GLenum _type;
+
+};
+
+class GlVertexFormat {
+public:
+
+    u32 size() const;
+
+    const std::vector<GlVertexElement> &elements() const {
+        return _elements;
+    }
+
+private:
+
+    std::vector<GlVertexElement> _elements;
+
+};
+
+class GlVertexArray : private NonCopyable {
+public:
+
+    GlVertexArray(const GlVertexFormat &format);
+
+    ~GlVertexArray();
 
     GLuint id() const {
         return _id;
     }
 
-    void add(void *data, u32 size);
-
-    void clear();
+    void bind();
 
 private:
 
-    GLenum _type;
-
     GLuint _id;
-
-    u32 _capacity;
-
-    u32 _offset {0};
 
 };
 

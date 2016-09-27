@@ -32,6 +32,11 @@ GlBuffer::GlBuffer(GLenum type, u32 capacity, GlBufferUsage usage)
     glBufferData(type, capacity, nullptr, usage == GlBufferUsage::Dynamic ? GL_DYNAMIC_DRAW : GL_STATIC_DRAW);
 }
 
+GlBuffer::~GlBuffer()
+{
+    glDeleteBuffers(1, &_id);
+}
+
 void GlBuffer::add(void *data, u32 size)
 {
     assert((_offset + size) <= _capacity);
