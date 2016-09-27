@@ -13,6 +13,7 @@ set(TACHYON_SOURCES
     src/core/exception.cpp
     src/core/string.cpp
     src/platform/sdl_platform.cpp
+    src/renderer/gl_buffer.cpp
     src/renderer/gl_program.cpp
     src/renderer/gl_renderer.cpp
     src/renderer/gl_shader.cpp
@@ -44,12 +45,14 @@ target_link_libraries(tachyon
     ${OPENGL_LIBRARIES}
     ${SDL2_LIBRARY})
 
+if (${CMAKE_COMPILER_IS_GNUCXX})
+    set_source_files_properties(src/renderer/image.cpp PROPERTIES COMPILE_FLAGS -Wno-misleading-indentation)
+endif()
+
 if ((${CMAKE_COMPILER_IS_GNUCXX}) OR (${CMAKE_CXX_COMPILER_ID} MATCHES "Clang"))
     target_compile_options(tachyon PRIVATE
         -Wall -Werror -pedantic
         $<$<COMPILE_LANGUAGE:CXX>:-std=c++14>)
-
-    set_source_files_properties(src/renderer/image.cpp PROPERTIES COMPILE_FLAGS -Wno-misleading-indentation)
 else()
     target_compile_options(tachyon PRIVATE
         /W3 /WX)
