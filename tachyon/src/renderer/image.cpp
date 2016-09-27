@@ -29,7 +29,7 @@ Image::Image(const char *path)
     int y;
     int n;
 
-    u8 *data = stbi_load(path, &x, &y, &n, 4);
+    std::unique_ptr<u8> data {stbi_load(path, &x, &y, &n, 4)};
     if (!data) {
         TACHYON_THROW("unable to load image from file '%s': %s", path, stbi_failure_reason());
     }
@@ -38,9 +38,7 @@ Image::Image(const char *path)
     _height = static_cast<u32>(y);
 
     _pixels.resize(x * y * 4);
-    memcpy(&_pixels[0], data, _pixels.size());
-
-    stbi_image_free(data);
+    memcpy(&_pixels[0], data.get(), _pixels.size());
 }
 
 Image::Image(u32 width, u32 height)
