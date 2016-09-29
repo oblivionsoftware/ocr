@@ -20,6 +20,7 @@
 #include <vector>
 
 #include "tachyon/core/common.h"
+#include "tachyon/core/exception.h"
 #include "tachyon/core/non_copyable.h"
 
 namespace tachyon {
@@ -36,6 +37,9 @@ struct CommandHeader {
 };
 
 struct ClearCommand {
+
+    const static CommandType COMMAND_TYPE {CommandType::Clear};
+
     ClearCommand() = default;
 
     ClearCommand(r32 r, r32 g, r32 b, r32 a = 1.0f) {
@@ -50,18 +54,6 @@ struct ClearCommand {
     r32 b {0.0f};
     r32 a {1.0f};
 };
-
-template <typename T>
-CommandType commandType()
-{
-    TACHYON_THROW("Unknown command type");
-}
-
-template <>
-inline CommandType commandType<ClearCommand>()
-{
-    return CommandType::Clear;
-}
 
 class CommandIterator {
 public:
@@ -129,7 +121,7 @@ T *CommandBuffer::push(Args&&... args)
 
     CommandHeader *header = data<CommandHeader>(_offset);
     header->size = commandSize;
-    header->type = commandType<T>();
+    header->type = T::COMMAND_TYPE;
 
     auto result = data<T>(_offset + sizeof(CommandHeader));
     new (result) T (std::forward<Args&&>(args)...);

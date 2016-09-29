@@ -16,6 +16,8 @@
 
 #include "tachyon/core/context.h"
 
+#include <cmath>
+
 #include "tachyon/core/exception.h"
 #include "tachyon/renderer/command_buffer.h"
 #include "tachyon/renderer/renderer.h"

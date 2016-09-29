@@ -26,9 +26,9 @@ namespace tachyon {
 
 GlRenderer::GlRenderer(std::unique_ptr<GlContext> context, u32 width, u32 height)
     : _context {std::move(context)},
+      _commandBuffer {1024 * 1024 * 10},
       _width {width},
-      _height {height},
-      _commandBuffer {1024 * 1024 * 10}
+      _height {height}
 {
     glewExperimental = GL_TRUE;
     GLenum glewError = glewInit();
