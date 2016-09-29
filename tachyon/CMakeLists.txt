@@ -53,7 +53,7 @@ endif()
 
 if ((${CMAKE_COMPILER_IS_GNUCXX}) OR (${CMAKE_CXX_COMPILER_ID} MATCHES "Clang"))
     target_compile_options(tachyon PRIVATE
-        -Wall -Werror -pedantic
+        -Wall -Werror -pedantic -fno-rtti -march=native -ffast-math -O3
         $<$<COMPILE_LANGUAGE:CXX>:-std=c++14>)
 else()
     target_compile_options(tachyon PRIVATE

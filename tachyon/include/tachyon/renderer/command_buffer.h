@@ -27,15 +27,24 @@ namespace tachyon {
 
 class CommandBuffer;
 
+/**
+ * Enumeration for each type of command in the buffer.
+ */
 enum class CommandType {
     Clear
 };
 
+/**
+ * Header stored in the command buffer that stores offset information.
+ */
 struct CommandHeader {
     size_t size;
     CommandType type;
 };
 
+/**
+ * The command to clear the screen.
+ */
 struct ClearCommand {
 
     const static CommandType COMMAND_TYPE {CommandType::Clear};
@@ -55,6 +64,9 @@ struct ClearCommand {
     r32 a {1.0f};
 };
 
+/**
+ * An iterator over all commands in the buffer.
+ */
 class CommandIterator {
 public:
 
@@ -84,21 +96,43 @@ private:
 };
 
 
+/**
+ * A buffer of render commands.
+ */
 class CommandBuffer : private NonCopyable {
 public:
 
     explicit CommandBuffer(size_t capacity);
 
+    /**
+     * Adds a command to the buffer.
+     *
+     * @param args The constructor arguments to pass when constructing T.
+     */
     template <typename T, typename... Args>
     T *push(Args&&... args);
 
+    /**
+     * Clears all commands in the buffer.
+     */
     void clear();
 
+    /**
+     * Gets a pointer of the specified type at an offset within the command buffer.
+     *
+     * @param offset The offset into the buffer.
+     * @return The data inside the buffer.
+     */
     template <typename T>
     T *data(size_t offset) {
         return reinterpret_cast<T*>(&_buffer[offset]);
     }
 
+    /**
+     * Gets the current offset.
+     *
+     * @return The offset.
+     */
     size_t offset() const {
         return _offset;
     }
