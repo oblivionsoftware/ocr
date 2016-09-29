@@ -66,4 +66,11 @@ void GlRenderer::present()
     _context->present();
 }
 
+u32 GlRenderer::loadTexture(const Image &image)
+{
+    _textures.emplace_back(image);
+
+    return static_cast<u32>(_textures.size() - 1);
+}
+
 }

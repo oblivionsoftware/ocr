@@ -18,6 +18,7 @@ set(TACHYON_SOURCES
     src/renderer/gl_program.cpp
     src/renderer/gl_renderer.cpp
     src/renderer/gl_shader.cpp
+    src/renderer/gl_texture.cpp
     src/renderer/gl_vertex_array.cpp
     src/renderer/image.cpp
 )

@@ -17,11 +17,13 @@
 #pragma once
 
 #include <memory>
+#include <vector>
 
 #include "tachyon/core/common.h"
 #include "tachyon/core/non_copyable.h"
 #include "tachyon/renderer/command_buffer.h"
 #include "tachyon/renderer/renderer.h"
+#include "tachyon/renderer/gl_texture.h"
 
 namespace tachyon {
 
@@ -49,6 +51,8 @@ public:
         return _commandBuffer;
     }
 
+    virtual u32 loadTexture(const Image &image) override;
+
 private:
 
     std::unique_ptr<GlContext> _context;
@@ -58,6 +62,8 @@ private:
     u32 _width;
 
     u32 _height;
+
+    std::vector<GlTexture> _textures;
 
 };
 

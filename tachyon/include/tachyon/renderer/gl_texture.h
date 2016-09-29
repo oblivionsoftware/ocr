@@ -17,26 +17,42 @@
 #pragma once
 
 #include "tachyon/core/common.h"
+#include "tachyon/core/non_copyable.h"
+#include "tachyon/renderer/opengl.h"
 
 namespace tachyon {
 
-class CommandBuffer;
 class Image;
 
-class Renderer {
+
+class GlTexture : private NonCopyable {
 public:
 
-    Renderer() = default;
+    explicit GlTexture(const Image &image);
 
-    virtual ~Renderer() = default;
+    GlTexture(GlTexture &&texture);
 
-    virtual void present() = 0;
+    ~GlTexture();
 
-    virtual void flush() = 0;
+    GLuint id() const {
+        return _id;
+    }
 
-    virtual CommandBuffer &commandBuffer() = 0;
+    u32 width() const {
+        return _width;
+    }
 
-    virtual u32 loadTexture(const Image &image) = 0;
+    u32 height() const {
+        return _height;
+    }
+
+private:
+
+    GLuint _id;
+
+    u32 _width;
+
+    u32 _height;
 
 };
 

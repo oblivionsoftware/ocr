@@ -20,6 +20,7 @@
 
 #include "tachyon/core/exception.h"
 #include "tachyon/renderer/command_buffer.h"
+#include "tachyon/renderer/image.h"
 #include "tachyon/renderer/renderer.h"
 
 namespace tachyon {
@@ -27,6 +28,8 @@ namespace tachyon {
 Context::Context(std::unique_ptr<Renderer> renderer)
     : _renderer {std::move(renderer)}
 {
+
+    auto texture = _renderer->loadTexture(Image{"assets/textures/tiles.png"});
 }
 
 void Context::frame(r32 dt)
@@ -35,7 +38,7 @@ void Context::frame(r32 dt)
     t += dt;
 
     auto &commands = _renderer->commandBuffer();
-    commands.push<ClearCommand>(std::sinf(t * 0.5f), std::sinf(t * 1.0f), std::sinf(t * 1.5f));
+    commands.push<ClearCommand>(std::sinf(t * 0.2f), std::sinf(t * 0.29f), std::sinf(t * 0.17f));
 
     _renderer->present();
 }
