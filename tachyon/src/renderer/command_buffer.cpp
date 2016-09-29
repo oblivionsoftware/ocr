@@ -14,27 +14,19 @@
  * limitations under the License.
  */
 
-#pragma once
-
-#include "tachyon/core/common.h"
+#include "tachyon/renderer/command_buffer.h"
 
 namespace tachyon {
 
-class CommandBuffer;
+CommandBuffer::CommandBuffer(size_t capacity)
+    : _offset {0},
+      _buffer(capacity)
+{
+}
 
-class Renderer {
-public:
-
-    Renderer() = default;
-
-    virtual ~Renderer() = default;
-
-    virtual void present() = 0;
-
-    virtual void flush() = 0;
-
-    virtual CommandBuffer &commandBuffer() = 0;
-
-};
+void CommandBuffer::clear()
+{
+    _offset = 0;
+}
 
 }

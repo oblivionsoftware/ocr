@@ -17,6 +17,7 @@
 #include "tachyon/renderer/gl_renderer.h"
 
 #include "tachyon/core/exception.h"
+#include "tachyon/renderer/command_buffer.h"
 #include "tachyon/renderer/gl_program.h"
 #include "tachyon/renderer/gl_shader.h"
 #include "tachyon/renderer/opengl.h"
@@ -26,7 +27,8 @@ namespace tachyon {
 GlRenderer::GlRenderer(std::unique_ptr<GlContext> context, u32 width, u32 height)
     : _context {std::move(context)},
       _width {width},
-      _height {height}
+      _height {height},
+      _commandBuffer {1024 * 1024 * 10}
 {
     glewExperimental = GL_TRUE;
     GLenum glewError = glewInit();
@@ -35,13 +37,32 @@ GlRenderer::GlRenderer(std::unique_ptr<GlContext> context, u32 width, u32 height
     }
 
     glViewport(0, 0, _width, _height);
-    glClearColor(0.2f, 0.2f, 0.2f, 1.0f);
+}
+
+void GlRenderer::flush()
+{
+    CommandIterator itr {_commandBuffer};
+    while (itr.next()) {
+        switch (itr.type()) {
+
+        case CommandType::Clear: {
+            auto cmd = itr.command<ClearCommand>();
+
+            glClearColor(cmd->r, cmd->g, cmd->b, cmd->a);
+            glClear(GL_COLOR_BUFFER_BIT);
+        } break;
+
+        default:
+            TACHYON_THROW("unsupported command: %d", itr.type());
+        }
+    }
+
+    _commandBuffer.clear();
 }
 
 void GlRenderer::present()
 {
-    glClear(GL_COLOR_BUFFER_BIT);
-
+    flush();
     _context->present();
 }
 

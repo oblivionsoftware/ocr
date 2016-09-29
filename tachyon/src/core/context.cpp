@@ -17,6 +17,7 @@
 #include "tachyon/core/context.h"
 
 #include "tachyon/core/exception.h"
+#include "tachyon/renderer/command_buffer.h"
 #include "tachyon/renderer/renderer.h"
 
 namespace tachyon {
@@ -28,6 +29,12 @@ Context::Context(std::unique_ptr<Renderer> renderer)
 
 void Context::frame(r32 dt)
 {
+    static r32 t = 0.0f;
+    t += dt;
+
+    auto &commands = _renderer->commandBuffer();
+    commands.push<ClearCommand>(std::sinf(t * 0.5f), std::sinf(t * 1.0f), std::sinf(t * 1.5f));
+
     _renderer->present();
 }
 

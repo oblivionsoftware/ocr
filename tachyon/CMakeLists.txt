@@ -13,6 +13,7 @@ set(TACHYON_SOURCES
     src/core/exception.cpp
     src/core/string.cpp
     src/platform/sdl_platform.cpp
+    src/renderer/command_buffer.cpp
     src/renderer/gl_buffer.cpp
     src/renderer/gl_program.cpp
     src/renderer/gl_renderer.cpp

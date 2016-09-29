@@ -110,6 +110,8 @@ SdlGlContext::SdlGlContext(SDL_Window *window, u32 major, u32 minor)
     if (!_context) {
         TACHYON_THROW("OpenGL Context creation failed: %s", SDL_GetError());
     }
+
+    SDL_GL_SetSwapInterval(1);
 }
 
 SdlGlContext::~SdlGlContext()

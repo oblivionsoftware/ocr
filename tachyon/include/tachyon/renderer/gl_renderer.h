@@ -20,6 +20,7 @@
 
 #include "tachyon/core/common.h"
 #include "tachyon/core/non_copyable.h"
+#include "tachyon/renderer/command_buffer.h"
 #include "tachyon/renderer/renderer.h"
 
 namespace tachyon {
@@ -40,11 +41,19 @@ public:
 
     GlRenderer(std::unique_ptr<GlContext> context, u32 width, u32 height);
 
+    virtual void flush() override;
+
     virtual void present() override;
+
+    virtual CommandBuffer &commandBuffer() override {
+        return _commandBuffer;
+    }
 
 private:
 
     std::unique_ptr<GlContext> _context;
+
+    CommandBuffer _commandBuffer;
 
     u32 _width;
 
