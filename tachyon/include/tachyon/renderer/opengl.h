@@ -41,7 +41,7 @@
 
 namespace tachyon {
 
-static inline void *bufferOffset(u32 offset)
+static inline void *bufferOffset(size_t offset)
 {
     return reinterpret_cast<void*>(offset);
 }
