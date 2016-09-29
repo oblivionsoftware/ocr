@@ -56,7 +56,7 @@ if ((${CMAKE_COMPILER_IS_GNUCXX}) OR (${CMAKE_CXX_COMPILER_ID} MATCHES "Clang"))
         $<$<COMPILE_LANGUAGE:CXX>:-std=c++14>)
 else()
     target_compile_options(tachyon PRIVATE
-        /W3 /WX)
+        /W3 /WX /GR-)
     target_compile_definitions(tachyon PRIVATE
         -D_CRT_SECURE_NO_WARNINGS -DGLEW_STATIC)
 endif()
