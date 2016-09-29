@@ -39,11 +39,6 @@ public:
     explicit Context(std::unique_ptr<Renderer> renderer);
 
     /**
-     * Cleans up engine resources.
-     */
-    ~Context();
-
-    /**
      * Invoked once per frame to frame the engine.
      *
      * @param dt The amount of elapsed time (in seconds).
