@@ -57,4 +57,16 @@ void GlBuffer::clear()
     _offset = 0;
 }
 
+void *GlBuffer::map()
+{
+    bind();
+    return glMapBuffer(_type, GL_WRITE_ONLY);
+}
+
+void GlBuffer::unmap()
+{
+    bind();
+    glUnmapBuffer(_type);
+}
+
 }

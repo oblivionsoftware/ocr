@@ -42,7 +42,8 @@ uniform mat4 projectionMatrix;
 
 void main()
 {
-    gl_Position = projectionMatrix * vec4(position, 1.0f);
+    //gl_Position = projectionMatrix * vec4(position, 1.0f);
+    gl_Position = vec4(position, 1.0f);
 
     vertexOut.texCoords = texCoords;
     vertexOut.color = color;
@@ -54,7 +55,7 @@ const auto SPRITE_FRAGMENT_SHADER = R"(
 
 out vec4 outColor;
 
-uniform sampler2D diffuseTexture;
+uniform sampler2D texture0;
 
 in VertexOutput {
     vec2 texCoords;
@@ -63,14 +64,14 @@ in VertexOutput {
 
 void main()
 {
-    vec4 texColor = texture(diffuseTexture, fragIn.texCoords);
+    vec4 texColor = texture(texture0, fragIn.texCoords);
     outColor = fragIn.color * texColor;
 }
 )";
 
 struct SpriteVertex {
     float x, y, z;
-    float tx, tv;
+    float tu, tv;
     float r, g, b, a;
 };
 
@@ -132,6 +133,85 @@ void GlRenderer::present()
     flush();
 
     glUseProgram(_spriteProgram->id());
+
+    auto v = _spriteVertexArray->mapVertices<SpriteVertex>();
+
+    v->x = -0.5f;
+    v->y = -0.5f;
+
+    v->r = 1.0f;
+    v->g = 1.0f;
+    v->b = 1.0f;
+    v->a = 1.0f;
+
+    v->tu = 0.0f;
+    v->tv = 0.0f;
+
+    ++v;
+    v->x = 0.5f;
+    v->y = -0.5f;
+
+    v->r = 1.0f;
+    v->g = 1.0f;
+    v->b = 1.0f;
+    v->a = 1.0f;
+
+    v->tu = 1.0f;
+    v->tv = 0.0f;
+
+    ++v;
+    v->x = 0.5f;
+    v->y = 0.5f;
+
+    v->r = 1.0f;
+    v->g = 1.0f;
+    v->b = 1.0f;
+    v->a = 1.0f;
+
+    v->tu = 1.0f;
+    v->tv = 1.0f;
+
+    ++v;
+    v->x = -0.5f;
+    v->y = -0.5f;
+
+    v->r = 1.0f;
+    v->g = 1.0f;
+    v->b = 1.0f;
+    v->a = 1.0f;
+
+    v->tu = 0.0f;
+    v->tv = 0.0f;
+
+    ++v;
+    v->x = 0.5f;
+    v->y = 0.5f;
+
+    v->r = 1.0f;
+    v->g = 1.0f;
+    v->b = 1.0f;
+    v->a = 1.0f;
+
+    v->tu = 1.0f;
+    v->tv = 1.0f;
+
+    ++v;
+    v->x = -0.5f;
+    v->y = 0.5f;
+
+    v->r = 1.0f;
+    v->g = 1.0f;
+    v->b = 1.0f;
+    v->a = 1.0f;
+
+    v->tu = 0.0f;
+    v->tv = 1.0f;
+
+    _spriteVertexArray->unmapVertices();
+
+    glUseProgram(_spriteProgram->id());
+    _textures[0].bind();
+    _spriteVertexArray->draw(0, 6);
 
     _context->present();
 }

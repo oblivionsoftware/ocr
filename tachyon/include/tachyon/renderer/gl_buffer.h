@@ -44,6 +44,10 @@ public:
 
     void clear();
 
+    void *map();
+
+    void unmap();
+
 private:
 
     GLenum _type;

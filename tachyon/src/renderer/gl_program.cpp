@@ -18,6 +18,7 @@
 #include "tachyon/renderer/gl_program.h"
 
 #include "tachyon/core/exception.h"
+#include "tachyon/core/string.h"
 #include "tachyon/renderer/gl_shader.h"
 
 namespace tachyon {
@@ -47,6 +48,14 @@ GlProgram::GlProgram(const GlVertexShader &vertexShader, const GlFragmentShader 
 
         glDeleteProgram(_id);
         TACHYON_THROW("program linking failed: %s", buffer);
+    }
+
+    for (int i = 0; i < 8; ++i) {
+        auto uniformName = formatString("texture%d", i);
+        GLint location = glGetUniformLocation(_id, uniformName.c_str());
+        if (location != -1) {
+            glProgramUniform1i(_id, location, i);
+        }
     }
 }
 

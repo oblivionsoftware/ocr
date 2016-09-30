@@ -28,7 +28,7 @@ GlTexture::GlTexture(const Image &image)
     glGenTextures(1, &_id);
     glBindTexture(GL_TEXTURE_2D, _id);
 
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, _width, _height, 0, GL_RGBA, GL_UNSIGNED_BYTE, image.pixels());
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, _width, _height, 0, GL_RGBA, GL_UNSIGNED_BYTE, image.pixels());
 
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
@@ -37,6 +37,8 @@ GlTexture::GlTexture(const Image &image)
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP);
 
     glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAX_ANISOTROPY_EXT, 8.0f);
+
+    glGenerateMipmap(GL_TEXTURE_2D);
 }
 
 GlTexture::GlTexture(GlTexture &&texture)
@@ -52,6 +54,11 @@ GlTexture::~GlTexture()
     if (_id > 0) {
         glDeleteTextures(1, &_id);
     }
+}
+
+void GlTexture::bind()
+{
+    glBindTexture(GL_TEXTURE_2D, _id);
 }
 
 }

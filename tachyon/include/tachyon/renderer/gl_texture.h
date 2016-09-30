@@ -46,6 +46,8 @@ public:
         return _height;
     }
 
+    void bind();
+
 private:
 
     GLuint _id;

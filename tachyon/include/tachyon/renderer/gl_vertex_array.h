@@ -80,6 +80,15 @@ public:
 
     void draw(u32 offset, u32 vertexCount);
 
+    template <typename T>
+    T *mapVertices() {
+        return reinterpret_cast<T*>(_vertexBuffer.map());
+    }
+
+    void unmapVertices() {
+        _vertexBuffer.unmap();
+    }
+
 private:
 
     GLuint _id;
