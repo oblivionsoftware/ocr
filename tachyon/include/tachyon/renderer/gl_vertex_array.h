@@ -20,6 +20,7 @@
 
 #include "tachyon/core/common.h"
 #include "tachyon/core/non_copyable.h"
+#include "tachyon/renderer/gl_buffer.h"
 #include "tachyon/renderer/opengl.h"
 
 namespace tachyon {
@@ -50,6 +51,8 @@ private:
 class GlVertexFormat {
 public:
 
+    GlVertexFormat(std::initializer_list<GlVertexElement> elements);
+
     u32 size() const;
 
     const std::vector<GlVertexElement> &elements() const {
@@ -65,7 +68,7 @@ private:
 class GlVertexArray : private NonCopyable {
 public:
 
-    GlVertexArray(const GlVertexFormat &format);
+    GlVertexArray(const GlVertexFormat &format, u32 vertexCount, GlBufferUsage usage);
 
     ~GlVertexArray();
 
@@ -75,9 +78,13 @@ public:
 
     void bind();
 
+    void draw(u32 offset, u32 vertexCount);
+
 private:
 
     GLuint _id;
+
+    GlBuffer _vertexBuffer;
 
 };
 

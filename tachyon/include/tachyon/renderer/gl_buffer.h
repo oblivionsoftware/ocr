@@ -38,6 +38,8 @@ public:
         return _id;
     }
 
+    void bind();
+
     void add(void *data, u32 size);
 
     void clear();

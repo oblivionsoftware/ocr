@@ -21,6 +21,7 @@
 #include "tachyon/renderer/gl_buffer.h"
 #include "tachyon/renderer/gl_program.h"
 #include "tachyon/renderer/gl_shader.h"
+#include "tachyon/renderer/gl_vertex_array.h"
 #include "tachyon/renderer/opengl.h"
 
 namespace tachyon {
@@ -67,6 +68,12 @@ void main()
 }
 )";
 
+struct SpriteVertex {
+    float x, y, z;
+    float tx, tv;
+    float r, g, b, a;
+};
+
 GlRenderer::GlRenderer(std::unique_ptr<GlContext> context, u32 width, u32 height)
     : _context {std::move(context)},
       _commandBuffer {1024 * 1024 * 10},
@@ -81,7 +88,13 @@ GlRenderer::GlRenderer(std::unique_ptr<GlContext> context, u32 width, u32 height
 
     glViewport(0, 0, _width, _height);
 
-    _spriteBuffer = std::make_unique<GlBuffer>(GL_ARRAY_BUFFER, 1024 * 1024 * 10, GlBufferUsage::Dynamic);
+    GlVertexFormat spriteFormat {
+        {3, GL_FLOAT},
+        {2, GL_FLOAT},
+        {4, GL_FLOAT}
+    };
+
+    _spriteVertexArray = std::make_unique<GlVertexArray>(spriteFormat, 4096, GlBufferUsage::Dynamic);
     _spriteProgram = std::make_unique<GlProgram>(SPRITE_VERTEX_SHADER, SPRITE_FRAGMENT_SHADER);
 }
 
@@ -93,7 +106,7 @@ void GlRenderer::flush()
 {
     CommandIterator itr {_commandBuffer};
     while (itr.next()) {
-        switch (itr.type()) {
+       switch (itr.type()) {
 
         case CommandType::Clear: {
             auto cmd = itr.command<ClearCommand>();
@@ -117,6 +130,9 @@ void GlRenderer::flush()
 void GlRenderer::present()
 {
     flush();
+
+    glUseProgram(_spriteProgram->id());
+
     _context->present();
 }
 

@@ -27,7 +27,7 @@
 
 namespace tachyon {
 
-class GlBuffer;
+class GlVertexArray;
 class GlProgram;
 
 class GlContext : private NonCopyable {
@@ -70,7 +70,7 @@ private:
 
     std::vector<GlTexture> _textures;
 
-    std::unique_ptr<GlBuffer> _spriteBuffer;
+    std::unique_ptr<GlVertexArray> _spriteVertexArray;
 
     std::unique_ptr<GlProgram> _spriteProgram;
 

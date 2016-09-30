@@ -37,6 +37,11 @@ GlBuffer::~GlBuffer()
     glDeleteBuffers(1, &_id);
 }
 
+void GlBuffer::bind()
+{
+    glBindBuffer(_type, _id);
+}
+
 void GlBuffer::add(void *data, u32 size)
 {
     assert((_offset + size) <= _capacity);

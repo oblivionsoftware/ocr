@@ -41,6 +41,11 @@ u32 GlVertexElement::size() const
     return _count * typeSize(_type);
 }
 
+GlVertexFormat::GlVertexFormat(std::initializer_list<GlVertexElement> elements)
+    : _elements {elements}
+{
+}
+
 u32 GlVertexFormat::size() const
 {
     u32 size = 0;
@@ -51,10 +56,13 @@ u32 GlVertexFormat::size() const
     return size;
 }
 
-GlVertexArray::GlVertexArray(const GlVertexFormat &format)
+GlVertexArray::GlVertexArray(const GlVertexFormat &format, u32 vertexCount, GlBufferUsage usage)
+    : _vertexBuffer {GL_ARRAY_BUFFER, format.size() * vertexCount, usage}
 {
     glGenVertexArrays(1, &_id);
     glBindVertexArray(_id);
+
+    _vertexBuffer.bind();
 
     u32 offset = 0;
     u32 index = 0;
@@ -76,6 +84,12 @@ GlVertexArray::~GlVertexArray()
 void GlVertexArray::bind()
 {
     glBindVertexArray(_id);
+}
+
+void GlVertexArray::draw(u32 offset, u32 vertexCount)
+{
+    bind();
+    glDrawArrays(GL_TRIANGLES, offset, vertexCount);
 }
 
 }
