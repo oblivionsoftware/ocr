@@ -85,6 +85,10 @@ GlRenderer::GlRenderer(std::unique_ptr<GlContext> context, u32 width, u32 height
     _spriteProgram = std::make_unique<GlProgram>(SPRITE_VERTEX_SHADER, SPRITE_FRAGMENT_SHADER);
 }
 
+GlRenderer::~GlRenderer()
+{
+}
+
 void GlRenderer::flush()
 {
     CommandIterator itr {_commandBuffer};
@@ -99,7 +103,7 @@ void GlRenderer::flush()
         } break;
 
         case CommandType::DrawSprite: {
-            auto cmd = itr.command<DrawSprite>();
+            //auto cmd = itr.command<DrawSprite>();
         } break;
 
         default:

@@ -46,6 +46,8 @@ public:
 
     GlRenderer(std::unique_ptr<GlContext> context, u32 width, u32 height);
 
+    ~GlRenderer();
+
     virtual void flush() override;
 
     virtual void present() override;
