@@ -52,6 +52,10 @@ void GlRenderer::flush()
             glClear(GL_COLOR_BUFFER_BIT);
         } break;
 
+        case CommandType::DrawSprite: {
+            auto cmd = itr.command<DrawSprite>();
+        } break;
+
         default:
             TACHYON_THROW("unsupported command: %d", itr.type());
         }
@@ -70,7 +74,7 @@ u32 GlRenderer::loadTexture(const Image &image)
 {
     _textures.emplace_back(image);
 
-    return static_cast<u32>(_textures.size() - 1);
+    return static_cast<u32>(_textures.size());
 }
 
 }

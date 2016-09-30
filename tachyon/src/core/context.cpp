@@ -25,11 +25,13 @@
 
 namespace tachyon {
 
+static u32 texture;
+
 Context::Context(std::unique_ptr<Renderer> renderer)
     : _renderer {std::move(renderer)}
 {
 
-    auto texture = _renderer->loadTexture(Image{"assets/textures/tiles.png"});
+    texture = _renderer->loadTexture(Image{"assets/textures/tiles.png"});
 }
 
 void Context::frame(r32 dt)
@@ -39,6 +41,7 @@ void Context::frame(r32 dt)
 
     auto &commands = _renderer->commandBuffer();
     commands.push<ClearCommand>(std::sinf(t * 0.2f), std::sinf(t * 0.29f), std::sinf(t * 0.17f));
+    commands.push<DrawSprite>(texture);
 
     _renderer->present();
 }

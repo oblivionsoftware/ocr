@@ -31,7 +31,8 @@ class CommandBuffer;
  * Enumeration for each type of command in the buffer.
  */
 enum class CommandType {
-    Clear
+    Clear,
+    DrawSprite
 };
 
 /**
@@ -62,6 +63,20 @@ struct ClearCommand {
     r32 g {0.0f};
     r32 b {0.0f};
     r32 a {1.0f};
+};
+
+struct DrawSprite {
+
+    const static CommandType COMMAND_TYPE {CommandType::DrawSprite};
+
+    DrawSprite() = default;
+
+    DrawSprite(u32 texture) {
+        this->texture = texture;
+    }
+
+    u32 texture;
+
 };
 
 /**
