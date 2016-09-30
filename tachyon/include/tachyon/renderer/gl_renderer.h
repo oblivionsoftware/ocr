@@ -27,6 +27,9 @@
 
 namespace tachyon {
 
+class GlBuffer;
+class GlProgram;
+
 class GlContext : private NonCopyable {
 public:
 
@@ -64,6 +67,10 @@ private:
     u32 _height;
 
     std::vector<GlTexture> _textures;
+
+    std::unique_ptr<GlBuffer> _spriteBuffer;
+
+    std::unique_ptr<GlProgram> _spriteProgram;
 
 };
 

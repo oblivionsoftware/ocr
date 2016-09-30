@@ -18,11 +18,54 @@
 
 #include "tachyon/core/exception.h"
 #include "tachyon/renderer/command_buffer.h"
+#include "tachyon/renderer/gl_buffer.h"
 #include "tachyon/renderer/gl_program.h"
 #include "tachyon/renderer/gl_shader.h"
 #include "tachyon/renderer/opengl.h"
 
 namespace tachyon {
+
+const auto SPRITE_VERTEX_SHADER = R"(
+#version 400
+
+layout (location = 0) in vec3 position;
+layout (location = 1) in vec2 texCoords;
+layout (location = 2) in vec4 color;
+
+out VertexOutput {
+    vec2 texCoords;
+    vec4 color;
+} vertexOut;
+
+uniform mat4 projectionMatrix;
+
+void main()
+{
+    gl_Position = projectionMatrix * vec4(position, 1.0f);
+
+    vertexOut.texCoords = texCoords;
+    vertexOut.color = color;
+}
+)";
+
+const auto SPRITE_FRAGMENT_SHADER = R"(
+#version 400 core
+
+out vec4 outColor;
+
+uniform sampler2D diffuseTexture;
+
+in VertexOutput {
+    vec2 texCoords;
+    vec4 color;
+} fragIn;
+
+void main()
+{
+    vec4 texColor = texture(diffuseTexture, fragIn.texCoords);
+    outColor = fragIn.color * texColor;
+}
+)";
 
 GlRenderer::GlRenderer(std::unique_ptr<GlContext> context, u32 width, u32 height)
     : _context {std::move(context)},
@@ -37,6 +80,9 @@ GlRenderer::GlRenderer(std::unique_ptr<GlContext> context, u32 width, u32 height
     }
 
     glViewport(0, 0, _width, _height);
+
+    _spriteBuffer = std::make_unique<GlBuffer>(GL_ARRAY_BUFFER, 1024 * 1024 * 10, GlBufferUsage::Dynamic);
+    _spriteProgram = std::make_unique<GlProgram>(SPRITE_VERTEX_SHADER, SPRITE_FRAGMENT_SHADER);
 }
 
 void GlRenderer::flush()
