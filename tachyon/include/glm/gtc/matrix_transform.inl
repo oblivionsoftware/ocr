@@ -157,7 +157,7 @@ namespace glm
 			Result[2][2] = - static_cast<T>(2) / (zFar - zNear);
 			Result[3][2] = - (zFar + zNear) / (zFar - zNear);
 #		endif
-
+        
 		return Result;
 	}
 
@@ -185,7 +185,7 @@ namespace glm
 		T nearVal, T farVal
 	)
 	{
-#		if GLM_COORDINATE_SYSTEM == GLM_LEFT_HANDED
+        #		if GLM_COORDINATE_SYSTEM == GLM_LEFT_HANDED
 			return frustumLH(left, right, bottom, top, nearVal, farVal);
 #		else
 			return frustumRH(left, right, bottom, top, nearVal, farVal);

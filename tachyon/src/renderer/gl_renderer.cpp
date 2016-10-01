@@ -140,40 +140,57 @@ void GlRenderer::present()
     glUseProgram(_spriteProgram->id());
 
     auto v = _spriteVertexArray->mapVertices<SpriteVertex>();
+    auto *texture = &_textures[0];
 
-    v->position = {32.0f, 32.0f, 0.0f};
-    v->texCoords = {0.0f, 1.0f};
+    vec2 pos = {128.0f, 128.0f};
+    vec2 size = {32.0f, 32.0f};
+
+    r32 tw = static_cast<r32>(texture->width());
+    r32 th = static_cast<r32>(texture->height());
+
+    vec2 sourcePos = {32.0f, 64.0f};
+    vec2 sourceSize = {32.0f, 32.0};
+
+
+    r32 tl = sourcePos.x / tw;
+    r32 tr = (sourcePos.x + sourceSize.x) / tw;
+    r32 tt = (sourcePos.y / th);
+    r32 tb = ((sourcePos.y + sourceSize.y) / th);
+
+
+    v->position = {pos.x, pos.y, 0.0f};
+    v->texCoords = {tl, tt};
     v->color = {1.0f, 1.0f, 1.0f, 1.0f};
 
     ++v;
-    v->position = {64.0f, 64.0f, 0.0f};
-    v->texCoords = {1.0f, 0.0f};
+    v->position = {pos.x + size.x, pos.y + size.y, 0.0f};
+    v->texCoords = {tr, tb};
     v->color = {1.0f, 1.0f, 1.0f, 1.0f};
 
     ++v;
-    v->position = {64.0f, 32.0f, 0.0f};
-    v->texCoords = {1.0f, 1.0f};
+    v->position = {pos.x + size.x, pos.y, 0.0f};
+    v->texCoords = {tr, tt};
     v->color = {1.0f, 1.0f, 1.0f, 1.0f};
 
     ++v;
-    v->position = {32.0f, 32.0f, 0.0f};
-    v->texCoords = {0.0f, 1.0f};
+    v->position = {pos.x, pos.y, 0.0f};
+    v->texCoords = {tl, tt};
     v->color = {1.0f, 1.0f, 1.0f, 1.0f};
 
     ++v;
-    v->position = {64.0f, 64.0f, 0.0f};
-    v->texCoords = {1.0f, 0.0f};
+    v->position = {pos.x + size.x, pos.y + size.y, 0.0f};
+    v->texCoords = {tr, tb};
     v->color = {1.0f, 1.0f, 1.0f, 1.0f};
 
     ++v;
-    v->position = {32.0f, 64.0f, 0.0f};
-    v->texCoords = {0.0f, 0.0f};
+    v->position = {pos.x, pos.y + size.y, 0.0f};
+    v->texCoords = {tl, tb};
     v->color = {1.0f, 1.0f, 1.0f, 1.0f};
 
     _spriteVertexArray->unmapVertices();
 
     glUseProgram(_spriteProgram->id());
-    _textures[0].bind();
+    texture->bind();
     _spriteVertexArray->draw(0, 6);
 
     _context->present();
