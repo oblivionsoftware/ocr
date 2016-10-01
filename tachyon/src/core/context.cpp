@@ -33,8 +33,8 @@ Context::Context(std::unique_ptr<Renderer> renderer)
     Image image {256, 256};
 
     u32 *pixel = reinterpret_cast<u32*>(image.pixels());
-    for (int y = 0; y < image.height(); ++y) {
-        for (int x = 0; x < image.width(); ++x) {
+    for (u32 y = 0; y < image.height(); ++y) {
+        for (u32 x = 0; x < image.width(); ++x) {
             *pixel = 0xff00ffff;
             ++pixel;
         }

@@ -100,7 +100,8 @@ GlRenderer::GlRenderer(std::unique_ptr<GlContext> context, u32 width, u32 height
     _spriteVertexArray = std::make_unique<GlVertexArray>(spriteFormat, 4096, GlBufferUsage::Dynamic);
 
     _spriteProgram = std::make_unique<GlProgram>(SPRITE_VERTEX_SHADER, SPRITE_FRAGMENT_SHADER);
-    _spriteProgram->setUniform(GlStandardUniform::ProjectionMatrix, glm::ortho(0u, _width, _height, 0u));
+    _spriteProgram->setUniform(GlStandardUniform::ProjectionMatrix,
+                               glm::ortho(0.0f, static_cast<r32>(_width), static_cast<r32>(_height), 0.0f));
 }
 
 GlRenderer::~GlRenderer()
@@ -166,7 +167,7 @@ void GlRenderer::present()
 
     ++v;
     v->position = {32.0f, 64.0f, 0.0f};
-    v->texCoords = {0.0f, 1.0f};
+    v->texCoords = {0.0f, 0.0f};
     v->color = {1.0f, 1.0f, 1.0f, 1.0f};
 
     _spriteVertexArray->unmapVertices();
