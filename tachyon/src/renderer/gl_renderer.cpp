@@ -97,7 +97,7 @@ GlRenderer::GlRenderer(std::unique_ptr<GlContext> context, u32 width, u32 height
         {4, GL_FLOAT}
     };
 
-    _spriteVertexArray = std::make_unique<GlVertexArray>(spriteFormat, 4096, GlBufferUsage::Dynamic);
+    _spriteVertexArray = std::make_unique<GlVertexArray>(spriteFormat, 20000, GlBufferUsage::Dynamic);
 
     _spriteProgram = std::make_unique<GlProgram>(SPRITE_VERTEX_SHADER, SPRITE_FRAGMENT_SHADER);
     _spriteProgram->setUniform(GlStandardUniform::ProjectionMatrix,
@@ -133,30 +133,20 @@ void GlRenderer::flush()
     _commandBuffer.clear();
 }
 
-void GlRenderer::present()
+static void drawTile(u32 tileX, u32 tileY, vec2 pos, GlTexture *texture, SpriteVertex *v)
 {
-    flush();
-
-    glUseProgram(_spriteProgram->id());
-
-    auto v = _spriteVertexArray->mapVertices<SpriteVertex>();
-    auto *texture = &_textures[0];
-
-    vec2 pos = {128.0f, 128.0f};
     vec2 size = {32.0f, 32.0f};
 
     r32 tw = static_cast<r32>(texture->width());
     r32 th = static_cast<r32>(texture->height());
 
-    vec2 sourcePos = {32.0f, 64.0f};
+    vec2 sourcePos = {tileX * 32.0f, tileY * 32.0f};
     vec2 sourceSize = {32.0f, 32.0};
-
 
     r32 tl = sourcePos.x / tw;
     r32 tr = (sourcePos.x + sourceSize.x) / tw;
     r32 tt = (sourcePos.y / th);
     r32 tb = ((sourcePos.y + sourceSize.y) / th);
-
 
     v->position = {pos.x, pos.y, 0.0f};
     v->texCoords = {tl, tt};
@@ -186,12 +176,32 @@ void GlRenderer::present()
     v->position = {pos.x, pos.y + size.y, 0.0f};
     v->texCoords = {tl, tb};
     v->color = {1.0f, 1.0f, 1.0f, 1.0f};
+}
+
+void GlRenderer::present()
+{
+    flush();
+
+    glUseProgram(_spriteProgram->id());
+
+    auto v = _spriteVertexArray->mapVertices<SpriteVertex>();
+    auto *texture = &_textures[0];
+
+    int vertexCount = 0;
+    for (int y = 0; y < 30; ++y) {
+        for (int x = 0; x < 40; ++x) {
+            drawTile(x % 24, y % 48, {x * 32, y * 32}, texture, v);
+
+            vertexCount += 6;
+            v += 6;
+        }
+    }
 
     _spriteVertexArray->unmapVertices();
 
     glUseProgram(_spriteProgram->id());
     texture->bind();
-    _spriteVertexArray->draw(0, 6);
+    _spriteVertexArray->draw(0, vertexCount);
 
     _context->present();
 }
