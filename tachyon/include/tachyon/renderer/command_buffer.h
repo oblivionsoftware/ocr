@@ -21,6 +21,7 @@
 
 #include "tachyon/core/common.h"
 #include "tachyon/core/exception.h"
+#include "tachyon/core/math.h"
 #include "tachyon/core/non_copyable.h"
 
 namespace tachyon {
@@ -52,17 +53,11 @@ struct ClearCommand {
 
     ClearCommand() = default;
 
-    ClearCommand(r32 r, r32 g, r32 b, r32 a = 1.0f) {
-        this->r = r;
-        this->g = g;
-        this->b = b;
-        this->a = a;
+    ClearCommand(vec4 color) {
+        this->color = color;
     }
 
-    r32 r {0.0f};
-    r32 g {0.0f};
-    r32 b {0.0f};
-    r32 a {1.0f};
+    vec4 color;
 };
 
 struct DrawSprite {

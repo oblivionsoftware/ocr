@@ -16,6 +16,9 @@
 
 #pragma once
 
+#include <array>
+
+#include "tachyon/core/math_fwd.h"
 #include "tachyon/core/non_copyable.h"
 #include "tachyon/renderer/opengl.h"
 
@@ -23,6 +26,12 @@ namespace tachyon {
 
 class GlFragmentShader;
 class GlVertexShader;
+
+enum class GlStandardUniform {
+    ProjectionMatrix,
+
+    Count
+};
 
 class GlProgram : private NonCopyable {
 public:
@@ -37,9 +46,13 @@ public:
         return _id;
     }
 
+    void setUniform(GlStandardUniform uniform, mat4 value);
+
 private:
 
     GLuint _id;
+
+    std::array<GLint, static_cast<size_t>(GlStandardUniform::Count)> _standardUniforms;
 
 };
 

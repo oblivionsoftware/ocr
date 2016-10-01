@@ -17,6 +17,7 @@
 #include "tachyon/renderer/gl_renderer.h"
 
 #include "tachyon/core/exception.h"
+#include "tachyon/core/math.h"
 #include "tachyon/renderer/command_buffer.h"
 #include "tachyon/renderer/gl_buffer.h"
 #include "tachyon/renderer/gl_program.h"
@@ -42,8 +43,7 @@ uniform mat4 projectionMatrix;
 
 void main()
 {
-    //gl_Position = projectionMatrix * vec4(position, 1.0f);
-    gl_Position = vec4(position, 1.0f);
+    gl_Position = projectionMatrix * vec4(position, 1.0f);
 
     vertexOut.texCoords = texCoords;
     vertexOut.color = color;
@@ -70,9 +70,9 @@ void main()
 )";
 
 struct SpriteVertex {
-    float x, y, z;
-    float tu, tv;
-    float r, g, b, a;
+    vec3 position;
+    vec2 texCoords;
+    vec4 color;
 };
 
 GlRenderer::GlRenderer(std::unique_ptr<GlContext> context, u32 width, u32 height)
@@ -88,6 +88,8 @@ GlRenderer::GlRenderer(std::unique_ptr<GlContext> context, u32 width, u32 height
     }
 
     glViewport(0, 0, _width, _height);
+    glEnable(GL_DEPTH_TEST);
+    glClearDepth(1.0f);
 
     GlVertexFormat spriteFormat {
         {3, GL_FLOAT},
@@ -96,7 +98,9 @@ GlRenderer::GlRenderer(std::unique_ptr<GlContext> context, u32 width, u32 height
     };
 
     _spriteVertexArray = std::make_unique<GlVertexArray>(spriteFormat, 4096, GlBufferUsage::Dynamic);
+
     _spriteProgram = std::make_unique<GlProgram>(SPRITE_VERTEX_SHADER, SPRITE_FRAGMENT_SHADER);
+    _spriteProgram->setUniform(GlStandardUniform::ProjectionMatrix, glm::ortho(0u, _width, _height, 0u));
 }
 
 GlRenderer::~GlRenderer()
@@ -112,8 +116,8 @@ void GlRenderer::flush()
         case CommandType::Clear: {
             auto cmd = itr.command<ClearCommand>();
 
-            glClearColor(cmd->r, cmd->g, cmd->b, cmd->a);
-            glClear(GL_COLOR_BUFFER_BIT);
+            glClearColor(cmd->color.r, cmd->color.g, cmd->color.b, cmd->color.a);
+            glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         } break;
 
         case CommandType::DrawSprite: {
@@ -136,76 +140,34 @@ void GlRenderer::present()
 
     auto v = _spriteVertexArray->mapVertices<SpriteVertex>();
 
-    v->x = -0.5f;
-    v->y = -0.5f;
-
-    v->r = 1.0f;
-    v->g = 1.0f;
-    v->b = 1.0f;
-    v->a = 1.0f;
-
-    v->tu = 0.0f;
-    v->tv = 0.0f;
+    v->position = {32.0f, 32.0f, 0.0f};
+    v->texCoords = {0.0f, 1.0f};
+    v->color = {1.0f, 1.0f, 1.0f, 1.0f};
 
     ++v;
-    v->x = 0.5f;
-    v->y = -0.5f;
-
-    v->r = 1.0f;
-    v->g = 1.0f;
-    v->b = 1.0f;
-    v->a = 1.0f;
-
-    v->tu = 1.0f;
-    v->tv = 0.0f;
+    v->position = {64.0f, 64.0f, 0.0f};
+    v->texCoords = {1.0f, 0.0f};
+    v->color = {1.0f, 1.0f, 1.0f, 1.0f};
 
     ++v;
-    v->x = 0.5f;
-    v->y = 0.5f;
-
-    v->r = 1.0f;
-    v->g = 1.0f;
-    v->b = 1.0f;
-    v->a = 1.0f;
-
-    v->tu = 1.0f;
-    v->tv = 1.0f;
+    v->position = {64.0f, 32.0f, 0.0f};
+    v->texCoords = {1.0f, 1.0f};
+    v->color = {1.0f, 1.0f, 1.0f, 1.0f};
 
     ++v;
-    v->x = -0.5f;
-    v->y = -0.5f;
-
-    v->r = 1.0f;
-    v->g = 1.0f;
-    v->b = 1.0f;
-    v->a = 1.0f;
-
-    v->tu = 0.0f;
-    v->tv = 0.0f;
+    v->position = {32.0f, 32.0f, 0.0f};
+    v->texCoords = {0.0f, 1.0f};
+    v->color = {1.0f, 1.0f, 1.0f, 1.0f};
 
     ++v;
-    v->x = 0.5f;
-    v->y = 0.5f;
-
-    v->r = 1.0f;
-    v->g = 1.0f;
-    v->b = 1.0f;
-    v->a = 1.0f;
-
-    v->tu = 1.0f;
-    v->tv = 1.0f;
+    v->position = {64.0f, 64.0f, 0.0f};
+    v->texCoords = {1.0f, 0.0f};
+    v->color = {1.0f, 1.0f, 1.0f, 1.0f};
 
     ++v;
-    v->x = -0.5f;
-    v->y = 0.5f;
-
-    v->r = 1.0f;
-    v->g = 1.0f;
-    v->b = 1.0f;
-    v->a = 1.0f;
-
-    v->tu = 0.0f;
-    v->tv = 1.0f;
+    v->position = {32.0f, 64.0f, 0.0f};
+    v->texCoords = {0.0f, 1.0f};
+    v->color = {1.0f, 1.0f, 1.0f, 1.0f};
 
     _spriteVertexArray->unmapVertices();
 

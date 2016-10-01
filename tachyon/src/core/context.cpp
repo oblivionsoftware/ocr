@@ -46,7 +46,7 @@ Context::Context(std::unique_ptr<Renderer> renderer)
 void Context::frame(r32 dt)
 {
     auto &commands = _renderer->commandBuffer();
-    commands.push<ClearCommand>(0.2f, 0.2f, 0.2f);
+    commands.push<ClearCommand>(vec4(0.2f, 0.2f, 0.2f, 1.0f));
     commands.push<DrawSprite>(texture);
 
     _renderer->present();
