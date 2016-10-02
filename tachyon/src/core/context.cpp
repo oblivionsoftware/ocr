@@ -38,10 +38,12 @@ void Context::frame(r32 dt)
     auto &commands = _renderer->commandBuffer();
     commands.push<ClearCommand>(vec4(0.2f, 0.2f, 0.2f, 1.0f));
 
+    const auto ts = 32.0f;
+
     for (int y = 0; y < 100; ++y) {
         for (int x = 0; x < 100; ++x) {
-            rect source {x * 32.0f, (x * 32.0f) + 32.0f, y * 32.0f, (y * 32.0f) + 32.0f};
-            rect dest {x * 32.0f, (x * 32.0f) + 32.0f, y * 32.0f, (y * 32.0f) + 32.0f};
+            rect source {x * ts, (x * ts) + ts, y * ts, (y * ts) + ts};
+            rect dest {x * ts, (x * ts) + ts, y * ts, (y * ts) + ts};
 
             commands.push<DrawSprite>(texture, source, dest);
         }
