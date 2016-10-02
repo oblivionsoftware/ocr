@@ -68,7 +68,7 @@ private:
 class GlVertexArray : private NonCopyable {
 public:
 
-    GlVertexArray(const GlVertexFormat &format, u32 vertexCount, GlBufferUsage usage);
+    GlVertexArray(const GlVertexFormat &format, u32 maxVertexCount, GlBufferUsage usage);
 
     ~GlVertexArray();
 
@@ -80,14 +80,10 @@ public:
 
     void draw(u32 offset, u32 vertexCount);
 
-    template <typename T>
-    T *mapVertices() {
-        return reinterpret_cast<T*>(_vertexBuffer.map());
-    }
+    template <typename T, size_t N>
+    void addVertices(const std::array<T, N> &vertices);
 
-    void unmapVertices() {
-        _vertexBuffer.unmap();
-    }
+    void flush();
 
 private:
 
@@ -95,6 +91,29 @@ private:
 
     GlBuffer _vertexBuffer;
 
+    u32 _maxVertexCount;
+
+    u32 _vertexCount {0};
+
+    u8 *_vertices {nullptr};
+
 };
+
+template <typename T, size_t N>
+void GlVertexArray::addVertices(const std::array<T, N> &vertices) {
+    if ((_vertexCount + N) >= _maxVertexCount) {
+        flush();
+    }
+
+    if (!_vertices) {
+        _vertices = reinterpret_cast<u8*>(_vertexBuffer.map());
+    }
+
+    size_t size = sizeof(T) * N;
+
+    memcpy(_vertices, &vertices[0], size);
+    _vertices += size;
+    _vertexCount += N;
+}
 
 }

@@ -46,6 +46,10 @@ public:
         return _id;
     }
 
+    void bind() {
+        glUseProgram(_id);
+    }
+
     void setUniform(GlStandardUniform uniform, mat4 value);
 
 private:

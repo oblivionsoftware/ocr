@@ -74,6 +74,8 @@ private:
 
     std::unique_ptr<GlProgram> _spriteProgram;
 
+    u32 _currentTexture {0};
+
 };
 
 }

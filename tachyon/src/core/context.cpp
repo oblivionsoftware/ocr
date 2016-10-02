@@ -30,16 +30,6 @@ static u32 texture;
 Context::Context(std::unique_ptr<Renderer> renderer)
     : _renderer {std::move(renderer)}
 {
-    Image image {256, 256};
-
-    u32 *pixel = reinterpret_cast<u32*>(image.pixels());
-    for (u32 y = 0; y < image.height(); ++y) {
-        for (u32 x = 0; x < image.width(); ++x) {
-            *pixel = 0xff00ffff;
-            ++pixel;
-        }
-    }
-
     texture = _renderer->loadTexture(Image{"assets/textures/tiles.png"});
 }
 
@@ -47,7 +37,15 @@ void Context::frame(r32 dt)
 {
     auto &commands = _renderer->commandBuffer();
     commands.push<ClearCommand>(vec4(0.2f, 0.2f, 0.2f, 1.0f));
-    commands.push<DrawSprite>(texture);
+
+    for (int y = 0; y < 100; ++y) {
+        for (int x = 0; x < 100; ++x) {
+            rect source {x * 32.0f, (x * 32.0f) + 32.0f, y * 32.0f, (y * 32.0f) + 32.0f};
+            rect dest {x * 32.0f, (x * 32.0f) + 32.0f, y * 32.0f, (y * 32.0f) + 32.0f};
+
+            commands.push<DrawSprite>(texture, source, dest);
+        }
+    }
 
     _renderer->present();
 }

@@ -105,6 +105,8 @@ GlRenderer::GlRenderer(std::unique_ptr<GlContext> context, u32 width, u32 height
     _spriteProgram = std::make_unique<GlProgram>(SPRITE_VERTEX_SHADER, SPRITE_FRAGMENT_SHADER);
     _spriteProgram->setUniform(GlStandardUniform::ProjectionMatrix,
                                glm::ortho(0.0f, static_cast<r32>(_width), static_cast<r32>(_height), 0.0f));
+
+    _spriteProgram->bind();
 }
 
 GlRenderer::~GlRenderer()
@@ -125,7 +127,52 @@ void GlRenderer::flush()
         } break;
 
         case CommandType::DrawSprite: {
-            //auto cmd = itr.command<DrawSprite>();
+            auto cmd = itr.command<DrawSprite>();
+            auto texture = &_textures[cmd->texture - 1];
+
+            if (cmd->texture != _currentTexture) {
+                _spriteVertexArray->flush();
+                texture->bind();
+
+                _currentTexture = cmd->texture;
+            }
+
+            r32 tw = static_cast<r32>(texture->width());
+            r32 th = static_cast<r32>(texture->height());
+
+            r32 tl = cmd->source.left/ tw;
+            r32 tr = cmd->source.right / tw;
+            r32 tt = cmd->source.top / th;
+            r32 tb = cmd->source.bottom / th;
+
+            const std::array<SpriteVertex, 6> v = {{{
+                        {cmd->dest.left, cmd->dest.top, 0.0f},
+                        {tl, tt},
+                        cmd->color
+                    }, {
+                        {cmd->dest.right, cmd->dest.bottom, 0.0f},
+                        {tr, tb},
+                        cmd->color
+                    }, {
+                        {cmd->dest.right, cmd->dest.top, 0.0f},
+                        {tr, tt},
+                        cmd->color
+                    }, {
+                        {cmd->dest.left, cmd->dest.top, 0.0f},
+                        {tl, tt},
+                        cmd->color
+                    }, {
+                        {cmd->dest.right, cmd->dest.bottom, 0.0f},
+                        {tr, tb},
+                        cmd->color
+                    }, {
+                        {cmd->dest.left, cmd->dest.bottom, 0.0f},
+                        {tl, tb},
+                        cmd->color
+                    }
+                }};
+
+            _spriteVertexArray->addVertices(v);
         } break;
 
         default:
@@ -134,83 +181,13 @@ void GlRenderer::flush()
     }
 
     _commandBuffer.clear();
-}
 
-static void drawRect(rect source, rect dest, vec4 color, GlTexture *texture, SpriteVertex *v)
-{
-    r32 tw = static_cast<r32>(texture->width());
-    r32 th = static_cast<r32>(texture->height());
-
-    r32 tl = source.left/ tw;
-    r32 tr = source.right / tw;
-    r32 tt = source.top / th;
-    r32 tb = source.bottom / th;
-
-    v->position = {dest.left, dest.top, 0.0f};
-    v->texCoords = {tl, tt};
-    v->color = color;
-
-    ++v;
-    v->position = {dest.right, dest.bottom, 0.0f};
-    v->texCoords = {tr, tb};
-    v->color = color;
-
-    ++v;
-    v->position = {dest.right, dest.top, 0.0f};
-    v->texCoords = {tr, tt};
-    v->color = color;
-
-    ++v;
-    v->position = {dest.left, dest.top, 0.0f};
-    v->texCoords = {tl, tt};
-    v->color = color;
-
-    ++v;
-    v->position = {dest.right, dest.bottom, 0.0f};
-    v->texCoords = {tr, tb};
-    v->color = color;
-
-    ++v;
-    v->position = {dest.left, dest.bottom, 0.0f};
-    v->texCoords = {tl, tb};
-    v->color = color;
-
-
-}
-
-static void drawTile(u32 tileX, u32 tileY, vec2 pos, vec4 color, GlTexture *texture, SpriteVertex *v)
-{
-    rect dest = {pos.x, pos.x + 32.0f, pos.y, pos.y + 32.0f};
-    rect source = {tileX * 32.0f, (tileX * 32.0f) + 32.0f, tileY * 32.0f, (tileY * 32.0f) + 32.0f};
-
-    drawRect(source, dest, color, texture, v);
+    _spriteVertexArray->flush();
 }
 
 void GlRenderer::present()
 {
     flush();
-
-    glUseProgram(_spriteProgram->id());
-
-    auto v = _spriteVertexArray->mapVertices<SpriteVertex>();
-    auto *texture = &_textures[0];
-
-    int vertexCount = 0;
-    for (int y = 0; y < 100; ++y) {
-        for (int x = 0; x < 100; ++x) {
-            drawTile(x % 24, y % 48, {x * 32, y * 32}, {1.0, 1.0f, 1.0f, 1.0f}, texture, v);
-
-            vertexCount += 6;
-            v += 6;
-        }
-    }
-
-    _spriteVertexArray->unmapVertices();
-
-    glUseProgram(_spriteProgram->id());
-    texture->bind();
-    _spriteVertexArray->draw(0, vertexCount);
-
     _context->present();
 }
 

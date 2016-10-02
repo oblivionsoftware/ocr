@@ -56,8 +56,9 @@ u32 GlVertexFormat::size() const
     return size;
 }
 
-GlVertexArray::GlVertexArray(const GlVertexFormat &format, u32 vertexCount, GlBufferUsage usage)
-    : _vertexBuffer {GL_ARRAY_BUFFER, format.size() * vertexCount, usage}
+GlVertexArray::GlVertexArray(const GlVertexFormat &format, u32 maxVertexCount, GlBufferUsage usage)
+    : _vertexBuffer {GL_ARRAY_BUFFER, format.size() * maxVertexCount, usage},
+      _maxVertexCount {maxVertexCount}
 {
     glGenVertexArrays(1, &_id);
     glBindVertexArray(_id);
@@ -90,6 +91,18 @@ void GlVertexArray::draw(u32 offset, u32 vertexCount)
 {
     bind();
     glDrawArrays(GL_TRIANGLES, offset, vertexCount);
+}
+
+void GlVertexArray::flush()
+{
+    if (_vertices) {
+        _vertexBuffer.unmap();
+        _vertices = nullptr;
+    }
+
+    draw(0, _vertexCount);
+
+    _vertexCount = 0;
 }
 
 }

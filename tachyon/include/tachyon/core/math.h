@@ -29,6 +29,8 @@ using mat4 = glm::mat4;
 
 struct rect {
 
+    rect() = default;
+
     rect(r32 left, r32 right, r32 top, r32 bottom) {
         this->left = left;
         this->right = right;
