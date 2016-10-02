@@ -9,6 +9,7 @@ find_package(OpenGL REQUIRED)
 
 set(TACHYON_SOURCES
     src/glew.c
+    src/tinyxml2.cpp
     src/core/context.cpp
     src/core/exception.cpp
     src/core/string.cpp
