@@ -91,13 +91,16 @@ GlRenderer::GlRenderer(std::unique_ptr<GlContext> context, u32 width, u32 height
     glEnable(GL_DEPTH_TEST);
     glClearDepth(1.0f);
 
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+    glEnable(GL_BLEND);
+
     GlVertexFormat spriteFormat {
         {3, GL_FLOAT},
         {2, GL_FLOAT},
         {4, GL_FLOAT}
     };
 
-    _spriteVertexArray = std::make_unique<GlVertexArray>(spriteFormat, 20000, GlBufferUsage::Dynamic);
+    _spriteVertexArray = std::make_unique<GlVertexArray>(spriteFormat, 100000, GlBufferUsage::Dynamic);
 
     _spriteProgram = std::make_unique<GlProgram>(SPRITE_VERTEX_SHADER, SPRITE_FRAGMENT_SHADER);
     _spriteProgram->setUniform(GlStandardUniform::ProjectionMatrix,
@@ -133,49 +136,54 @@ void GlRenderer::flush()
     _commandBuffer.clear();
 }
 
-static void drawTile(u32 tileX, u32 tileY, vec2 pos, GlTexture *texture, SpriteVertex *v)
+static void drawRect(rect source, rect dest, vec4 color, GlTexture *texture, SpriteVertex *v)
 {
-    vec2 size = {32.0f, 32.0f};
-
     r32 tw = static_cast<r32>(texture->width());
     r32 th = static_cast<r32>(texture->height());
 
-    vec2 sourcePos = {tileX * 32.0f, tileY * 32.0f};
-    vec2 sourceSize = {32.0f, 32.0};
+    r32 tl = source.left/ tw;
+    r32 tr = source.right / tw;
+    r32 tt = source.top / th;
+    r32 tb = source.bottom / th;
 
-    r32 tl = sourcePos.x / tw;
-    r32 tr = (sourcePos.x + sourceSize.x) / tw;
-    r32 tt = (sourcePos.y / th);
-    r32 tb = ((sourcePos.y + sourceSize.y) / th);
-
-    v->position = {pos.x, pos.y, 0.0f};
+    v->position = {dest.left, dest.top, 0.0f};
     v->texCoords = {tl, tt};
-    v->color = {1.0f, 1.0f, 1.0f, 1.0f};
+    v->color = color;
 
     ++v;
-    v->position = {pos.x + size.x, pos.y + size.y, 0.0f};
+    v->position = {dest.right, dest.bottom, 0.0f};
     v->texCoords = {tr, tb};
-    v->color = {1.0f, 1.0f, 1.0f, 1.0f};
+    v->color = color;
 
     ++v;
-    v->position = {pos.x + size.x, pos.y, 0.0f};
+    v->position = {dest.right, dest.top, 0.0f};
     v->texCoords = {tr, tt};
-    v->color = {1.0f, 1.0f, 1.0f, 1.0f};
+    v->color = color;
 
     ++v;
-    v->position = {pos.x, pos.y, 0.0f};
+    v->position = {dest.left, dest.top, 0.0f};
     v->texCoords = {tl, tt};
-    v->color = {1.0f, 1.0f, 1.0f, 1.0f};
+    v->color = color;
 
     ++v;
-    v->position = {pos.x + size.x, pos.y + size.y, 0.0f};
+    v->position = {dest.right, dest.bottom, 0.0f};
     v->texCoords = {tr, tb};
-    v->color = {1.0f, 1.0f, 1.0f, 1.0f};
+    v->color = color;
 
     ++v;
-    v->position = {pos.x, pos.y + size.y, 0.0f};
+    v->position = {dest.left, dest.bottom, 0.0f};
     v->texCoords = {tl, tb};
-    v->color = {1.0f, 1.0f, 1.0f, 1.0f};
+    v->color = color;
+
+
+}
+
+static void drawTile(u32 tileX, u32 tileY, vec2 pos, vec4 color, GlTexture *texture, SpriteVertex *v)
+{
+    rect dest = {pos.x, pos.x + 32.0f, pos.y, pos.y + 32.0f};
+    rect source = {tileX * 32.0f, (tileX * 32.0f) + 32.0f, tileY * 32.0f, (tileY * 32.0f) + 32.0f};
+
+    drawRect(source, dest, color, texture, v);
 }
 
 void GlRenderer::present()
@@ -188,9 +196,9 @@ void GlRenderer::present()
     auto *texture = &_textures[0];
 
     int vertexCount = 0;
-    for (int y = 0; y < 30; ++y) {
-        for (int x = 0; x < 40; ++x) {
-            drawTile(x % 24, y % 48, {x * 32, y * 32}, texture, v);
+    for (int y = 0; y < 100; ++y) {
+        for (int x = 0; x < 100; ++x) {
+            drawTile(x % 24, y % 48, {x * 32, y * 32}, {1.0, 1.0f, 1.0f, 1.0f}, texture, v);
 
             vertexCount += 6;
             v += 6;

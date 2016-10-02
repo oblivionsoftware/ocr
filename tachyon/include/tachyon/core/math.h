@@ -27,5 +27,21 @@ using vec3 = glm::vec3;
 using vec4 = glm::vec4;
 using mat4 = glm::mat4;
 
+struct rect {
+
+    rect(r32 left, r32 right, r32 top, r32 bottom) {
+        this->left = left;
+        this->right = right;
+        this->top = top;
+        this->bottom = bottom;
+    }
+
+
+    r32 left;
+    r32 right;
+    r32 top;
+    r32 bottom;
+};
+
 }
 
