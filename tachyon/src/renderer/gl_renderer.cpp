@@ -120,15 +120,15 @@ void GlRenderer::flush()
        switch (itr.type()) {
 
         case CommandType::Clear: {
-            auto cmd = itr.command<ClearCommand>();
+            auto cmd {itr.command<ClearCommand>()};
 
             glClearColor(cmd->color.r, cmd->color.g, cmd->color.b, cmd->color.a);
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         } break;
 
         case CommandType::DrawSprite: {
-            auto cmd = itr.command<DrawSprite>();
-            auto texture = &_textures[cmd->texture - 1];
+            auto cmd {itr.command<DrawSprite>()};
+            auto texture {&_textures[cmd->texture - 1]};
 
             if (cmd->texture != _currentTexture) {
                 _spriteVertexArray->flush();
@@ -137,13 +137,13 @@ void GlRenderer::flush()
                 _currentTexture = cmd->texture;
             }
 
-            r32 tw = static_cast<r32>(texture->width());
-            r32 th = static_cast<r32>(texture->height());
+            r32 tw {static_cast<r32>(texture->width())};
+            r32 th {static_cast<r32>(texture->height())};
 
-            r32 tl = cmd->source.left/ tw;
-            r32 tr = cmd->source.right / tw;
-            r32 tt = cmd->source.top / th;
-            r32 tb = cmd->source.bottom / th;
+            r32 tl {cmd->source.left/ tw};
+            r32 tr {cmd->source.right / tw};
+            r32 tt {cmd->source.top / th};
+            r32 tb {cmd->source.bottom / th};
 
             const std::array<SpriteVertex, 6> v = {{{
                         {cmd->dest.left, cmd->dest.top, 0.0f},
