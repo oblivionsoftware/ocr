@@ -22,15 +22,19 @@
 #include "tachyon/renderer/command_buffer.h"
 #include "tachyon/renderer/image.h"
 #include "tachyon/renderer/renderer.h"
+#include "tachyon/renderer/tile_map.h"
 
 namespace tachyon {
 
 static u32 texture;
 
+static std::unique_ptr<TileMap> _map;
+
 Context::Context(std::unique_ptr<Renderer> renderer)
     : _renderer {std::move(renderer)}
 {
     texture = _renderer->loadTexture(Image{"assets/textures/tiles.png"});
+    _map.reset(new TileMap("assets/maps/world.tmx"));
 }
 
 void Context::frame(r32 dt)

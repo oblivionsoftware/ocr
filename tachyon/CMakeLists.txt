@@ -22,6 +22,7 @@ set(TACHYON_SOURCES
     src/renderer/gl_texture.cpp
     src/renderer/gl_vertex_array.cpp
     src/renderer/image.cpp
+    src/renderer/tile_map.cpp
 )
 
 if (NOT WIN32)

@@ -53,8 +53,8 @@ struct ClearCommand {
 
     ClearCommand() = default;
 
-    ClearCommand(vec4 color) {
-        this->color = color;
+    ClearCommand(vec4 color)
+        : color {color} {
     }
 
     vec4 color;
