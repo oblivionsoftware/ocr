@@ -23,8 +23,10 @@
 
 namespace tachyon {
 
-class TileSet : private NonCopyable {
+class TileSet {
 public:
+
+    TileSet(u32 tileWidth, u32 tileHeight, u32 tileCount, u32 columns);
 
     u32 tileWidth() const {
         return _tileWidth;
@@ -59,6 +61,8 @@ public:
 
     TileLayer(u32 width, u32 height);
 
+    TileLayer(TileLayer &&other);
+
     u32 width() const {
         return _width;
     }
@@ -67,11 +71,17 @@ public:
         return _height;
     }
 
+    void addTile(u32 tile) {
+        _tiles.push_back(tile);
+    }
+
 private:
 
     u32 _width;
 
     u32 _height;
+
+    std::vector<u32> _tiles;
 
 };
 
@@ -89,6 +99,8 @@ private:
     u32 _tileWidth;
 
     u32 _tileHeight;
+
+    std::vector<TileSet> _tileSets;
 
     std::vector<TileLayer> _layers;
 
