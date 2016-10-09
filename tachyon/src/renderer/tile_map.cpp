@@ -36,6 +36,12 @@ TileMap::TileMap(const char *path)
     if (document.LoadFile(path) != 0) {
         TACHYON_THROW("unable to load tile map file '%s'", path);
     }
+
+    XMLElement *root = document.RootElement();
+    _width = root->IntAttribute("width");
+    _height = root->IntAttribute("height");
+    _tileWidth = root->IntAttribute("tilewidth");
+    _tileHeight = root->IntAttribute("tileheight");
 }
 
 }
