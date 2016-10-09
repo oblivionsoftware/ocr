@@ -23,10 +23,14 @@
 
 namespace tachyon {
 
-class TileSet {
+class Renderer;
+
+class TileSet : private NonCopyable {
 public:
 
-    TileSet(u32 tileWidth, u32 tileHeight, u32 tileCount, u32 columns);
+    TileSet(u32 texture, u32 tileWidth, u32 tileHeight, u32 tileCount, u32 columns);
+
+    TileSet(TileSet &&other);
 
     u32 tileWidth() const {
         return _tileWidth;
@@ -45,6 +49,8 @@ public:
     }
 
 private:
+
+    u32 _texture;
 
     u32 _tileWidth;
 
@@ -88,7 +94,7 @@ private:
 class TileMap : private NonCopyable {
 public:
 
-    explicit TileMap(const char *path);
+    TileMap(const char *path, Renderer &renderer);
 
 private:
 

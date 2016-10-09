@@ -21,14 +21,26 @@
 #include "tinyxml2.h"
 
 #include "tachyon/core/exception.h"
+#include "tachyon/renderer/image.h"
+#include "tachyon/renderer/renderer.h"
 
 namespace tachyon {
 
-TileSet::TileSet(u32 tileWidth, u32 tileHeight, u32 tileCount, u32 columns)
-    : _tileWidth {tileWidth},
+TileSet::TileSet(u32 texture, u32 tileWidth, u32 tileHeight, u32 tileCount, u32 columns)
+    : _texture {texture},
+      _tileWidth {tileWidth},
       _tileHeight {tileHeight},
       _tileCount {tileCount},
       _columns {columns}
+{
+}
+
+TileSet::TileSet(TileSet &&other)
+    : _texture {other._texture},
+      _tileWidth {other._tileWidth},
+      _tileHeight {other._tileHeight},
+      _tileCount {other._tileCount},
+      _columns {other._columns}
 {
 }
 
@@ -46,7 +58,7 @@ TileLayer::TileLayer(TileLayer &&other)
     other._tiles.clear();
 }
 
-TileMap::TileMap(const char *path)
+TileMap::TileMap(const char *path, Renderer &renderer)
 {
     using namespace tinyxml2;
 
@@ -69,7 +81,12 @@ TileMap::TileMap(const char *path)
             u32 tileCount = tileSet->IntAttribute("tilecount");
             u32 columns = tileSet->IntAttribute("columns");
 
-            _tileSets.emplace_back(tileWidth, tileHeight, tileCount, columns);
+            auto image = tileSet->FirstChildElement("image");
+            auto imagePath = std::string("assets/maps/") + image->Attribute("source");
+
+            u32 texture = renderer.loadTexture(Image{imagePath.c_str()});
+
+            _tileSets.emplace_back(texture, tileWidth, tileHeight, tileCount, columns);
 
             tileSet = tileSet->NextSiblingElement("tileset");
         }
