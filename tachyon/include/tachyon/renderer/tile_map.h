@@ -23,6 +23,7 @@
 
 namespace tachyon {
 
+struct rect;
 class Renderer;
 
 class TileSet : private NonCopyable {
@@ -31,6 +32,10 @@ public:
     TileSet(u32 texture, u32 tileWidth, u32 tileHeight, u32 tileCount, u32 columns);
 
     TileSet(TileSet &&other);
+
+    u32 texture() const {
+        return _texture;
+    }
 
     u32 tileWidth() const {
         return _tileWidth;
@@ -47,6 +52,8 @@ public:
     u32 columns() const {
         return _columns;
     }
+
+    rect getRect(u32 tile) const;
 
 private:
 
@@ -81,7 +88,7 @@ public:
         _tiles.push_back(tile);
     }
 
-    void render(Renderer &renderer);
+    void render(Renderer &renderer, const std::vector<TileSet> &tileSets);
 
 private:
 

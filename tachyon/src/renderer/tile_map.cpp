@@ -21,6 +21,8 @@
 #include "tinyxml2.h"
 
 #include "tachyon/core/exception.h"
+#include "tachyon/core/math.h"
+#include "tachyon/renderer/command_buffer.h"
 #include "tachyon/renderer/image.h"
 #include "tachyon/renderer/renderer.h"
 
@@ -44,6 +46,11 @@ TileSet::TileSet(TileSet &&other)
 {
 }
 
+rect TileSet::getRect(u32 tile) const
+{
+    return {0, 32, 0, 32};
+}
+
 TileLayer::TileLayer(u32 width, u32 height)
     : _width {width},
       _height {height}
@@ -58,8 +65,22 @@ TileLayer::TileLayer(TileLayer &&other)
     other._tiles.clear();
 }
 
-void TileLayer::render(Renderer &renderer)
+void TileLayer::render(Renderer &renderer, const std::vector<TileSet> &tileSets)
 {
+    auto &commands = renderer.commandBuffer();
+    auto tileSet = &tileSets[0];
+
+    auto tw {static_cast<r32>(tileSet->tileWidth())};
+    auto th {static_cast<r32>(tileSet->tileHeight())};
+
+    for (u32 y = 0; y < _height; ++y) {
+        for (u32 x = 0; x < _width; ++x) {
+            rect dest {x * tw, (x * tw) + tw, y * th, (y * th) + th};
+            rect src = tileSet->getRect(_tiles[x + y * _width]);
+
+            commands.push<DrawSprite>(tileSet->texture(), src, dest);
+        }
+    }
 }
 
 TileMap::TileMap(const char *path, Renderer &renderer)
@@ -123,6 +144,9 @@ TileMap::TileMap(const char *path, Renderer &renderer)
 
 void TileMap::render(Renderer &renderer)
 {
+    for (auto &layer : _layers) {
+        layer.render(renderer, _tileSets);
+    }
 }
 
 }
