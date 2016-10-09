@@ -31,7 +31,7 @@ static std::unique_ptr<TileMap> _map;
 Context::Context(std::unique_ptr<Renderer> renderer)
     : _renderer {std::move(renderer)}
 {
-    _map.reset(new TileMap("assets/maps/world.tmx", *renderer));
+    _map.reset(new TileMap("assets/maps/world.tmx", *_renderer));
 }
 
 void Context::frame(r32 dt)
