@@ -81,6 +81,8 @@ public:
         _tiles.push_back(tile);
     }
 
+    void render(Renderer &renderer);
+
 private:
 
     u32 _width;
@@ -95,6 +97,8 @@ class TileMap : private NonCopyable {
 public:
 
     TileMap(const char *path, Renderer &renderer);
+
+    void render(Renderer &renderer);
 
 private:
 

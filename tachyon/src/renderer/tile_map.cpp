@@ -58,6 +58,10 @@ TileLayer::TileLayer(TileLayer &&other)
     other._tiles.clear();
 }
 
+void TileLayer::render(Renderer &renderer)
+{
+}
+
 TileMap::TileMap(const char *path, Renderer &renderer)
 {
     using namespace tinyxml2;
@@ -115,6 +119,10 @@ TileMap::TileMap(const char *path, Renderer &renderer)
             layer = layer->NextSiblingElement("layer");
         }
     }
+}
+
+void TileMap::render(Renderer &renderer)
+{
 }
 
 }

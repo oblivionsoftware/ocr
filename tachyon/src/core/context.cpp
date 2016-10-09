@@ -39,6 +39,8 @@ void Context::frame(r32 dt)
     auto &commands = _renderer->commandBuffer();
     commands.push<ClearCommand>(vec4(0.2f, 0.2f, 0.2f, 1.0f));
 
+    _map->render(*_renderer);
+
     _renderer->present();
 }
 
