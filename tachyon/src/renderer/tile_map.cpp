@@ -151,10 +151,10 @@ TileMap::TileMap(const char *path, Renderer &renderer)
 
 void TileMap::render(Renderer &renderer)
 {
-    r32 z = 0.0f;
+    auto z = 0.0f;
+
     for (auto &layer : _layers) {
         layer.render(renderer, z, _tileSets);
-
         z += 0.1f;
     }
 }
