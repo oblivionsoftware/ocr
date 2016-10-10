@@ -88,8 +88,8 @@ GlRenderer::GlRenderer(std::unique_ptr<GlContext> context, u32 width, u32 height
     }
 
     glViewport(0, 0, _width, _height);
-    glEnable(GL_DEPTH_TEST);
-    glClearDepth(1.0f);
+    //glEnable(GL_DEPTH_TEST);
+    //glClearDepth(1.0f);
 
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     glEnable(GL_BLEND);
@@ -123,7 +123,7 @@ void GlRenderer::flush()
             auto cmd {itr.command<ClearCommand>()};
 
             glClearColor(cmd->color.r, cmd->color.g, cmd->color.b, cmd->color.a);
-            glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+            glClear(GL_COLOR_BUFFER_BIT);
         } break;
 
         case CommandType::DrawSprite: {

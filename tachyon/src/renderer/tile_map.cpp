@@ -48,7 +48,10 @@ TileSet::TileSet(TileSet &&other)
 
 rect TileSet::getRect(u32 tile) const
 {
-    return {0, 32, 0, 32};
+    auto x = static_cast<r32>(tile % _columns);
+    auto y = static_cast<r32>(tile / _columns);
+
+    return {x * _tileWidth, (x * _tileWidth) + _tileWidth, y * _tileHeight, (y * _tileHeight) + _tileHeight};
 }
 
 TileLayer::TileLayer(u32 width, u32 height)
@@ -75,10 +78,14 @@ void TileLayer::render(Renderer &renderer, const std::vector<TileSet> &tileSets)
 
     for (u32 y = 0; y < _height; ++y) {
         for (u32 x = 0; x < _width; ++x) {
-            rect dest {x * tw, (x * tw) + tw, y * th, (y * th) + th};
-            rect src = tileSet->getRect(_tiles[x + y * _width]);
+            auto tile = _tiles[x + y * _width];
 
-            commands.push<DrawSprite>(tileSet->texture(), src, dest);
+            if (tile > 0) {
+                rect dest {x * tw, (x * tw) + tw, y * th, (y * th) + th};
+                rect src = tileSet->getRect(tile - 1);
+
+                commands.push<DrawSprite>(tileSet->texture(), src, dest);
+            }
         }
     }
 }
@@ -146,6 +153,7 @@ void TileMap::render(Renderer &renderer)
 {
     for (auto &layer : _layers) {
         layer.render(renderer, _tileSets);
+        renderer.flush();
     }
 }
 
