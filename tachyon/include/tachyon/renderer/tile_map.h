@@ -19,11 +19,11 @@
 #include <vector>
 
 #include "tachyon/core/common.h"
+#include "tachyon/core/math.h"
 #include "tachyon/core/non_copyable.h"
 
 namespace tachyon {
 
-struct rect;
 class Renderer;
 
 class TileSet : private NonCopyable {
@@ -88,7 +88,7 @@ public:
         _tiles.push_back(tile);
     }
 
-    void render(Renderer &renderer, r32 z, const std::vector<TileSet> &tileSets);
+    void render(Renderer &renderer, vec2 offset, r32 z, const std::vector<TileSet> &tileSets);
 
 private:
 
@@ -105,7 +105,7 @@ public:
 
     TileMap(const char *path, Renderer &renderer);
 
-    void render(Renderer &renderer);
+    void render(Renderer &renderer, vec2 offset);
 
 private:
 

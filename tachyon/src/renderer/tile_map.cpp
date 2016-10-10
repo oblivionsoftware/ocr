@@ -68,7 +68,7 @@ TileLayer::TileLayer(TileLayer &&other)
     other._tiles.clear();
 }
 
-void TileLayer::render(Renderer &renderer, r32 z, const std::vector<TileSet> &tileSets)
+void TileLayer::render(Renderer &renderer, vec2 offset, r32 z, const std::vector<TileSet> &tileSets)
 {
     auto &commands = renderer.commandBuffer();
     auto tileSet = &tileSets[0];
@@ -83,6 +83,11 @@ void TileLayer::render(Renderer &renderer, r32 z, const std::vector<TileSet> &ti
             if (tile > 0) {
                 rect dest {x * tw, (x * tw) + tw, y * th, (y * th) + th};
                 rect src = tileSet->getRect(tile - 1);
+
+                dest.left += offset.x;
+                dest.right += offset.x;
+                dest.top += offset.y;
+                dest.bottom += offset.y;
 
                 commands.push<DrawSprite>(tileSet->texture(), src, dest, z);
             }
@@ -149,12 +154,12 @@ TileMap::TileMap(const char *path, Renderer &renderer)
     }
 }
 
-void TileMap::render(Renderer &renderer)
+void TileMap::render(Renderer &renderer, vec2 offset)
 {
     auto z = 0.0f;
 
     for (auto &layer : _layers) {
-        layer.render(renderer, z, _tileSets);
+        layer.render(renderer, offset, z, _tileSets);
         z += 0.1f;
     }
 }
