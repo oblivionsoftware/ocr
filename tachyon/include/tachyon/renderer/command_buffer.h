@@ -66,16 +66,18 @@ struct DrawSprite {
 
     DrawSprite() = default;
 
-    DrawSprite(u32 texture, rect source, rect dest, vec4 color = {1.0f, 1.0f, 1.0f, 1.0f})
+    DrawSprite(u32 texture, rect source, rect dest, r32 z, vec4 color = {1.0f, 1.0f, 1.0f, 1.0f})
         : texture {texture},
           source {source},
           dest {dest},
+          z {z},
           color {color} {
     }
 
     u32 texture;
     rect source;
     rect dest;
+    r32 z;
     vec4 color;
 };
 

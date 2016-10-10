@@ -88,8 +88,8 @@ GlRenderer::GlRenderer(std::unique_ptr<GlContext> context, u32 width, u32 height
     }
 
     glViewport(0, 0, _width, _height);
-    //glEnable(GL_DEPTH_TEST);
-    //glClearDepth(1.0f);
+    glEnable(GL_DEPTH_TEST);
+    glClearDepth(1.0f);
 
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     glEnable(GL_BLEND);
@@ -123,7 +123,7 @@ void GlRenderer::flush()
             auto cmd {itr.command<ClearCommand>()};
 
             glClearColor(cmd->color.r, cmd->color.g, cmd->color.b, cmd->color.a);
-            glClear(GL_COLOR_BUFFER_BIT);
+            glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         } break;
 
         case CommandType::DrawSprite: {
@@ -146,27 +146,27 @@ void GlRenderer::flush()
             r32 tb {cmd->source.bottom / th};
 
             const std::array<SpriteVertex, 6> v = {{{
-                        {cmd->dest.left, cmd->dest.top, 0.0f},
+                        {cmd->dest.left, cmd->dest.top, cmd->z},
                         {tl, tt},
                         cmd->color
                     }, {
-                        {cmd->dest.right, cmd->dest.bottom, 0.0f},
+                        {cmd->dest.right, cmd->dest.bottom, cmd->z},
                         {tr, tb},
                         cmd->color
                     }, {
-                        {cmd->dest.right, cmd->dest.top, 0.0f},
+                        {cmd->dest.right, cmd->dest.top, cmd->z},
                         {tr, tt},
                         cmd->color
                     }, {
-                        {cmd->dest.left, cmd->dest.top, 0.0f},
+                        {cmd->dest.left, cmd->dest.top, cmd->z},
                         {tl, tt},
                         cmd->color
                     }, {
-                        {cmd->dest.right, cmd->dest.bottom, 0.0f},
+                        {cmd->dest.right, cmd->dest.bottom, cmd->z},
                         {tr, tb},
                         cmd->color
                     }, {
-                        {cmd->dest.left, cmd->dest.bottom, 0.0f},
+                        {cmd->dest.left, cmd->dest.bottom, cmd->z},
                         {tl, tb},
                         cmd->color
                     }

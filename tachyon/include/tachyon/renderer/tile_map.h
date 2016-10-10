@@ -88,7 +88,7 @@ public:
         _tiles.push_back(tile);
     }
 
-    void render(Renderer &renderer, const std::vector<TileSet> &tileSets);
+    void render(Renderer &renderer, r32 z, const std::vector<TileSet> &tileSets);
 
 private:
 
