@@ -23,6 +23,11 @@ namespace tachyon {
 class CommandBuffer;
 class Image;
 
+enum class RendererType {
+    OpenGL,
+    DirectX11
+};
+
 class Renderer {
 public:
 

@@ -1,3 +1,4 @@
+
 /*
  * Copyright 2016 Jeff Upton
  *
@@ -16,52 +17,54 @@
 
 #pragma once
 
-#include <SDL.h>
+#define WIN32_LEAN_AND_MEAN
+#include <windows.h>
+
+#include <d3d11_1.h>
+
+#include <memory>
+#include <vector>
 
 #include "tachyon/core/common.h"
+#include "tachyon/core/non_copyable.h"
+#include "tachyon/renderer/command_buffer.h"
 #include "tachyon/renderer/renderer.h"
 
 namespace tachyon {
 
-/**
- * SDL platform implementation.
- */
-class SdlPlatform {
+class DX11Renderer : public Renderer, private NonCopyable {
 public:
 
-    /**
-     * Initializes SDL with the specified window title and dimensions.
-     *
-     * @param title The window title.
-     * @param rendererType The type of renderer to use.
-     * @param width The window width.
-     * @param height The window height.
-     */
-    SdlPlatform(const char *title, RendererType rendererType, u32 width, u32 height);
+    DX11Renderer(HWND hwnd, u32 width, u32 height);
 
-    /**
-     * Cleans up SDL.
-     */
-    ~SdlPlatform();
+    ~DX11Renderer();
 
-    /**
-     * Runs the platform.
-     */
-    void run();
+    virtual void flush() override;
+
+    virtual void present() override;
+
+    virtual CommandBuffer &commandBuffer() override {
+        return _commandBuffer;
+    }
+
+    virtual u32 loadTexture(const Image &image) override;
 
 private:
 
-    SDL_Window *_window;
+    CommandBuffer _commandBuffer;
 
-    RendererType _rendererType;
+    HWND _hwnd;
 
     u32 _width;
 
     u32 _height;
 
-    bool _running {false};
+    ID3D11Device *_device;
+
+    IDXGISwapChain *_swapChain;
+
+    ID3D11RenderTargetView *_renderTargetView;
 
 };
-
 
 }

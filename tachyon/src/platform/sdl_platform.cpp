@@ -18,8 +18,11 @@
 
 #include <memory>
 
+#include "SDL_syswm.h"
+
 #include "tachyon/core/context.h"
 #include "tachyon/core/exception.h"
+#include "tachyon/renderer/dx11_renderer.h"
 #include "tachyon/renderer/gl_renderer.h"
 
 namespace tachyon {
@@ -44,15 +47,20 @@ private:
 
 };
 
-SdlPlatform::SdlPlatform(const char *title, u32 width, u32 height)
-    : _width {width},
+SdlPlatform::SdlPlatform(const char *title, RendererType rendererType, u32 width, u32 height)
+    : _rendererType {rendererType},
+      _width {width},
       _height {height}
 {
     if (SDL_Init(SDL_INIT_VIDEO) != 0) {
         TACHYON_THROW("SDL initialization failed: %s", SDL_GetError());
     }
 
-    u32 flags {SDL_WINDOW_OPENGL};
+    u32 flags {0};
+    if (rendererType == RendererType::OpenGL) {
+        flags |= SDL_WINDOW_OPENGL;
+    }
+
     _window = SDL_CreateWindow(title, SDL_WINDOWPOS_UNDEFINED,
                                SDL_WINDOWPOS_UNDEFINED, width, height, flags);
     if (!_window) {
@@ -66,10 +74,29 @@ SdlPlatform::~SdlPlatform()
     SDL_Quit();
 }
 
-static std::unique_ptr<Renderer> createRenderer(SDL_Window *window, u32 width, u32 height)
+static std::unique_ptr<Renderer> createRenderer(SDL_Window *window, RendererType rendererType, u32 width, u32 height)
 {
-    auto glContext {std::make_unique<SdlGlContext>(window, 4, 1)};
-    return std::make_unique<GlRenderer>(std::move(glContext), width, height);
+    switch (rendererType) {
+
+    case RendererType::OpenGL: {
+        auto glContext {std::make_unique<SdlGlContext>(window, 4, 1)};
+        return std::make_unique<GlRenderer>(std::move(glContext), width, height);
+    } break;
+
+    case RendererType::DirectX11: {
+        SDL_SysWMinfo info;
+        SDL_VERSION(&info.version);
+
+        if (!SDL_GetWindowWMInfo(window, &info)) {
+            TACHYON_THROW("SDL_GetWindowWMInfo failed: %s", SDL_GetError());
+        }
+
+        return std::make_unique<DX11Renderer>(info.info.win.window, width, height);
+    } break;
+
+    default:
+        TACHYON_THROW("unsupported renderer type");
+    }
 }
 
 void SdlPlatform::run()
@@ -78,7 +105,7 @@ void SdlPlatform::run()
 
     u32 start {SDL_GetTicks()};
 
-    Context context {createRenderer(_window, _width, _height)};
+    Context context {createRenderer(_window, _rendererType, _width, _height)};
 
     while (_running) {
         r32 dt {(SDL_GetTicks() - start) / 1000.0f};
