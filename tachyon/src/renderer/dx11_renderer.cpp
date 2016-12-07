@@ -21,6 +21,8 @@
 #include "tachyon/core/math.h"
 #include "tachyon/renderer/command_buffer.h"
 
+#pragma comment(lib, "d3d11.lib")
+
 namespace tachyon {
 
 struct SpriteVertex {
@@ -48,6 +50,25 @@ DX11Renderer::DX11Renderer(HWND hwnd, u32 width, u32 height)
     sd.SampleDesc.Count = 1;
     sd.SampleDesc.Quality = 0;
     sd.Windowed = true;
+    sd.SwapEffect = DXGI_SWAP_EFFECT_DISCARD;
+
+    if (FAILED(D3D11CreateDeviceAndSwapChain(nullptr, D3D_DRIVER_TYPE_HARDWARE, nullptr, 0,
+                                             nullptr, 0, D3D11_SDK_VERSION, &sd, &_swapChain,
+                                             &_device, nullptr, &_deviceContext))) {
+
+        TACHYON_THROW("error initializing DirectX11");
+    }
+
+    ComPtr<ID3D11Texture2D> backBuffer;
+    if (FAILED(_swapChain->GetBuffer(0, __uuidof(ID3D11Texture2D), (void**)&backBuffer))) {
+        TACHYON_THROW("unable to get back buffer");
+    }
+
+    if (FAILED(_device->CreateRenderTargetView(backBuffer.Get(), nullptr, &_renderTargetView))) {
+        TACHYON_THROW("error creating render target view");
+    }
+
+    _deviceContext->OMSetRenderTargets(1, &_renderTargetView, nullptr);
 }
 
 DX11Renderer::~DX11Renderer()
@@ -61,6 +82,9 @@ void DX11Renderer::flush()
        switch (itr.type()) {
 
         case CommandType::Clear: {
+            auto cmd {itr.command<ClearCommand>()};
+
+            _deviceContext->ClearRenderTargetView(_renderTargetView.Get(), glm::value_ptr(cmd->color));
         } break;
 
         case CommandType::DrawSprite: {
@@ -77,6 +101,8 @@ void DX11Renderer::flush()
 void DX11Renderer::present()
 {
     flush();
+
+    _swapChain->Present(0, 0);
 }
 
 u32 DX11Renderer::loadTexture(const Image &image)

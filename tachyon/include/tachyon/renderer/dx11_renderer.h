@@ -20,6 +20,8 @@
 #define WIN32_LEAN_AND_MEAN
 #include <windows.h>
 
+#include <wrl/client.h>
+
 #include <d3d11_1.h>
 
 #include <memory>
@@ -31,6 +33,9 @@
 #include "tachyon/renderer/renderer.h"
 
 namespace tachyon {
+
+template <typename T>
+using ComPtr = Microsoft::WRL::ComPtr<T>;
 
 class DX11Renderer : public Renderer, private NonCopyable {
 public:
@@ -59,11 +64,13 @@ private:
 
     u32 _height;
 
-    ID3D11Device *_device;
+    ComPtr<ID3D11Device> _device;
 
-    IDXGISwapChain *_swapChain;
+    ComPtr<ID3D11DeviceContext> _deviceContext;
 
-    ID3D11RenderTargetView *_renderTargetView;
+    ComPtr<IDXGISwapChain> _swapChain;
+
+    ComPtr<ID3D11RenderTargetView> _renderTargetView;
 
 };
 
