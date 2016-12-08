@@ -20,7 +20,7 @@
 
 #include "ocr/log.h"
 
-ocr_status_t ocr_read_file(const char *path, ocr_pool_t *pool, ocr_buffer_t *buffer)
+ocr_status_t ocr_read_file(const char *path, ocr_pool_t *pool, ocr_buffer_t **buffer_out)
 {
     FILE *file = fopen(path, "rb");
     if (!file) {
@@ -33,7 +33,7 @@ ocr_status_t ocr_read_file(const char *path, ocr_pool_t *pool, ocr_buffer_t *buf
     fseek(file, 0, SEEK_SET);
     OCR_INFO("file size: %zu", size);
 
-    ocr_buffer_init(buffer, pool, size + 1);
+    ocr_buffer_t *buffer = ocr_buffer_create(pool, size + 1);
     if (fread(buffer->data, size, 1, file) != 1) {
         fclose(file);
         return OCR_IO_ERROR;
@@ -41,6 +41,8 @@ ocr_status_t ocr_read_file(const char *path, ocr_pool_t *pool, ocr_buffer_t *buf
 
     buffer->data[size] = '\0';
     fclose(file);
+
+    *buffer_out = buffer;
 
     return OCR_OK;
 }

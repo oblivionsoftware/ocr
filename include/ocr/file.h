@@ -26,9 +26,9 @@ OCR_EXTERN_C_BEGIN
  *
  * @param path The path to the file.
  * @param pool The pool to use to allocate the buffer.
- * @param buffer The output buffer.
+ * @param buffer_out The output buffer.
  * @return OK on success, IO_ERROR on failure.
  */
-ocr_status_t ocr_read_file(const char *path, ocr_pool_t *pool, ocr_buffer_t *buffer);
+ocr_status_t ocr_read_file(const char *path, ocr_pool_t *pool, ocr_buffer_t **buffer_out);
 
 OCR_EXTERN_C_END

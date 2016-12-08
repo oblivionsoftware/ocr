@@ -17,12 +17,12 @@
 #include "ocr/buffer.h"
 
 
-ocr_status_t ocr_buffer_init(ocr_buffer_t *buffer, ocr_pool_t *pool, size_t size)
+ocr_buffer_t *ocr_buffer_create(ocr_pool_t *pool, size_t size)
 {
-    buffer->data = ocr_alloc(pool, size);
+    ocr_buffer_t *buffer = ocr_alloc(pool, sizeof(*buffer) + size);
     buffer->size = size;
 
-    return OCR_OK;
+    return buffer;
 }
 
 

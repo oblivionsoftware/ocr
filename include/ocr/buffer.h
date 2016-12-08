@@ -22,11 +22,11 @@
 OCR_EXTERN_C_BEGIN
 
 typedef struct {
-    u8 *data;
     size_t size;
+    u8 data[1];
 } ocr_buffer_t;
 
-ocr_status_t ocr_buffer_init(ocr_buffer_t *buffer, ocr_pool_t *pool, size_t size);
+ocr_buffer_t *ocr_buffer_create(ocr_pool_t *pool, size_t size);
 
 void ocr_buffer_destroy(ocr_buffer_t *buffer);
 

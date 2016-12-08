@@ -34,10 +34,9 @@ struct ocr_pool {
  *
  * @param size The size of the pool.
  * @param parent The parent pool.
- * @param pool_out Output parameter for the newly created pool.
- * @return OK on success, NO_MEMORY if pool allocation failed.
+ * @return the newly created pool.
  */
-ocr_status_t ocr_pool_create(size_t size, ocr_pool_t *parent, ocr_pool_t **pool_out);
+ocr_pool_t *ocr_pool_create(size_t size, ocr_pool_t *parent);
 
 /**
  * Destroys the specified pool.
