@@ -27,10 +27,9 @@ typedef struct ocr_event_loop ocr_event_loop_t;
  * Creates a new event loop.
  *
  * @param pool The allocation pool.
- * @param loop_out Output parameter for the newly created loop.
- * return OK on success, a valid error code otherwise.
+ * @return The newly created loop.
  */
-ocr_status_t ocr_event_loop_create(ocr_pool_t *pool, ocr_event_loop_t **loop_out);
+ocr_event_loop_t *ocr_event_loop_create(ocr_pool_t *pool);
 
 /**
  * Destroys the event loop.

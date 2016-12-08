@@ -47,8 +47,8 @@ TEST_CASE("event loop can run", "[event]")
     ocr_pool_t *pool = ocr_pool_create(ocr_mb(32), NULL);
     REQUIRE(pool);
 
-    ocr_event_loop_t *loop;
-    REQUIRE(OCR_OK == ocr_event_loop_create(pool, &loop));
+    ocr_event_loop_t *loop = ocr_event_loop_create(pool);
+    REQUIRE(loop);
     ocr_event_loop_run(loop);
     ocr_event_loop_destroy(loop);
 
