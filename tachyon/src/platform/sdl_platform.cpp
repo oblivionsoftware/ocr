@@ -18,12 +18,15 @@
 
 #include <memory>
 
-#include "SDL_syswm.h"
 
 #include "tachyon/core/context.h"
 #include "tachyon/core/exception.h"
-#include "tachyon/renderer/dx11_renderer.h"
 #include "tachyon/renderer/gl_renderer.h"
+
+#if TACHYON_PLATFORM == TACHYON_PLATFORM_WINDOWS
+    #include "SDL_syswm.h"
+    #include "tachyon/renderer/dx11_renderer.h"
+#endif
 
 namespace tachyon {
 
@@ -83,6 +86,8 @@ static std::unique_ptr<Renderer> createRenderer(SDL_Window *window, RendererType
         return std::make_unique<GlRenderer>(std::move(glContext), width, height);
     } break;
 
+#if TACHYON_PLATFORM == TACHYON_PLATFORM_WINDOWS
+
     case RendererType::DirectX11: {
         SDL_SysWMinfo info;
         SDL_VERSION(&info.version);
@@ -93,6 +98,8 @@ static std::unique_ptr<Renderer> createRenderer(SDL_Window *window, RendererType
 
         return std::make_unique<DX11Renderer>(info.info.win.window, width, height);
     } break;
+
+#endif
 
     default:
         TACHYON_THROW("unsupported renderer type");
