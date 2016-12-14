@@ -31,7 +31,7 @@ ocr_pool_t *ocr_pool_create(size_t size, ocr_pool_t *parent)
 
     ocr_pool_t *pool;
     if (parent) {
-        pool = ocr_alloc(parent, pool_size);
+        pool = ocr_pool_alloc(parent, pool_size);
     } else {
         pool = malloc(pool_size);
     }
@@ -59,7 +59,7 @@ void ocr_pool_destroy(ocr_pool_t *pool)
 }
 
 
-void *ocr_alloc(ocr_pool_t *pool, size_t size)
+void *ocr_pool_alloc(ocr_pool_t *pool, size_t size)
 {
     assert(pool->offset + size < pool->size);
 

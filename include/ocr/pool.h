@@ -52,7 +52,7 @@ void ocr_pool_destroy(ocr_pool_t *pool);
  * @param size The amount of memory to allocate.
  * @return The allocated memory, NULL if the pool was unable to allocate.
  */
-void *ocr_alloc(ocr_pool_t *pool, size_t size);
+void *ocr_pool_alloc(ocr_pool_t *pool, size_t size);
 
 /**
  * Clears the allocated memory in the pool.
