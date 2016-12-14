@@ -38,7 +38,6 @@ public:
 
     ~ComPtr() {
         if (_value) {
-            printf("releasing\n");
             _value->Release();
         }
     }
