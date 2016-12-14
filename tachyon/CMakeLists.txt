@@ -15,13 +15,13 @@ set(TACHYON_SOURCES
     src/core/string.cpp
     src/platform/sdl_platform.cpp
     src/renderer/command_buffer.cpp
-    src/renderer/dx11_renderer.cpp
     src/renderer/gl_buffer.cpp
     src/renderer/gl_program.cpp
     src/renderer/gl_renderer.cpp
     src/renderer/gl_shader.cpp
     src/renderer/gl_texture.cpp
     src/renderer/gl_vertex_array.cpp
+    src/renderer/windows/dx11_renderer.cpp
     src/renderer/image.cpp
     src/renderer/tile_map.cpp
 )
