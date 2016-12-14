@@ -20,8 +20,6 @@
 #define WIN32_LEAN_AND_MEAN
 #include <windows.h>
 
-#include <wrl/client.h>
-
 #include <d3d11_1.h>
 
 #include <memory>
@@ -35,7 +33,32 @@
 namespace tachyon {
 
 template <typename T>
-using ComPtr = Microsoft::WRL::ComPtr<T>;
+class ComPtr : private NonCopyable {
+public:
+
+    ~ComPtr() {
+        if (_value) {
+            printf("releasing\n");
+            _value->Release();
+        }
+    }
+
+    T *get() {
+        return _value;
+    }
+
+    T **operator &() {
+        return &_value;
+    }
+
+    T *operator ->() {
+        return _value;
+    }
+
+private:
+
+    T *_value {nullptr};
+};
 
 class DX11Renderer : public Renderer, private NonCopyable {
 public:

@@ -43,7 +43,7 @@ DX11Renderer::DX11Renderer(HWND hwnd, u32 width, u32 height)
     sd.BufferDesc.Width = width;
     sd.BufferDesc.Height = height;
     sd.BufferDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
-    sd.BufferDesc.RefreshRate.Numerator = 60;
+    sd.BufferDesc.RefreshRate.Numerator = 144;
     sd.BufferDesc.RefreshRate.Denominator = 1;
     sd.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;
     sd.OutputWindow = hwnd;
@@ -64,11 +64,21 @@ DX11Renderer::DX11Renderer(HWND hwnd, u32 width, u32 height)
         TACHYON_THROW("unable to get back buffer");
     }
 
-    if (FAILED(_device->CreateRenderTargetView(backBuffer.Get(), nullptr, &_renderTargetView))) {
+    if (FAILED(_device->CreateRenderTargetView(backBuffer.get(), nullptr, &_renderTargetView))) {
         TACHYON_THROW("error creating render target view");
     }
+    backBuffer->Release();
 
     _deviceContext->OMSetRenderTargets(1, &_renderTargetView, nullptr);
+
+    D3D11_VIEWPORT viewport;
+    ZeroMemory(&viewport, sizeof(viewport));
+    viewport.TopLeftX = 0;
+    viewport.TopLeftY = 0;
+    viewport.Width = static_cast<r32>(width);
+    viewport.Height = static_cast<r32>(height);
+
+    _deviceContext->RSSetViewports(1, &viewport);
 }
 
 DX11Renderer::~DX11Renderer()
@@ -84,7 +94,7 @@ void DX11Renderer::flush()
         case CommandType::Clear: {
             auto cmd {itr.command<ClearCommand>()};
 
-            _deviceContext->ClearRenderTargetView(_renderTargetView.Get(), glm::value_ptr(cmd->color));
+            _deviceContext->ClearRenderTargetView(_renderTargetView.get(), glm::value_ptr(cmd->color));
         } break;
 
         case CommandType::DrawSprite: {
