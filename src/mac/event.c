@@ -29,7 +29,7 @@ struct ocr_event_loop {
 
 ocr_event_loop_t *ocr_event_loop_create(ocr_pool_t *pool)
 {
-    ocr_event_loop_t *loop = ocr_alloc(pool, sizeof(ocr_event_loop_t));
+    ocr_event_loop_t *loop = ocr_pool_alloc(pool, sizeof(ocr_event_loop_t));
     if ((loop->kq = kqueue()) == -1) {
         OCR_ERROR("kqueue failed");
         return NULL;
