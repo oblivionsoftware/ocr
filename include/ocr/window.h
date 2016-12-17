@@ -16,9 +16,26 @@
 
 #pragma once
 
-#include "ocr/buffer.h"
-#include "ocr/event.h"
-#include "ocr/file.h"
-#include "ocr/log.h"
+#include "ocr/common.h"
 #include "ocr/pool.h"
-#include "ocr/window.h"
+
+OCR_EXTERN_C_BEGIN
+
+typedef struct ocr_window ocr_window_t;
+
+typedef struct {
+    u32 width;
+    u32 height;
+    const char *title;
+} ocr_window_settings_t;
+
+ocr_window_t *ocr_window_create(ocr_pool_t *pool, ocr_window_settings_t *settings);
+
+void ocr_window_destroy(ocr_window_t *window);
+
+void ocr_window_do_events(ocr_window_t *window);
+
+bool ocr_window_is_closed(ocr_window_t *window);
+
+
+OCR_EXTERN_C_END

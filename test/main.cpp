@@ -54,3 +54,21 @@ TEST_CASE("event loop can run", "[event]")
 
     ocr_pool_destroy(pool);
 }
+
+TEST_CASE("window runs", "[window]")
+{
+    ocr_pool_t *pool = ocr_pool_create(ocr_mb(32), NULL);
+
+    ocr_window_settings_t settings;
+    settings.width = 640;
+    settings.height = 480;
+    settings.title = "OCR Window";
+
+    ocr_window_t *window = ocr_window_create(pool, &settings);
+    while (!ocr_window_is_closed(window)) {
+        ocr_window_do_events(window);
+    }
+    ocr_window_destroy(window);
+
+    ocr_pool_destroy(pool);
+}

@@ -13,7 +13,9 @@ set(OCR_SOURCES
     src/pool.c
     src/linux/event.c
     src/mac/event.c
-    src/windows/event.c)
+    src/windows/event.c
+    src/windows/window.c
+)
 
 if (NOT WIN32)
     list(FILTER OCR_SOURCES EXCLUDE REGEX ".+/windows/.+")
