@@ -32,7 +32,7 @@ struct ocr_event_loop {
 
 ocr_event_loop_t *ocr_event_loop_create(ocr_pool_t *pool)
 {
-    ocr_event_loop_t *loop = ocr_alloc(pool, sizeof(ocr_event_loop_t));
+    ocr_event_loop_t *loop = ocr_pool_alloc(pool, sizeof(ocr_event_loop_t));
     if ((loop->efd = epoll_create1(0)) == -1) {
         OCR_ERROR("epoll_create1 failed: %s", strerror(errno));
         return NULL;
@@ -48,6 +48,7 @@ void ocr_event_loop_destroy(ocr_event_loop_t *loop)
         close(loop->efd);
     }
 }
+
 
 void ocr_event_loop_run(ocr_event_loop_t *loop)
 {
