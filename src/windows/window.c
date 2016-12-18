@@ -14,17 +14,9 @@
  * limitations under the License.
  */
 
-#include "ocr/window.h"
-
-#define WIN32_LEAN_AND_MEAN
-#include <windows.h>
+#include "window.h"
 
 #include "ocr/log.h"
-
-struct ocr_window {
-    HWND handle;
-    bool closed;
-};
 
 static LRESULT CALLBACK window_proc(HWND hwnd, UINT msg, WPARAM w_param, LPARAM l_param)
 {

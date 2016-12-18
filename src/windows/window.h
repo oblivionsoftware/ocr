@@ -14,12 +14,13 @@
  * limitations under the License.
  */
 
-#pragma once
-
-#include "ocr/buffer.h"
-#include "ocr/event.h"
-#include "ocr/file.h"
-#include "ocr/log.h"
-#include "ocr/opengl.h"
-#include "ocr/pool.h"
 #include "ocr/window.h"
+
+#define WIN32_LEAN_AND_MEAN
+#include <windows.h>
+
+struct ocr_window {
+    HWND handle;
+    bool closed;
+};
+

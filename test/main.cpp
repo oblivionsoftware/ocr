@@ -65,10 +65,19 @@ TEST_CASE("window runs", "[window]")
     settings.title = "OCR Window";
 
     ocr_window_t *window = ocr_window_create(pool, &settings);
+    ocr_gl_context_t *gl_context = ocr_gl_context_create(pool, window);
+
+    glClearColor(0.0f, 0.0f, 1.0f, 1.0f);
+
     while (!ocr_window_is_closed(window)) {
         ocr_window_do_events(window);
-    }
-    ocr_window_destroy(window);
 
+        glClear(GL_COLOR_BUFFER_BIT);
+
+        ocr_gl_context_present(gl_context);
+    }
+
+    ocr_gl_context_destroy(gl_context);
+    ocr_window_destroy(window);
     ocr_pool_destroy(pool);
 }

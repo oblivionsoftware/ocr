@@ -4,6 +4,7 @@ cmake_minimum_required(VERSION 3.5 FATAL_ERROR)
 project(ocr VERSION 0.1 LANGUAGES C CXX)
 
 find_package(Threads REQUIRED)
+find_package(OpenGL REQUIRED)
 
 set(OCR_SOURCES
     src/buffer.c
@@ -14,6 +15,7 @@ set(OCR_SOURCES
     src/linux/event.c
     src/mac/event.c
     src/windows/event.c
+    src/windows/opengl.c
     src/windows/window.c
 )
 
@@ -30,9 +32,12 @@ if ((NOT UNIX) OR APPLE)
 endif()
 
 add_library(ocr ${OCR_SOURCES})
+target_link_libraries(ocr
+    ${OPENGL_LIBRARIES})
 
 target_include_directories(ocr PUBLIC
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+    $<BUILD_INTERFACE:${OPENGL_INCLUDE_DIR}>
     $<INSTALL_INTERFACE:include>
     PRIVATE src)
 
