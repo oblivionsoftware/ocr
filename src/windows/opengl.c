@@ -18,8 +18,7 @@
 
 #include "ocr/log.h"
 #include "ocr/pool.h"
-
-#include "window.h"
+#include "ocr/windows/window.h"
 
 #define WGL_CONTEXT_MAJOR_VERSION_ARB 0x2091
 #define WGL_CONTEXT_MINOR_VERSION_ARB 0x2092
