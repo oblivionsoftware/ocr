@@ -33,9 +33,7 @@ OCR_EXTERN_C_BEGIN
     #include <GL/glu.h>
 #endif
 
-#ifndef APIENTRY
-    #define APIENTRY
-#endif
+#include <GL/glext.h>
 
 struct ocr_window;
 struct ocr_pool;
