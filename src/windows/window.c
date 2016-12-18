@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-#include "window.h"
+#include "ocr/windows/window.h"
 
 #include "ocr/log.h"
 
