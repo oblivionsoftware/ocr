@@ -16,7 +16,7 @@
 
 #pragma once
 
-#include <SDL.h>
+#include <ocr/ocr.h>
 
 #include "tachyon/core/common.h"
 #include "tachyon/renderer/renderer.h"
@@ -24,25 +24,25 @@
 namespace tachyon {
 
 /**
- * SDL platform implementation.
+ * OCR platform implementation.
  */
-class SdlPlatform {
+class OcrPlatform {
 public:
 
     /**
-     * Initializes SDL with the specified window title and dimensions.
+     * Initializes OCR with the specified window title and dimensions.
      *
      * @param title The window title.
      * @param rendererType The type of renderer to use.
      * @param width The window width.
      * @param height The window height.
      */
-    SdlPlatform(const char *title, RendererType rendererType, u32 width, u32 height);
+    OcrPlatform(const char *title, RendererType rendererType, u32 width, u32 height);
 
     /**
-     * Cleans up SDL.
+     * Cleans up the platform.
      */
-    ~SdlPlatform();
+    ~OcrPlatform();
 
     /**
      * Runs the platform.
@@ -51,7 +51,9 @@ public:
 
 private:
 
-    SDL_Window *_window;
+    ocr_pool_t *_pool;
+
+    ocr_window_t *_window;
 
     RendererType _rendererType;
 

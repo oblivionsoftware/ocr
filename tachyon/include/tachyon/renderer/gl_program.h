@@ -18,9 +18,10 @@
 
 #include <array>
 
+#include <ocr/ocr.h>
+
 #include "tachyon/core/math_fwd.h"
 #include "tachyon/core/non_copyable.h"
-#include "tachyon/renderer/opengl.h"
 
 namespace tachyon {
 

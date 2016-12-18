@@ -23,7 +23,6 @@
 #include "tachyon/renderer/gl_program.h"
 #include "tachyon/renderer/gl_shader.h"
 #include "tachyon/renderer/gl_vertex_array.h"
-#include "tachyon/renderer/opengl.h"
 
 namespace tachyon {
 
@@ -81,12 +80,6 @@ GlRenderer::GlRenderer(std::unique_ptr<GlContext> context, u32 width, u32 height
       _width {width},
       _height {height}
 {
-    glewExperimental = GL_TRUE;
-    GLenum glewError = glewInit();
-    if (glewError != GLEW_OK) {
-        TACHYON_THROW("glewInit failed: %s", glewGetErrorString(glewError));
-    }
-
     glViewport(0, 0, _width, _height);
     glEnable(GL_DEPTH_TEST);
     glClearDepth(1.0f);

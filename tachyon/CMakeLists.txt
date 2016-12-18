@@ -3,17 +3,14 @@ project(tachyon VERSION 0.1 LANGUAGES C CXX)
 
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${tachyon_SOURCE_DIR}/cmake")
 
-find_package(SDL2 REQUIRED)
-find_package(OpenGL REQUIRED)
-
+add_subdirectory(dependencies/ocr)
 
 set(TACHYON_SOURCES
-    src/glew.c
     src/tinyxml2.cpp
     src/core/context.cpp
     src/core/exception.cpp
     src/core/string.cpp
-    src/platform/sdl_platform.cpp
+    src/platform/ocr_platform.cpp
     src/renderer/command_buffer.cpp
     src/renderer/gl_buffer.cpp
     src/renderer/gl_program.cpp
@@ -42,14 +39,11 @@ add_library(tachyon ${TACHYON_SOURCES})
 
 target_include_directories(tachyon PUBLIC
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
-    $<BUILD_INTERFACE:${SDL2_INCLUDE_DIR}>
-    $<BUILD_INTERFACE:${OPENGL_INCLUDE_DIR}>
     $<INSTALL_INTERFACE:include>
     PRIVATE src)
 
 target_link_libraries(tachyon
-    ${OPENGL_LIBRARIES}
-    ${SDL2_LIBRARY})
+    ocr)
 
 if (${CMAKE_COMPILER_IS_GNUCXX})
     set_source_files_properties(src/renderer/image.cpp PROPERTIES COMPILE_FLAGS -Wno-misleading-indentation)
