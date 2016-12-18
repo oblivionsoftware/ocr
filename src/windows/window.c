@@ -63,11 +63,10 @@ ocr_window_t *ocr_window_create(ocr_pool_t *pool, ocr_window_settings_t *setting
     }
 
     RECT rect = {
-        .left = 0,
-        .top = 0,
         .right = settings->width,
         .bottom = settings->height
     };
+
     AdjustWindowRect(&rect, WS_OVERLAPPED, false);
 
     HWND handle = CreateWindowEx(0, "ocr_window", settings->title, WS_OVERLAPPED | WS_SYSMENU | WS_MINIMIZEBOX, CW_USEDEFAULT, CW_USEDEFAULT,

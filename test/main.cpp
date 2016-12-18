@@ -60,8 +60,8 @@ TEST_CASE("window runs", "[window]")
     ocr_pool_t *pool = ocr_pool_create(ocr_mb(32), NULL);
 
     ocr_window_settings_t settings;
-    settings.width = 640;
-    settings.height = 480;
+    settings.width = 1280;
+    settings.height = 720;
     settings.title = "OCR Window";
 
     ocr_window_t *window = ocr_window_create(pool, &settings);
