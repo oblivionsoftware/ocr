@@ -16,12 +16,17 @@
 
 #pragma once
 
-#include "ocr/buffer.h"
-#include "ocr/event.h"
-#include "ocr/file.h"
-#include "ocr/log.h"
-#include "ocr/math.h"
-#include "ocr/opengl.h"
+#include "ocr/common.h"
 #include "ocr/pool.h"
-#include "ocr/timer.h"
-#include "ocr/window.h"
+
+OCR_EXTERN_C_BEGIN
+
+typedef struct ocr_timer ocr_timer_t;
+
+ocr_timer_t *ocr_timer_create(ocr_pool_t *pool);
+
+void ocr_timer_reset(ocr_timer_t *timer);
+
+r32 ocr_timer_time(ocr_timer_t *timer);
+
+OCR_EXTERN_C_END
