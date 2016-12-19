@@ -1,8 +1,6 @@
 cmake_minimum_required(VERSION 3.5 FATAL_ERROR)
 project(tachyon VERSION 0.1 LANGUAGES C CXX)
 
-set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${tachyon_SOURCE_DIR}/cmake")
-
 add_subdirectory(dependencies/ocr)
 
 set(TACHYON_SOURCES
