@@ -20,6 +20,7 @@
 #include "ocr/event.h"
 #include "ocr/file.h"
 #include "ocr/log.h"
+#include "ocr/math.h"
 #include "ocr/opengl.h"
 #include "ocr/pool.h"
 #include "ocr/window.h"
