@@ -20,6 +20,11 @@
 
 namespace tachyon {
 
+static inline void *bufferOffset(size_t offset)
+{
+    return reinterpret_cast<void*>(offset);
+}
+
 GlVertexElement::GlVertexElement(u32 count, GLenum type)
     : _count {count},
       _type {type}

@@ -18,14 +18,18 @@
 #include <cstdlib>
 
 #include <tachyon/tachyon.h>
-#include <tachyon/platform/sdl_platform.h>
+#include <tachyon/platform/ocr_platform.h>
 
-int main(int argc, char **argv)
+#if OCR_PLATFORM == OCR_PLATFORM_WINDOWS
+    int CALLBACK WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow)
+#else
+    int main(int argc, char **argv)
+#endif
 {
     using namespace tachyon;
 
     try {
-        SdlPlatform platform("Seeds of Fate", RendererType::DirectX11, 1280, 720);
+        OcrPlatform platform("Seeds of Fate", RendererType::OpenGL, 1280, 720);
         platform.run();
 
         return EXIT_SUCCESS;
