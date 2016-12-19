@@ -37,7 +37,7 @@ Context::Context(std::unique_ptr<Renderer> renderer)
 void Context::frame(r32 dt)
 {
     auto &commands = _renderer->commandBuffer();
-    commands.push<ClearCommand>(vec4(0.2f, 0.2f, 0.2f, 1.0f));
+    commands.push<ClearCommand>(ocr_vec4(0.2f, 0.2f, 0.2f, 1.0f));
 
     _map->render(*_renderer, {0.0f, 0.0f});
 

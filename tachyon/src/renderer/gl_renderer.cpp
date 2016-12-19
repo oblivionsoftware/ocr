@@ -96,8 +96,7 @@ GlRenderer::GlRenderer(std::unique_ptr<GlContext> context, u32 width, u32 height
     _spriteVertexArray = std::make_unique<GlVertexArray>(spriteFormat, 100000, GlBufferUsage::Dynamic);
 
     _spriteProgram = std::make_unique<GlProgram>(SPRITE_VERTEX_SHADER, SPRITE_FRAGMENT_SHADER);
-    _spriteProgram->setUniform(GlStandardUniform::ProjectionMatrix,
-                               glm::ortho(0.0f, static_cast<r32>(_width), static_cast<r32>(_height), 0.0f));
+    _spriteProgram->setUniform(GlStandardUniform::ProjectionMatrix, ocr_mat4_ortho(0.0f, static_cast<r32>(_width), static_cast<r32>(_height), 0.0f, -1.0f, 1.0f));
 
     _spriteProgram->bind();
 }
@@ -115,7 +114,7 @@ void GlRenderer::flush()
         case CommandType::Clear: {
             auto cmd {itr.command<ClearCommand>()};
 
-            glClearColor(cmd->color.r, cmd->color.g, cmd->color.b, cmd->color.a);
+            glClearColor(cmd->color.x, cmd->color.y, cmd->color.z, cmd->color.w);
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         } break;
 

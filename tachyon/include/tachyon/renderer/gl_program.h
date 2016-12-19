@@ -20,7 +20,7 @@
 
 #include <ocr/ocr.h>
 
-#include "tachyon/core/math_fwd.h"
+#include "tachyon/core/math.h"
 #include "tachyon/core/non_copyable.h"
 
 namespace tachyon {

@@ -16,16 +16,14 @@
 
 #pragma once
 
-#include <glm/glm.hpp>
-#include <glm/gtc/matrix_transform.hpp>
-#include <glm/gtc/type_ptr.hpp>
+#include <ocr/ocr.h>
 
 namespace tachyon {
 
-using vec2 = glm::vec2;
-using vec3 = glm::vec3;
-using vec4 = glm::vec4;
-using mat4 = glm::mat4;
+using vec2 = ocr_vec2_t;
+using vec3 = ocr_vec3_t;
+using vec4 = ocr_vec4_t;
+using mat4 = ocr_mat4_t;
 
 struct rect {
 

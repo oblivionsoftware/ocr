@@ -81,7 +81,7 @@ void GlProgram::setUniform(GlStandardUniform uniform, mat4 value)
     auto location = _standardUniforms[index];
 
     if (location != -1) {
-        glProgramUniformMatrix4fv(_id, location, 1, false, glm::value_ptr(value));
+        glProgramUniformMatrix4fv(_id, location, 1, false, value.m);
     }
 }
 

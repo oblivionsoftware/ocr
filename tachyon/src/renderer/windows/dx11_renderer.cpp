@@ -94,7 +94,7 @@ void DX11Renderer::flush()
         case CommandType::Clear: {
             auto cmd {itr.command<ClearCommand>()};
 
-            _deviceContext->ClearRenderTargetView(_renderTargetView.get(), glm::value_ptr(cmd->color));
+            _deviceContext->ClearRenderTargetView(_renderTargetView.get(), &cmd->color.x);
         } break;
 
         case CommandType::DrawSprite: {
