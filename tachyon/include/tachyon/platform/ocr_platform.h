@@ -55,6 +55,8 @@ private:
 
     ocr_window_t *_window;
 
+    ocr_timer_t *_timer;
+
     RendererType _rendererType;
 
     u32 _width;

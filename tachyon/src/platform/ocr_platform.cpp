@@ -62,6 +62,7 @@ OcrPlatform::OcrPlatform(const char *title, RendererType rendererType, u32 width
     settings.title = title;
 
     _window = ocr_window_create(_pool, &settings);
+    _timer = ocr_timer_create(_pool);
 }
 
 OcrPlatform::~OcrPlatform()
@@ -96,13 +97,14 @@ void OcrPlatform::run()
 {
     _running = true;
 
-    u32 start {0};
+    r32 start {ocr_timer_time(_timer)};
 
     Context context {createRenderer(_pool, _window, _rendererType, _width, _height)};
 
     while (_running) {
-        r32 dt {0.0f};
-        start = 0;
+        r32 t = ocr_timer_time(_timer);
+        r32 dt {t - start};
+        start = t;
 
         ocr_window_do_events(_window);
 

@@ -16,6 +16,7 @@ set(OCR_SOURCES
     src/mac/event.c
     src/windows/event.c
     src/windows/opengl.c
+    src/windows/timer.c
     src/windows/window.c
 )
 
