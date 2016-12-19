@@ -20,12 +20,14 @@
 
 OCR_EXTERN_C_BEGIN
 
-#ifdef WIN32
+#if OCR_PLATFORM == OCR_PLATFORM_WINDOWS
     #define WIN32_LEAN_AND_MEAN
     #include <Windows.h>
     #include <gl/GL.h>
     #include <gl/GLU.h>
-#elif defined(__APPLE__)
+    #include <GL/glext.h>
+
+#elif OCR_PLATFORM == OCR_PLATFORM_MAC
     #include <OpenGL/OpenGL.h>
     #include <OpenGL/glu.h>
 #else
@@ -33,7 +35,6 @@ OCR_EXTERN_C_BEGIN
     #include <GL/glu.h>
 #endif
 
-#include <GL/glext.h>
 
 struct ocr_window;
 struct ocr_pool;
@@ -47,6 +48,8 @@ void ocr_gl_context_destroy(ocr_gl_context_t *ctx);
 void ocr_gl_context_present(ocr_gl_context_t *ctx);
 
 /* Begin OpenGL Functions */
+
+#if OCR_PLATFORM == OCR_PLATFORM_WINDOWS
 
 extern PFNGLCREATEPROGRAMPROC glCreateProgram;
 extern PFNGLUSEPROGRAMPROC glUseProgram;
@@ -76,6 +79,8 @@ extern PFNGLBINDVERTEXARRAYPROC glBindVertexArray;
 extern PFNGLVERTEXATTRIBPOINTERPROC glVertexAttribPointer;
 extern PFNGLENABLEVERTEXATTRIBARRAYPROC glEnableVertexAttribArray;
 extern PFNGLDELETEVERTEXARRAYSPROC glDeleteVertexArrays;
+
+#endif
 
 /* End OpenGL Functions */
 

@@ -14,6 +14,9 @@ set(OCR_SOURCES
     src/pool.c
     src/linux/event.c
     src/mac/event.c
+    src/mac/opengl.c
+    src/mac/timer.c
+    src/mac/window.c
     src/windows/event.c
     src/windows/opengl.c
     src/windows/timer.c
