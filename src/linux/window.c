@@ -25,9 +25,17 @@
 
 struct ocr_window {
     Display *display;
+    xcb_connection_t *xcb_connection;
+    xcb_window_t xcb_window;
     bool closed;
 
 };
+
+static xcb_screen_t *get_default_screen(xcb_connection_t *connection)
+{
+    xcb_screen_iterator_t itr = xcb_setup_roots_iterator(xcb_get_setup(connection));
+    return itr.data;
+}
 
 ocr_window_t *ocr_window_create(ocr_pool_t *pool, ocr_window_settings_t *settings)
 {
@@ -37,22 +45,66 @@ ocr_window_t *ocr_window_create(ocr_pool_t *pool, ocr_window_settings_t *setting
         return NULL;
     }
 
+    xcb_connection_t *xcb_connection = XGetXCBConnection(display);
+    if (!xcb_connection) {
+        OCR_ERROR("error getting XCB connection");
+        goto out_display;
+    }
+
+    XSetEventQueueOwner(display, XCBOwnsEventQueue);
+
+    xcb_screen_t *screen = get_default_screen(xcb_connection);
+    xcb_window_t xcb_window = xcb_generate_id(xcb_connection);
+
+    u32 event_mask = XCB_EVENT_MASK_EXPOSURE | XCB_EVENT_MASK_KEY_PRESS | XCB_EVENT_MASK_STRUCTURE_NOTIFY;
+    u32 value_list[] = {event_mask, 0};
+    u32 value_mask = XCB_CW_EVENT_MASK;
+
+    xcb_create_window(xcb_connection,
+                      XCB_COPY_FROM_PARENT,
+                      xcb_window, screen->root,
+                      0, 0, settings->width, settings->height, 0,
+                      XCB_WINDOW_CLASS_INPUT_OUTPUT,
+                      screen->root_visual, value_mask, value_list);
+
+    xcb_map_window(xcb_connection, xcb_window);
+    xcb_flush(xcb_connection);
+
     ocr_window_t *window = ocr_pool_alloc(pool, sizeof(*window));
     window->display = display;
-    window->closed = true;
+    window->closed = false;
+    window->xcb_connection = xcb_connection;
+    window->xcb_window = xcb_window;
 
     return window;
+
+out_display:
+    XCloseDisplay(display);
+
+    return NULL;
 }
 
 
 void ocr_window_destroy(ocr_window_t *window)
 {
+    xcb_destroy_window(window->xcb_connection, window->xcb_window);
     XCloseDisplay(window->display);
 }
 
 
 void ocr_window_do_events(ocr_window_t *window)
 {
+    xcb_generic_event_t *event = xcb_poll_for_event(window->xcb_connection);
+    while (event) {
+        switch (event->response_type & ~0x80) {
+        case XCB_UNMAP_NOTIFY:
+            window->closed = true;
+            break;
+        }
+
+        free(event);
+        event = xcb_poll_for_event(window->xcb_connection);
+    }
 }
 
 

@@ -42,6 +42,11 @@ add_library(ocr ${OCR_SOURCES})
 target_link_libraries(ocr
     ${OPENGL_LIBRARIES})
 
+if (UNIX AND NOT APPLE)
+    target_link_libraries(ocr
+        "-lX11" "-lxcb" "-lX11-xcb")
+endif()
+
 target_include_directories(ocr PUBLIC
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
     $<BUILD_INTERFACE:${OPENGL_INCLUDE_DIR}>
