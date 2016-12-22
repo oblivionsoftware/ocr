@@ -16,22 +16,26 @@
 
 #include "ocr/timer.h"
 
-#define WIN32_LEAN_AND_MEAN
-#include <windows.h>
+#include <time.h>
 
 #include "ocr/log.h"
 
 struct ocr_timer {
-    LARGE_INTEGER start;
-    LARGE_INTEGER frequency;
+    u64 start;
 };
 
+static u64 ns_time(void)
+{
+    struct timespec ts;
+    clock_gettime(CLOCK_REALTIME, &ts);
+
+    return ts.tv_nsec + ts.tv_sec * 1000000;
+}
 
 ocr_timer_t *ocr_timer_create(ocr_pool_t *pool)
 {
     ocr_timer_t *timer = ocr_pool_alloc(pool, sizeof(*timer));
-    QueryPerformanceFrequency(&timer->frequency);
-    QueryPerformanceCounter(&timer->start);
+    timer->start = ns_time();
 
     return timer;
 }
@@ -39,15 +43,13 @@ ocr_timer_t *ocr_timer_create(ocr_pool_t *pool)
 
 void ocr_timer_reset(ocr_timer_t *timer)
 {
-    QueryPerformanceCounter(&timer->start);
+    timer->start = ns_time();
 }
 
 
 r32 ocr_timer_time(ocr_timer_t *timer)
 {
-    LARGE_INTEGER time;
-    QueryPerformanceCounter(&time);
-
-    return (r32)(time.QuadPart - timer->start.QuadPart) / timer->frequency.QuadPart;
+    u64 elapsed = ns_time() - timer->start;
+    return elapsed / 1000000.0f;
 }
 

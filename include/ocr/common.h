@@ -22,9 +22,9 @@
 
 #define OCR_INLINE static __inline 
 
-#define OCR_PLATFORM_WINDOWS 0
-#define OCR_PLATFORM_LINUX 1
-#define OCR_PLATFORM_MAC 2
+#define OCR_PLATFORM_WINDOWS 1
+#define OCR_PLATFORM_LINUX 2
+#define OCR_PLATFORM_MAC 3
 
 #ifdef _WIN32
     #define OCR_PLATFORM OCR_PLATFORM_WINDOWS
@@ -33,7 +33,7 @@
     #define OCR_PLATFORM OCR_PLATFORM_MAC
     #define OCR_PLATFORM_NAME "Mac OSX"
 #elif __linux__
-    #define OCR_PLATFOMR OCR_PLATFORM_LINUX
+    #define OCR_PLATFORM OCR_PLATFORM_LINUX
     #define OCR_PLATFORM_NAME "Linux"
 #else
     #error "Unsupported Platform"

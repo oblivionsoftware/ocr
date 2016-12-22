@@ -13,6 +13,9 @@ set(OCR_SOURCES
     src/log.c
     src/pool.c
     src/linux/event.c
+    src/linux/opengl.c
+    src/linux/timer.c
+    src/linux/window.c
     src/mac/event.c
     src/mac/opengl.c
     src/mac/timer.c
@@ -47,7 +50,7 @@ target_include_directories(ocr PUBLIC
 
 if ((${CMAKE_COMPILER_IS_GNUCC}) OR (${CMAKE_C_COMPILER_ID} MATCHES "Clang"))
     target_compile_options(ocr PRIVATE
-        -std=c99 -Wall -Werror -pedantic)
+        -std=gnu99 -Wall -Werror -pedantic)
 else()
     target_compile_options(ocr PRIVATE
         /W3 /WX)
