@@ -14,28 +14,17 @@
  * limitations under the License.
  */
 
-#include "ocr/window.h"
-
-#include <X11/Xlib.h>
-#include <X11/Xlib-xcb.h>
-
-#include <xcb/xcb.h>
+#include "ocr/linux/window.h"
 
 #include "ocr/log.h"
 
-struct ocr_window {
-    Display *display;
-    xcb_connection_t *xcb_connection;
-    xcb_window_t xcb_window;
-    bool closed;
-
-};
 
 static xcb_screen_t *get_default_screen(xcb_connection_t *connection)
 {
     xcb_screen_iterator_t itr = xcb_setup_roots_iterator(xcb_get_setup(connection));
     return itr.data;
 }
+
 
 ocr_window_t *ocr_window_create(ocr_pool_t *pool, ocr_window_settings_t *settings)
 {
@@ -97,9 +86,11 @@ void ocr_window_do_events(ocr_window_t *window)
     xcb_generic_event_t *event = xcb_poll_for_event(window->xcb_connection);
     while (event) {
         switch (event->response_type & ~0x80) {
+
         case XCB_UNMAP_NOTIFY:
             window->closed = true;
             break;
+
         }
 
         free(event);
