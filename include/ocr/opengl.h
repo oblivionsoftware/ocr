@@ -33,6 +33,7 @@ OCR_EXTERN_C_BEGIN
 #else
     #include <GL/gl.h>
     #include <GL/glu.h>
+    #include <GL/glext.h>
 #endif
 
 
@@ -49,7 +50,7 @@ void ocr_gl_context_present(ocr_gl_context_t *ctx);
 
 /* Begin OpenGL Functions */
 
-#if OCR_PLATFORM == OCR_PLATFORM_WINDOWS
+#if (OCR_PLATFORM == OCR_PLATFORM_WINDOWS) || (OCR_PLATFORM == OCR_PLATFORM_LINUX)
 
 extern PFNGLCREATEPROGRAMPROC glCreateProgram;
 extern PFNGLUSEPROGRAMPROC glUseProgram;
