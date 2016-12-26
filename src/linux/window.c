@@ -16,6 +16,8 @@
 
 #include "ocr/linux/window.h"
 
+#include <string.h>
+
 #include <xcb/xcb_icccm.h>
 
 #include "ocr/log.h"
@@ -27,6 +29,10 @@ static xcb_screen_t *get_default_screen(xcb_connection_t *connection)
     return itr.data;
 }
 
+static void set_string(xcb_connection_t *connection, xcb_window_t window, xcb_atom_t property, const char *value)
+{
+    xcb_change_property(connection, XCB_PROP_MODE_REPLACE, window, property, XCB_ATOM_STRING, 8, strlen(value), value);
+}
 
 ocr_window_t *ocr_window_create(ocr_pool_t *pool, ocr_window_settings_t *settings)
 {
@@ -58,11 +64,14 @@ ocr_window_t *ocr_window_create(ocr_pool_t *pool, ocr_window_settings_t *setting
                       XCB_WINDOW_CLASS_INPUT_OUTPUT,
                       screen->root_visual, value_mask, value_list);
 
+
     xcb_size_hints_t hints;
     xcb_icccm_size_hints_set_min_size(&hints, settings->width, settings->height);
     xcb_icccm_size_hints_set_max_size(&hints, settings->width, settings->height);
 
     xcb_icccm_set_wm_size_hints(xcb_connection, xcb_window, XCB_ATOM_WM_NORMAL_HINTS, &hints);
+
+    set_string(xcb_connection, xcb_window, XCB_ATOM_WM_NAME, settings->title);
 
     xcb_map_window(xcb_connection, xcb_window);
     xcb_flush(xcb_connection);
