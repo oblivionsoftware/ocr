@@ -44,7 +44,7 @@ target_link_libraries(ocr
 
 if (UNIX AND NOT APPLE)
     target_link_libraries(ocr
-        "-lX11" "-lxcb" "-lX11-xcb")
+        "-lX11" "-lxcb" "-lX11-xcb" "-lxcb-icccm")
 endif()
 
 target_include_directories(ocr PUBLIC

@@ -16,6 +16,8 @@
 
 #include "ocr/linux/window.h"
 
+#include <xcb/xcb_icccm.h>
+
 #include "ocr/log.h"
 
 
@@ -55,6 +57,12 @@ ocr_window_t *ocr_window_create(ocr_pool_t *pool, ocr_window_settings_t *setting
                       0, 0, settings->width, settings->height, 0,
                       XCB_WINDOW_CLASS_INPUT_OUTPUT,
                       screen->root_visual, value_mask, value_list);
+
+    xcb_size_hints_t hints;
+    xcb_icccm_size_hints_set_min_size(&hints, settings->width, settings->height);
+    xcb_icccm_size_hints_set_max_size(&hints, settings->width, settings->height);
+
+    xcb_icccm_set_wm_size_hints(xcb_connection, xcb_window, XCB_ATOM_WM_NORMAL_HINTS, &hints);
 
     xcb_map_window(xcb_connection, xcb_window);
     xcb_flush(xcb_connection);
