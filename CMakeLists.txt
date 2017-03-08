@@ -74,7 +74,8 @@ install(EXPORT OcrConfig DESTINATION share/ocr/cmake)
 export(TARGETS ocr FILE OcrConfig.cmake)
 
 add_executable(ocr_test
-    test/main.cpp)
+    test/main.cpp
+    test/test_window.cpp)
 target_link_libraries(ocr_test ocr ${CMAKE_THREAD_LIBS_INIT})
 
 add_custom_target(check COMMAND ${CMAKE_CTEST_COMMAND} -V DEPENDS ocr_test)
