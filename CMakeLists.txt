@@ -12,6 +12,7 @@ set(OCR_SOURCES
     src/file.c
     src/log.c
     src/pool.c
+    src/gl3w.c
     src/linux/event.c
     src/linux/opengl.c
     src/linux/timer.c
@@ -44,7 +45,7 @@ target_link_libraries(ocr
 
 if (UNIX AND NOT APPLE)
     target_link_libraries(ocr
-        "-lX11")
+        "-lX11" "-ldl")
 endif()
 
 target_include_directories(ocr PUBLIC

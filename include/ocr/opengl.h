@@ -18,6 +18,8 @@
 
 #include "ocr/common.h"
 
+#include <GL/gl3w.h>
+
 OCR_EXTERN_C_BEGIN
 
 #if OCR_PLATFORM == OCR_PLATFORM_WINDOWS
@@ -25,7 +27,6 @@ OCR_EXTERN_C_BEGIN
     #include <Windows.h>
     #include <gl/GL.h>
     #include <gl/GLU.h>
-    #include <GL/glext.h>
 
 #elif OCR_PLATFORM == OCR_PLATFORM_MAC
     #include <OpenGL/OpenGL.h>
@@ -34,7 +35,6 @@ OCR_EXTERN_C_BEGIN
     #include <GL/gl.h>
     #include <GL/glx.h>
     #include <GL/glu.h>
-    #include <GL/glext.h>
 #endif
 
 
@@ -48,42 +48,5 @@ ocr_gl_context_t *ocr_gl_context_create(struct ocr_pool *pool, struct ocr_window
 void ocr_gl_context_destroy(ocr_gl_context_t *ctx);
 
 void ocr_gl_context_present(ocr_gl_context_t *ctx);
-
-/* Begin OpenGL Functions */
-
-#if (OCR_PLATFORM == OCR_PLATFORM_WINDOWS) || (OCR_PLATFORM == OCR_PLATFORM_LINUX)
-
-extern PFNGLCREATEPROGRAMPROC glCreateProgram;
-extern PFNGLUSEPROGRAMPROC glUseProgram;
-extern PFNGLGENBUFFERSPROC glGenBuffers;
-extern PFNGLDELETEBUFFERSPROC glDeleteBuffers;
-extern PFNGLBINDBUFFERPROC glBindBuffer;
-extern PFNGLBUFFERDATAPROC glBufferData;
-extern PFNGLBUFFERSUBDATAPROC glBufferSubData;
-extern PFNGLMAPBUFFERPROC glMapBuffer;
-extern PFNGLUNMAPBUFFERPROC glUnmapBuffer;
-extern PFNGLATTACHSHADERPROC glAttachShader;
-extern PFNGLLINKPROGRAMPROC glLinkProgram;
-extern PFNGLGETPROGRAMIVPROC glGetProgramiv;
-extern PFNGLGETPROGRAMINFOLOGPROC glGetProgramInfoLog;
-extern PFNGLDELETEPROGRAMPROC glDeleteProgram;
-extern PFNGLGETUNIFORMLOCATIONPROC glGetUniformLocation;
-extern PFNGLPROGRAMUNIFORM1IPROC glProgramUniform1i;
-extern PFNGLPROGRAMUNIFORMMATRIX4FVPROC glProgramUniformMatrix4fv;
-extern PFNGLCREATESHADERPROC glCreateShader;
-extern PFNGLSHADERSOURCEPROC glShaderSource;
-extern PFNGLCOMPILESHADERPROC glCompileShader;
-extern PFNGLGETSHADERIVPROC glGetShaderiv;
-extern PFNGLGETSHADERINFOLOGPROC glGetShaderInfoLog;
-extern PFNGLDELETESHADERPROC glDeleteShader;
-extern PFNGLGENVERTEXARRAYSPROC glGenVertexArrays;
-extern PFNGLBINDVERTEXARRAYPROC glBindVertexArray;
-extern PFNGLVERTEXATTRIBPOINTERPROC glVertexAttribPointer;
-extern PFNGLENABLEVERTEXATTRIBARRAYPROC glEnableVertexAttribArray;
-extern PFNGLDELETEVERTEXARRAYSPROC glDeleteVertexArrays;
-
-#endif
-
-/* End OpenGL Functions */
 
 OCR_EXTERN_C_END

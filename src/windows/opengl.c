@@ -24,85 +24,12 @@
 #define WGL_CONTEXT_MINOR_VERSION_ARB 0x2092
 #define WGL_CONTEXT_FLAGS_ARB 0x2094
 
-PFNGLCREATEPROGRAMPROC glCreateProgram;
-PFNGLUSEPROGRAMPROC glUseProgram;
-PFNGLGENBUFFERSPROC glGenBuffers;
-PFNGLDELETEBUFFERSPROC glDeleteBuffers;
-PFNGLBINDBUFFERPROC glBindBuffer;
-PFNGLBUFFERDATAPROC glBufferData;
-PFNGLBUFFERSUBDATAPROC glBufferSubData;
-PFNGLMAPBUFFERPROC glMapBuffer;
-PFNGLUNMAPBUFFERPROC glUnmapBuffer;
-PFNGLATTACHSHADERPROC glAttachShader;
-PFNGLLINKPROGRAMPROC glLinkProgram;
-PFNGLGETPROGRAMIVPROC glGetProgramiv;
-PFNGLGETPROGRAMINFOLOGPROC glGetProgramInfoLog;
-PFNGLDELETEPROGRAMPROC glDeleteProgram;
-PFNGLGETUNIFORMLOCATIONPROC glGetUniformLocation;
-PFNGLPROGRAMUNIFORM1IPROC glProgramUniform1i;
-PFNGLPROGRAMUNIFORMMATRIX4FVPROC glProgramUniformMatrix4fv;
-PFNGLCREATESHADERPROC glCreateShader;
-PFNGLSHADERSOURCEPROC glShaderSource;
-PFNGLCOMPILESHADERPROC glCompileShader;
-PFNGLGETSHADERIVPROC glGetShaderiv;
-PFNGLGETSHADERINFOLOGPROC glGetShaderInfoLog;
-PFNGLDELETESHADERPROC glDeleteShader;
-PFNGLGENVERTEXARRAYSPROC glGenVertexArrays;
-PFNGLBINDVERTEXARRAYPROC glBindVertexArray;
-PFNGLVERTEXATTRIBPOINTERPROC glVertexAttribPointer;
-PFNGLENABLEVERTEXATTRIBARRAYPROC glEnableVertexAttribArray;
-PFNGLDELETEVERTEXARRAYSPROC glDeleteVertexArrays;
 static HGLRC (*wglCreateContextAttribsARB)(HDC, HGLRC, const int*);
-
 
 struct ocr_gl_context {
     HDC hdc;
     HGLRC hglrc;
 };
-
-static void *gl_proc(const char *name)
-{
-    return (void*)wglGetProcAddress(name);
-}
-
-#define gl_load_proc(name)\
-    (name) = (void*)wglGetProcAddress(#name)
-
-static ocr_status_t gl_load_extensions(void)
-{
-    gl_load_proc(glCreateProgram);
-    gl_load_proc(glUseProgram);
-    gl_load_proc(glGenBuffers);
-    gl_load_proc(glDeleteBuffers);
-    gl_load_proc(glBindBuffer);
-    gl_load_proc(glBufferData);
-    gl_load_proc(glBufferSubData);
-    gl_load_proc(glMapBuffer);
-    gl_load_proc(glUnmapBuffer);
-    gl_load_proc(glAttachShader);
-    gl_load_proc(glLinkProgram);
-    gl_load_proc(glGetProgramiv);
-    gl_load_proc(glGetProgramInfoLog);
-    gl_load_proc(glDeleteProgram);
-    gl_load_proc(glGetUniformLocation);
-    gl_load_proc(glProgramUniform1i);
-    gl_load_proc(glProgramUniformMatrix4fv);
-    gl_load_proc(glCreateShader);
-    gl_load_proc(glShaderSource);
-    gl_load_proc(glCompileShader);
-    gl_load_proc(glGetShaderiv);
-    gl_load_proc(glGetShaderInfoLog);
-    gl_load_proc(glDeleteShader);
-    gl_load_proc(glGenVertexArrays);
-    gl_load_proc(glBindVertexArray);
-    gl_load_proc(glVertexAttribPointer);
-    gl_load_proc(glEnableVertexAttribArray);
-    gl_load_proc(glDeleteVertexArrays);
-    gl_load_proc(wglCreateContextAttribsARB);
-
-    return OCR_OK;
-}
-
 
 ocr_gl_context_t *ocr_gl_context_create(ocr_pool_t *pool, ocr_window_t *window)
 {
@@ -132,7 +59,7 @@ ocr_gl_context_t *ocr_gl_context_create(ocr_pool_t *pool, ocr_window_t *window)
     HGLRC temp = wglCreateContext(hdc);
     wglMakeCurrent(hdc, temp);
 
-    if (OCR_FAILED(gl_load_extensions())) {
+    if (gl3wInit() != 0) {
         OCR_ERROR("unable to load extensions");
         return NULL;
     }
