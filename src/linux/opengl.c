@@ -53,8 +53,6 @@ PFNGLDELETEVERTEXARRAYSPROC glDeleteVertexArrays;
 
 struct ocr_gl_context {
     GLXContext context;
-    GLXDrawable drawable;
-    GLXWindow glx_window;
     ocr_window_t *window;
 };
 
@@ -109,16 +107,14 @@ ocr_gl_context_t *ocr_gl_context_create(ocr_pool_t *pool, ocr_window_t *window)
 
 
     GLXContext context = glXCreateNewContext(window->display, fb_config, GLX_RGBA_TYPE, 0, true);
-    GLXWindow glx_window = glXCreateWindow(window->display, fb_config, window->xcb_window, 0);
 
-    glXMakeContextCurrent(window->display, glx_window, glx_window, context);
+    glXMakeContextCurrent(window->display, window->window, window->window, context);
 
     gl_load_extensions();
 
     ocr_gl_context_t *ctx = ocr_pool_alloc(pool, sizeof(*ctx));
     ctx->window = window;
-    ctx->glx_window = glx_window;
-    ctx->drawable = glx_window;
+    ctx->context = context;
 
     return ctx;
 }
@@ -136,6 +132,6 @@ void ocr_gl_context_present(ocr_gl_context_t *ctx)
 {
     ocr_window_t *window = ctx->window;
 
-    glXSwapBuffers(window->display, ctx->drawable);
+    glXSwapBuffers(window->display, window->window);
 }
 

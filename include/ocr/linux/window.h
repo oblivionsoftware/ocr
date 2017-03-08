@@ -17,13 +17,11 @@
 #include "ocr/window.h"
 
 #include <X11/Xlib.h>
-#include <X11/Xlib-xcb.h>
 
-#include <xcb/xcb.h>
 
 struct ocr_window {
     Display *display;
-    xcb_connection_t *xcb_connection;
-    xcb_window_t xcb_window;
+    Window window;
     bool closed;
+    Atom delete_message;
 };

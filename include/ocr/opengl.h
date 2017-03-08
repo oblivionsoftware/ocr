@@ -32,6 +32,7 @@ OCR_EXTERN_C_BEGIN
     #include <OpenGL/glu.h>
 #else
     #include <GL/gl.h>
+    #include <GL/glx.h>
     #include <GL/glu.h>
     #include <GL/glext.h>
 #endif
