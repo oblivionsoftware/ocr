@@ -18,33 +18,32 @@
 
 #include "ocr/common.h"
 
-OCR_EXTERN_C_BEGIN
+namespace ocr {
 
 typedef struct {
     r32 x;
     r32 y;
-} ocr_vec2_t;
+} Vec2;
 
 typedef struct {
     r32 x;
     r32 y;
     r32 z;
-} ocr_vec3_t;
+} Vec3;
 
 typedef struct {
     r32 x;
     r32 y;
     r32 z;
     r32 w;
-} ocr_vec4_t;
+} Vec4;
 
 typedef struct {
     r32 m[16];
-} ocr_mat4_t;
+} Mat4;
 
-OCR_INLINE ocr_vec4_t ocr_vec4(r32 x, r32 y, r32 z, r32 w)
-{
-    ocr_vec4_t result;
+OCR_INLINE Vec4 vec4(r32 x, r32 y, r32 z, r32 w) {
+    Vec4 result;
     result.x = x;
     result.y = y;
     result.z = z;
@@ -53,13 +52,12 @@ OCR_INLINE ocr_vec4_t ocr_vec4(r32 x, r32 y, r32 z, r32 w)
     return result;
 }
 
-OCR_INLINE ocr_mat4_t ocr_mat4_ortho(r32 left, r32 right, r32 bottom, r32 top, r32 z_near, r32 z_far)
-{
+OCR_INLINE Mat4 mat4_ortho(r32 left, r32 right, r32 bottom, r32 top, r32 z_near, r32 z_far) {
     r32 tx = -(right + left) / (right - left);
     r32 ty = -(top + bottom) / (top - bottom);
     r32 tz = -(z_far + z_near) / (z_far - z_near);
 
-    ocr_mat4_t result = {{0}};
+    Mat4 result = {{0}};
     result.m[0] = 2 / (right - left);
     result.m[12] = tx;
     result.m[5] = 2 / (top - bottom);
@@ -71,4 +69,5 @@ OCR_INLINE ocr_mat4_t ocr_mat4_ortho(r32 left, r32 right, r32 bottom, r32 top, r
     return result;
 }
 
-OCR_EXTERN_C_END
+}
+

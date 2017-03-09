@@ -16,17 +16,29 @@
 
 #pragma once
 
+#include <memory>
+
 #include "ocr/common.h"
 #include "ocr/pool.h"
 
-OCR_EXTERN_C_BEGIN
+namespace ocr {
 
-typedef struct ocr_timer ocr_timer_t;
 
-ocr_timer_t *ocr_timer_create(ocr_pool_t *pool);
+class Timer {
 
-void ocr_timer_reset(ocr_timer_t *timer);
+public:
 
-r32 ocr_timer_time(ocr_timer_t *timer);
+    Timer();
 
-OCR_EXTERN_C_END
+    void reset();
+
+    r32 time();
+
+private:
+
+    struct Impl;
+    std::unique_ptr<Impl> _impl;
+
+};
+
+}

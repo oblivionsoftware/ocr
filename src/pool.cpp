@@ -22,55 +22,47 @@
 
 #include "ocr/log.h"
 
+namespace ocr {
 
-ocr_pool_t *ocr_pool_create(size_t size, ocr_pool_t *parent)
-{
+Pool::Pool(size_t size, Pool *parent) {
     OCR_INFO("allocating pool of size: %zu", size);
 
-    size_t pool_size = sizeof(ocr_pool_t) + size;
-
-    ocr_pool_t *pool;
     if (parent) {
-        pool = ocr_pool_alloc(parent, pool_size);
+        _memory = reinterpret_cast<u8*>(parent->allocRaw(size));
     } else {
-        pool = malloc(pool_size);
+        _memory = reinterpret_cast<u8*>(malloc(size));
     }
 
-    if (!pool) {
+    if (!_memory) {
         OCR_ERROR("pool allocation failed, size: %zu", size);
-        return NULL;
+        //return NULL;
     }
 
-    pool->size = size;
-    pool->offset = 0;
-    pool->parent = parent;
-
-    return pool;
+    _size = size;
+    _offset = 0;
+    _parent = parent;
 }
 
-
-void ocr_pool_destroy(ocr_pool_t *pool)
-{
+Pool::~Pool() {
     OCR_INFO("destroying pool");
 
-    if (pool->parent == NULL) {
-        free(pool);
+    if (_parent == NULL) {
+        free(_memory);
     }
 }
 
+void *Pool::allocRaw(size_t size) {
+    assert(_offset + size < _size);
 
-void *ocr_pool_alloc(ocr_pool_t *pool, size_t size)
-{
-    assert(pool->offset + size < pool->size);
-
-    void *result = pool->memory + pool->offset;
-    pool->offset += size;
+    void *result = _memory + _offset;
+    _offset += size;
 
     return result;
 }
 
 
-void ocr_pool_clear(ocr_pool_t *pool)
-{
-    pool->offset = 0;
+void Pool::clear() {
+    _offset = 0;
+}
+
 }

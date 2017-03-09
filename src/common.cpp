@@ -14,48 +14,23 @@
  * limitations under the License.
  */
 
-#pragma once
-
-#include <memory>
-
 #include "ocr/common.h"
-
-#include <GL/gl3w.h>
-
-#if OCR_PLATFORM == OCR_PLATFORM_WINDOWS
-    #define WIN32_LEAN_AND_MEAN
-    #include <Windows.h>
-    #include <gl/GL.h>
-    #include <gl/GLU.h>
-
-#elif OCR_PLATFORM == OCR_PLATFORM_MAC
-    #include <OpenGL/OpenGL.h>
-    #include <OpenGL/glu.h>
-#else
-    #include <GL/gl.h>
-    #include <GL/glx.h>
-    #include <GL/glu.h>
-#endif
 
 namespace ocr {
 
-struct Window;
-struct Pool;
-
-class GlContext {
-public:
-
-    GlContext(const Window &window);
-
-    ~GlContext();
-
-    void present();
-
-private:
-
-    struct Impl;
-    std::unique_ptr<Impl> _impl;
-
-};
+const char *strerror(Status status) {
+    switch (status) {
+        case Status::Ok:
+            return "ok";
+        case Status::NoMemory:
+            return "out of memory";
+        case Status::IoError:
+            return "i/o error";
+        case Status::GeneralError:
+            return "general error";
+        default:
+            return "unknown error";
+    }
+}
 
 }

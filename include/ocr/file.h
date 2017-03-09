@@ -19,7 +19,7 @@
 #include "ocr/common.h"
 #include "ocr/buffer.h"
 
-OCR_EXTERN_C_BEGIN
+namespace ocr {
 
 /**
  * Reads the entire contents of a file into a buffer.
@@ -29,6 +29,6 @@ OCR_EXTERN_C_BEGIN
  * @param buffer_out The output buffer.
  * @return OK on success, IO_ERROR on failure.
  */
-ocr_status_t ocr_read_file(const char *path, ocr_pool_t *pool, ocr_buffer_t **buffer_out);
+Buffer read_file(const char *path, Pool &pool);
 
-OCR_EXTERN_C_END
+}

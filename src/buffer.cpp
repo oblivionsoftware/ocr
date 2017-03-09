@@ -14,16 +14,14 @@
  * limitations under the License.
  */
 
-#include "ocr/common.h"
+#include "ocr/buffer.h"
 
+namespace ocr {
 
-const char *ocr_strerror(ocr_status_t status)
-{
-    switch (status) {
-    case OCR_OK: return "ok";
-    case OCR_NO_MEMORY: return "out of memory";
-    case OCR_IO_ERROR: return "i/o error";
-    case OCR_GENERAL_ERROR: return "general error";
-    default: return "unknown error";
-    }
+Buffer::Buffer(Pool &pool, size_t size) {
+    this->data = reinterpret_cast<u8*>(pool.allocRaw(size));
+    this->size = size;
 }
+
+}
+

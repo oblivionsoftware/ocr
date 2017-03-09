@@ -19,45 +19,42 @@
 #include <sys/epoll.h>
 #include <unistd.h>
 
-#include <errno.h>
 #include <string.h>
 
 #include "ocr/log.h"
 
-struct ocr_event_loop {
+namespace ocr {
+
+struct EventLoop::Impl {
     int efd;
     bool running;
 };
 
 
-ocr_event_loop_t *ocr_event_loop_create(ocr_pool_t *pool)
-{
-    ocr_event_loop_t *loop = ocr_pool_alloc(pool, sizeof(ocr_event_loop_t));
-    if ((loop->efd = epoll_create1(0)) == -1) {
-        OCR_ERROR("epoll_create1 failed: %s", strerror(errno));
-        return NULL;
-    }
+EventLoop::EventLoop()
+        : _impl{new Impl()} {
 
-    return loop;
-}
-
-
-void ocr_event_loop_destroy(ocr_event_loop_t *loop)
-{
-    if (loop) {
-        close(loop->efd);
+    if ((_impl->efd = epoll_create1(0)) == -1) {
+        OCR_ERROR("epoll_create1 failed: %s", ::strerror(errno));
+        throw std::runtime_error("epoll_create1 failed");
     }
 }
 
 
-void ocr_event_loop_run(ocr_event_loop_t *loop)
-{
-    loop->running = true;
+EventLoop::~EventLoop() {
+    close(_impl->efd);
+}
+
+
+void EventLoop::run() {
+    _impl->running = true;
 
     struct epoll_event events[64];
 
     for (int i = 0; i < 10; ++i) {
-        int event_count = epoll_wait(loop->efd, events, 64, 100);
+        int event_count = epoll_wait(_impl->efd, events, 64, 100);
         OCR_INFO("found %d events", event_count);
     }
+}
+
 }

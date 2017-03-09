@@ -16,7 +16,6 @@
 
 #pragma once
 
-#include <stdbool.h>
 #include <stdint.h>
 #include <stdlib.h>
 
@@ -39,31 +38,7 @@
     #error "Unsupported Platform"
 #endif
 
-#ifdef __cplusplus
-    #define OCR_EXTERN_C_BEGIN extern "C" {
-    #define OCR_EXTERN_C_END }
-#else
-    #define OCR_EXTERN_C_BEGIN
-    #define OCR_EXTERN_C_END
-#endif
-
-/**
- * Gets whether or not the specified status is successful.
- *
- * @param status The status to check.
- * @return Non-Zero if the status is OCR_OK, false otherwise.
- */
-#define OCR_SUCCEEDED(status) ((status) == OCR_OK)
-
-/**
- * Gets whether or not the specified status indicates failure.
- *
- * @param status The status to check.
- * @return Non-zero if the status is not OCR_OK, false otherwise.
- */
-#define OCR_FAILED(status) ((status) != OCR_OK)
-
-OCR_EXTERN_C_BEGIN
+namespace ocr {
 
 typedef uint8_t u8;
 typedef int8_t i8;
@@ -80,13 +55,12 @@ typedef int64_t i64;
 typedef float r32;
 typedef double r64;
 
-typedef enum ocr_status {
-    OCR_OK,
-    OCR_NO_MEMORY,
-    OCR_IO_ERROR,
-    OCR_GENERAL_ERROR
-} ocr_status_t;
-
+enum class Status {
+    Ok,
+    NoMemory,
+    IoError,
+    GeneralError
+};
 
 /**
  * Gets a static string description of a status code.
@@ -94,8 +68,15 @@ typedef enum ocr_status {
  * @param status The status code.
  * @return The string representation of the code. "unknown error" if the code is not recognized.
  */
-const char *ocr_strerror(ocr_status_t status);
+const char *strerror(Status status);
 
+OCR_INLINE constexpr bool succeeded(Status status) {
+    return status == Status::Ok;
+}
+
+OCR_INLINE constexpr bool failed(Status status) {
+    return status != Status::Ok;
+}
 
 /**
  * Gets the number of bytes in a number of kilobytes.
@@ -103,8 +84,7 @@ const char *ocr_strerror(ocr_status_t status);
  * @param kb The number of kilobytes.
  * @return The number of bytes.
  */
-OCR_INLINE size_t ocr_kb(size_t kb)
-{
+OCR_INLINE constexpr size_t kb(size_t kb) {
     return kb * 1024;
 }
 
@@ -115,9 +95,8 @@ OCR_INLINE size_t ocr_kb(size_t kb)
  * @param mb The number of megabytes.
  * @return The number of bytes.
  */
-OCR_INLINE size_t ocr_mb(size_t mb)
-{
-    return ocr_kb(mb) * 1024;
+OCR_INLINE constexpr size_t mb(size_t mb) {
+    return kb(mb) * 1024;
 }
 
 
@@ -127,9 +106,8 @@ OCR_INLINE size_t ocr_mb(size_t mb)
  * @param gb The number of gigabytes.
  * @return The number of bytes.
  */
-OCR_INLINE size_t ocr_gb(size_t gb)
-{
-    return ocr_mb(gb) * 1024;
+OCR_INLINE constexpr size_t gb(size_t gb) {
+    return mb(gb) * 1024;
 }
 
-OCR_EXTERN_C_END
+}

@@ -21,35 +21,45 @@
 
 #define MAX_LOG 4096
 
+namespace ocr {
 
-static const char *ocr_strlevel(u8 level)
-{
+static const char *ocr_strlevel(u8 level) {
     switch (level) {
-    case OCR_LOG_TRACE: return "TRACE";
-    case OCR_LOG_DEBUG: return "DEBUG";
-    case OCR_LOG_INFO: return "INFO";
-    case OCR_LOG_WARN: return "WARN";
-    case OCR_LOG_ERROR: return "ERROR";
-    default: return "INVALID";
+        case OCR_LOG_TRACE:
+            return "TRACE";
+        case OCR_LOG_DEBUG:
+            return "DEBUG";
+        case OCR_LOG_INFO:
+            return "INFO";
+        case OCR_LOG_WARN:
+            return "WARN";
+        case OCR_LOG_ERROR:
+            return "ERROR";
+        default:
+            return "INVALID";
     }
 }
 
 
-static const char *ocr_clrlevel(u8 level)
-{
+static const char *ocr_clrlevel(u8 level) {
     switch (level) {
-    case OCR_LOG_TRACE: return "\x1b[36m";
-    case OCR_LOG_DEBUG: return "\x1b[36m";
-    case OCR_LOG_INFO: return "\x1b[32m";
-    case OCR_LOG_WARN: return "\x1b[33m";
-    case OCR_LOG_ERROR: return "\x1b[31m";
-    default: return "\x1b[31m";
+        case OCR_LOG_TRACE:
+            return "\x1b[36m";
+        case OCR_LOG_DEBUG:
+            return "\x1b[36m";
+        case OCR_LOG_INFO:
+            return "\x1b[32m";
+        case OCR_LOG_WARN:
+            return "\x1b[33m";
+        case OCR_LOG_ERROR:
+            return "\x1b[31m";
+        default:
+            return "\x1b[31m";
     }
 }
 
 
-void ocr_log(u8 level, const char *file, int line, const char *format, ...)
-{
+void log(u8 level, const char *file, int line, const char *format, ...) {
     va_list args;
     va_start(args, format);
 
@@ -63,4 +73,6 @@ void ocr_log(u8 level, const char *file, int line, const char *format, ...)
            ocr_clrlevel(level),
            ocr_strlevel(level),
            buffer, file, line);
+}
+
 }

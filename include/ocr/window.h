@@ -16,26 +16,38 @@
 
 #pragma once
 
+#include <memory>
+
 #include "ocr/common.h"
 #include "ocr/pool.h"
 
-OCR_EXTERN_C_BEGIN
+namespace ocr {
 
-typedef struct ocr_window ocr_window_t;
-
-typedef struct {
+struct WindowSettings {
     u32 width;
     u32 height;
     const char *title;
-} ocr_window_settings_t;
+};
 
-ocr_window_t *ocr_window_create(ocr_pool_t *pool, ocr_window_settings_t *settings);
+class Window {
 
-void ocr_window_destroy(ocr_window_t *window);
+    friend class GlContext;
 
-void ocr_window_do_events(ocr_window_t *window);
+public:
 
-bool ocr_window_is_closed(ocr_window_t *window);
+    Window(const WindowSettings &settings);
 
+    ~Window();
 
-OCR_EXTERN_C_END
+    void doEvents();
+
+    bool isClosed();
+
+private:
+
+    struct Impl;
+    std::unique_ptr<Impl> _impl;
+};
+
+}
+

@@ -14,20 +14,34 @@
  * limitations under the License.
  */
 
-#include "ocr/buffer.h"
+#include "ocr/timer.h"
 
+namespace ocr {
 
-ocr_buffer_t *ocr_buffer_create(ocr_pool_t *pool, size_t size)
-{
-    ocr_buffer_t *buffer = ocr_pool_alloc(pool, sizeof(*buffer) + size);
-    buffer->size = size;
+struct Timer::Impl {
+    u64 start;
+};
 
-    return buffer;
+static u64 ns_time(void) {
+    struct timespec ts;
+    clock_gettime(CLOCK_REALTIME, &ts);
+
+    return ts.tv_nsec + ts.tv_sec * 1000000;
 }
 
+Timer::Timer()
+        : _impl {new Impl()} {
 
-void ocr_buffer_destroy(ocr_buffer_t *buffer)
-{
+    _impl->start = ns_time();
 }
 
+void Timer::reset() {
+    _impl->start = ns_time();
+}
 
+r32 Timer::time() {
+    u64 elapsed = ns_time() - _impl->start;
+    return elapsed / 1000000.0f;
+}
+
+}

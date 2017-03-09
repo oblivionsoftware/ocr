@@ -16,33 +16,28 @@
 
 #pragma once
 
+#include <memory>
+
 #include "ocr/common.h"
 #include "ocr/pool.h"
 
-OCR_EXTERN_C_BEGIN
+namespace ocr {
 
-typedef struct ocr_event_loop ocr_event_loop_t;
+class EventLoop {
 
-/**
- * Creates a new event loop.
- *
- * @param pool The allocation pool.
- * @return The newly created loop.
- */
-ocr_event_loop_t *ocr_event_loop_create(ocr_pool_t *pool);
+public:
 
-/**
- * Destroys the event loop.
- *
- * @param loop The loop to destroy.
- */
-void ocr_event_loop_destroy(ocr_event_loop_t *loop);
+    EventLoop();
 
-/**
- * Runs the event loop.
- *
- * @param loop The loop to run.
- */
-void ocr_event_loop_run(ocr_event_loop_t *loop);
+    ~EventLoop();
 
-OCR_EXTERN_C_END
+    void run();
+
+private:
+
+    struct Impl;
+    std::unique_ptr<Impl> _impl;
+
+};
+
+}

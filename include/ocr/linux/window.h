@@ -18,10 +18,13 @@
 
 #include <X11/Xlib.h>
 
+namespace ocr {
 
-struct ocr_window {
+struct Window::Impl {
     Display *display;
-    Window window;
+    ::Window window;
     bool closed;
     Atom delete_message;
 };
+
+}

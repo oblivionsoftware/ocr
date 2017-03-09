@@ -7,24 +7,24 @@ find_package(Threads REQUIRED)
 find_package(OpenGL REQUIRED)
 
 set(OCR_SOURCES
-    src/buffer.c
-    src/common.c
-    src/file.c
-    src/log.c
-    src/pool.c
-    src/gl3w.c
-    src/linux/event.c
-    src/linux/opengl.c
-    src/linux/timer.c
-    src/linux/window.c
-    src/mac/event.c
-    src/mac/opengl.c
-    src/mac/timer.c
-    src/mac/window.c
-    src/windows/event.c
-    src/windows/opengl.c
-    src/windows/timer.c
-    src/windows/window.c
+    src/buffer.cpp
+    src/common.cpp
+    src/file.cpp
+    src/log.cpp
+    src/pool.cpp
+    src/gl3w.cpp
+    src/linux/event.cpp
+    src/linux/opengl.cpp
+    src/linux/timer.cpp
+    src/linux/window.cpp
+    src/mac/event.cpp
+    src/mac/opengl.cpp
+    src/mac/timer.cpp
+    src/mac/window.cpp
+    src/windows/event.cpp
+    src/windows/opengl.cpp
+    src/windows/timer.cpp
+    src/windows/window.cpp
 )
 
 if (NOT WIN32)
@@ -54,9 +54,9 @@ target_include_directories(ocr PUBLIC
     $<INSTALL_INTERFACE:include>
     PRIVATE src)
 
-if ((${CMAKE_COMPILER_IS_GNUCC}) OR (${CMAKE_C_COMPILER_ID} MATCHES "Clang"))
+if ((${CMAKE_COMPILER_IS_GNUCXX}) OR (${CMAKE_CXX_COMPILER_ID} MATCHES "Clang"))
     target_compile_options(ocr PRIVATE
-        -std=gnu99 -Wall -Werror -pedantic)
+        -std=c++17 -Wall -Werror -pedantic)
 else()
     target_compile_options(ocr PRIVATE
         /W3 /WX)

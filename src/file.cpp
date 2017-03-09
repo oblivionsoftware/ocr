@@ -14,42 +14,36 @@
  * limitations under the License.
  */
 
-#include "ocr/timer.h"
+#include "ocr/file.h"
 
-#include <time.h>
+#include <stdio.h>
 
 #include "ocr/log.h"
 
-struct ocr_timer {
-    u64 start;
-};
+namespace ocr {
 
-static u64 ns_time(void)
-{
-    struct timespec ts;
-    clock_gettime(CLOCK_REALTIME, &ts);
+Buffer read_file(const char *path, Pool &pool) {
+    FILE *file = fopen(path, "rb");
+    if (!file) {
+        OCR_ERROR("unable to open file: %s", path);
+        //return Status::IoError;
+    }
 
-    return ts.tv_nsec + ts.tv_sec * 1000000;
+    fseek(file, 0, SEEK_END);
+    size_t size = ftell(file);
+    fseek(file, 0, SEEK_SET);
+    OCR_INFO("file size: %zu", size);
+
+    Buffer buffer{pool, size + 1};
+    if (fread(buffer.data, size, 1, file) != 1) {
+        fclose(file);
+        //return Status::IoError;
+    }
+
+    buffer.data[size] = '\0';
+    fclose(file);
+
+    return buffer;
 }
 
-ocr_timer_t *ocr_timer_create(ocr_pool_t *pool)
-{
-    ocr_timer_t *timer = ocr_pool_alloc(pool, sizeof(*timer));
-    timer->start = ns_time();
-
-    return timer;
 }
-
-
-void ocr_timer_reset(ocr_timer_t *timer)
-{
-    timer->start = ns_time();
-}
-
-
-r32 ocr_timer_time(ocr_timer_t *timer)
-{
-    u64 elapsed = ns_time() - timer->start;
-    return elapsed / 1000000.0f;
-}
-

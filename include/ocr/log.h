@@ -18,7 +18,7 @@
 
 #include "ocr/common.h"
 
-OCR_EXTERN_C_BEGIN
+namespace ocr {
 
 #define OCR_LOG_TRACE 0
 #define OCR_LOG_DEBUG 1
@@ -36,7 +36,7 @@ OCR_EXTERN_C_BEGIN
 
  * @param level The logging level.
  */
-#define OCR_LOG(level, ...) ocr_log(level, __FILE__, __LINE__, __VA_ARGS__)
+#define OCR_LOG(level, ...) log(level, __FILE__, __LINE__, __VA_ARGS__)
 
 /**
  * Gets whether or not the specified log level is enabled.
@@ -47,33 +47,33 @@ OCR_EXTERN_C_BEGIN
 #define OCR_LOG_ENABLED(level) (OCR_LOG_LEVEL <= (level))
 
 #if OCR_LOG_ENABLED(OCR_LOG_TRACE)
-    #define OCR_TRACE(...) OCR_LOG(OCR_LOG_TRACE, __VA_ARGS__)
+#define OCR_TRACE(...) OCR_LOG(OCR_LOG_TRACE, __VA_ARGS__)
 #else
-    #define OCR_TRACE(...)
+#define OCR_TRACE(...)
 #endif
 
 #if OCR_LOG_ENABLED(OCR_LOG_DEBUG)
-    #define OCR_DEBUG(...) OCR_LOG(OCR_LOG_DEBUG, __VA_ARGS__)
+#define OCR_DEBUG(...) OCR_LOG(OCR_LOG_DEBUG, __VA_ARGS__)
 #else
-    #define OCR_DEBUG(...)
+#define OCR_DEBUG(...)
 #endif
 
 #if OCR_LOG_ENABLED(OCR_LOG_INFO)
-    #define OCR_INFO(...) OCR_LOG(OCR_LOG_INFO, __VA_ARGS__)
+#define OCR_INFO(...) OCR_LOG(OCR_LOG_INFO, __VA_ARGS__)
 #else
-    #define OCR_INFO(...)
+#define OCR_INFO(...)
 #endif
 
 #if OCR_LOG_ENABLED(OCR_LOG_WARN)
-    #define OCR_WARN(...) OCR_LOG(OCR_LOG_WARN, __VA_ARGS__)
+#define OCR_WARN(...) OCR_LOG(OCR_LOG_WARN, __VA_ARGS__)
 #else
-    #define OCR_WARN(...)
+#define OCR_WARN(...)
 #endif
 
 #if OCR_LOG_ENABLED(OCR_LOG_ERROR)
-    #define OCR_ERROR(...) OCR_LOG(OCR_LOG_ERROR, __VA_ARGS__)
+#define OCR_ERROR(...) OCR_LOG(OCR_LOG_ERROR, __VA_ARGS__)
 #else
-    #define OCR_ERROR(...)
+#define OCR_ERROR(...)
 #endif
 
 /**
@@ -84,6 +84,7 @@ OCR_EXTERN_C_BEGIN
  * @param line The line number.
  * @param format The message format.
  */
-void ocr_log(u8 level, const char *file, int line, const char *format, ...);
+void log(u8 level, const char *file, int line, const char *format, ...);
 
-OCR_EXTERN_C_END
+}
+

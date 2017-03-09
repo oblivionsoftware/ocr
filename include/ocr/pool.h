@@ -18,47 +18,37 @@
 
 #include "ocr/common.h"
 
-OCR_EXTERN_C_BEGIN
+namespace ocr {
 
-typedef struct ocr_pool ocr_pool_t;
+class Pool {
 
-struct ocr_pool {
-    size_t size;
-    size_t offset;
-    ocr_pool_t *parent;
-    u8 memory[1];
+public:
+
+    explicit Pool(size_t size, Pool *parent = nullptr);
+
+    ~Pool();
+
+    void clear();
+
+    void *allocRaw(size_t size);
+
+    template <typename T>
+    T *alloc() {
+        return reinterpret_cast<T*>(allocRaw(sizeof(T)));
+    }
+
+    template <typename T>
+    T *allocExtra(size_t extra) {
+        return reinterpret_cast<T*>(allocRaw(sizeof(T) + extra));
+    }
+
+private:
+
+    size_t _size;
+    size_t _offset;
+    Pool *_parent;
+    u8 *_memory;
 };
 
-/**
- * Creates a new pool.
- *
- * @param size The size of the pool.
- * @param parent The parent pool.
- * @return the newly created pool.
- */
-ocr_pool_t *ocr_pool_create(size_t size, ocr_pool_t *parent);
 
-/**
- * Destroys the specified pool.
- *
- * @param pool The pool to destroy.
- */
-void ocr_pool_destroy(ocr_pool_t *pool);
-
-/**
- * Allocates memory using the specified pool.
- *
- * @param pool The pool to use to allocate.
- * @param size The amount of memory to allocate.
- * @return The allocated memory, NULL if the pool was unable to allocate.
- */
-void *ocr_pool_alloc(ocr_pool_t *pool, size_t size);
-
-/**
- * Clears the allocated memory in the pool.
- *
- * @param pool The pool to clear.
- */
-void ocr_pool_clear(ocr_pool_t *pool);
-
-OCR_EXTERN_C_END
+}
