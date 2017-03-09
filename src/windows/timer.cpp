@@ -16,38 +16,54 @@
 
 #include "ocr/timer.h"
 
-#define WIN32_LEAN_AND_MEAN
-#include <windows.h>
-
 #include "ocr/log.h"
+#include "ocr/windows.h"
 
-struct ocr_timer {
-    LARGE_INTEGER start;
-    LARGE_INTEGER frequency;
+namespace ocr {
+
+class Timer::Impl {
+public:
+
+    Impl()
+    {
+        QueryPerformanceFrequency(&_frequency);
+        QueryPerformanceCounter(&_start);
+    }
+
+    void reset()
+    {
+        QueryPerformanceCounter(&_start);
+    }
+
+    r32 time() const
+    {
+        LARGE_INTEGER time;
+        QueryPerformanceCounter(&time);
+
+        return (r32)(time.QuadPart - _start.QuadPart) / _frequency.QuadPart;
+    }
+
+private:
+
+    LARGE_INTEGER _start;
+    LARGE_INTEGER _frequency;
 };
 
-
-ocr_timer_t *ocr_timer_create(ocr_pool_t *pool)
+Timer::Timer()
+    : _impl{std::make_unique<Impl>()}
 {
-    ocr_timer_t *timer = ocr_pool_alloc(pool, sizeof(*timer));
-    QueryPerformanceFrequency(&timer->frequency);
-    QueryPerformanceCounter(&timer->start);
-
-    return timer;
 }
 
 
-void ocr_timer_reset(ocr_timer_t *timer)
+void Timer::reset()
 {
-    QueryPerformanceCounter(&timer->start);
+    _impl->reset();
 }
 
 
-r32 ocr_timer_time(ocr_timer_t *timer)
+r32 Timer::time() const
 {
-    LARGE_INTEGER time;
-    QueryPerformanceCounter(&time);
-
-    return (r32)(time.QuadPart - timer->start.QuadPart) / timer->frequency.QuadPart;
+    return _impl->time();
 }
 
+}

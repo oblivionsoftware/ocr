@@ -21,7 +21,6 @@
 namespace ocr {
 
 class Pool {
-
 public:
 
     explicit Pool(size_t size, Pool *parent = nullptr);
@@ -33,12 +32,14 @@ public:
     void *allocRaw(size_t size);
 
     template <typename T>
-    T *alloc() {
+    T *alloc()
+    {
         return reinterpret_cast<T*>(allocRaw(sizeof(T)));
     }
 
     template <typename T>
-    T *allocExtra(size_t extra) {
+    T *allocExtra(size_t extra)
+    {
         return reinterpret_cast<T*>(allocRaw(sizeof(T) + extra));
     }
 
@@ -49,6 +50,5 @@ private:
     Pool *_parent;
     u8 *_memory;
 };
-
 
 }

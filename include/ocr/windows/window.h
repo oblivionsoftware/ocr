@@ -16,11 +16,30 @@
 
 #include "ocr/window.h"
 
-#define WIN32_LEAN_AND_MEAN
-#include <windows.h>
+#include "ocr/windows.h"
 
-struct ocr_window {
-    HWND handle;
-    bool closed;
+namespace ocr {
+
+class Window::Impl {
+public:
+
+    Impl(const WindowSettings &settings);
+
+    ~Impl();
+
+    HWND handle() const;
+
+    void markClosed();
+
+    bool isClosed() const;
+
+    void doEvents();
+
+private:
+
+    HWND _handle;
+    bool _closed{false};
 };
+
+}
 

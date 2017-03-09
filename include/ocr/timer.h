@@ -19,26 +19,22 @@
 #include <memory>
 
 #include "ocr/common.h"
-#include "ocr/pool.h"
 
 namespace ocr {
 
-
 class Timer {
-
 public:
 
     Timer();
 
     void reset();
 
-    r32 time();
+    r32 time() const;
 
 private:
 
-    struct Impl;
+    class Impl;
     std::unique_ptr<Impl> _impl;
-
 };
 
 }

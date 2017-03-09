@@ -16,52 +16,46 @@
 
 #include "ocr/event.h"
 
-#define WIN32_LEAN_AND_MEAN
-#include <windows.h>
-
 #include "ocr/log.h"
+#include "ocr/windows.h"
 
-struct ocr_event_loop {
+namespace ocr {
+
+struct EventLoop::Impl {
     bool running;
     HANDLE completion_port;
 };
 
 
-ocr_event_loop_t *ocr_event_loop_create(ocr_pool_t *pool)
+EventLoop::EventLoop()
+    : _impl{std::make_unique<Impl>()}
 {
-    ocr_event_loop_t *loop = ocr_pool_alloc(pool, sizeof(ocr_event_loop_t));
-    loop->completion_port = CreateIoCompletionPort(INVALID_HANDLE_VALUE, NULL, (ULONG_PTR)loop, 1);
-
-    if (loop->completion_port == NULL) {
-        return NULL;
-    }
-
-    return loop;
-}
-
-
-void ocr_event_loop_destroy(ocr_event_loop_t *loop)
-{
-    if (loop) {
-        CloseHandle(loop->completion_port);
-        loop->completion_port = NULL;
+    _impl->completion_port = CreateIoCompletionPort(INVALID_HANDLE_VALUE, NULL, (ULONG_PTR)this, 1);
+    if (_impl->completion_port == NULL) {
+        throw std::runtime_error("unable to create completion port");
     }
 }
 
-
-void ocr_event_loop_run(ocr_event_loop_t *loop)
+EventLoop::~EventLoop()
 {
-    loop->running = true;
+    CloseHandle(_impl->completion_port);
+}
+
+void EventLoop::run()
+{
+    _impl->running = true;
 
     for (int i = 0; i < 10; ++i) {
         //while (loop->running) {
         DWORD byte_count;
         ULONG_PTR key;
         LPOVERLAPPED overlapped;
-        if (GetQueuedCompletionStatus(loop->completion_port, &byte_count, &key, &overlapped, 100)) {
+        if (GetQueuedCompletionStatus(_impl->completion_port, &byte_count, &key, &overlapped, 100)) {
             OCR_INFO("got completion status: %u", byte_count);
         } else {
             OCR_INFO("nothing from completion port");
         }
     }
+}
+
 }

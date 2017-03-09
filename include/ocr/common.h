@@ -16,8 +16,9 @@
 
 #pragma once
 
-#include <stdint.h>
-#include <stdlib.h>
+#include <stdexcept>
+#include <cstdint>
+#include <cstdlib>
 
 #define OCR_INLINE static __inline 
 

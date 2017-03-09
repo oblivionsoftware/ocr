@@ -24,7 +24,8 @@
 
 namespace ocr {
 
-Pool::Pool(size_t size, Pool *parent) {
+Pool::Pool(size_t size, Pool *parent)
+{
     OCR_INFO("allocating pool of size: %zu", size);
 
     if (parent) {
@@ -34,8 +35,7 @@ Pool::Pool(size_t size, Pool *parent) {
     }
 
     if (!_memory) {
-        OCR_ERROR("pool allocation failed, size: %zu", size);
-        //return NULL;
+        throw std::runtime_error("pool allocation failed");
     }
 
     _size = size;
@@ -43,7 +43,8 @@ Pool::Pool(size_t size, Pool *parent) {
     _parent = parent;
 }
 
-Pool::~Pool() {
+Pool::~Pool()
+{
     OCR_INFO("destroying pool");
 
     if (_parent == NULL) {
@@ -51,7 +52,8 @@ Pool::~Pool() {
     }
 }
 
-void *Pool::allocRaw(size_t size) {
+void *Pool::allocRaw(size_t size)
+{
     assert(_offset + size < _size);
 
     void *result = _memory + _offset;
@@ -61,7 +63,8 @@ void *Pool::allocRaw(size_t size) {
 }
 
 
-void Pool::clear() {
+void Pool::clear()
+{
     _offset = 0;
 }
 

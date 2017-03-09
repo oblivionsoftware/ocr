@@ -23,8 +23,7 @@
 #include <GL/gl3w.h>
 
 #if OCR_PLATFORM == OCR_PLATFORM_WINDOWS
-    #define WIN32_LEAN_AND_MEAN
-    #include <Windows.h>
+    #include "ocr/windows.h"
     #include <gl/GL.h>
     #include <gl/GLU.h>
 
@@ -39,8 +38,7 @@
 
 namespace ocr {
 
-struct Window;
-struct Pool;
+class Window;
 
 class GlContext {
 public:
@@ -53,7 +51,7 @@ public:
 
 private:
 
-    struct Impl;
+    class Impl;
     std::unique_ptr<Impl> _impl;
 
 };

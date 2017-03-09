@@ -1,5 +1,5 @@
 /*
- * Copyright 2016 Jeff Upton
+ * Copyright 2017 Jeff Upton
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,49 +16,8 @@
 
 #pragma once
 
-#include <memory>
+#ifndef WIN32_LEAN_AND_MEAN
+    #define WIN32_LEAN_AND_MEAN
+#endif
 
-#include "ocr/common.h"
-#include "ocr/pool.h"
-
-namespace ocr {
-
-struct WindowSettings {
-    u32 width;
-    u32 height;
-    const char *title;
-};
-
-class Window {
-
-    friend class GlContext;
-
-public:
-
-    Window(const WindowSettings &settings);
-
-    ~Window();
-
-    void doEvents();
-
-    bool isClosed() const;
-
-    class Impl;
-
-    Impl &impl()
-    {
-        return *_impl;
-    }
-
-    const Impl &impl() const
-    {
-        return *_impl;
-    }
-
-private:
-
-    std::unique_ptr<Impl> _impl;
-};
-
-}
-
+#include <Windows.h>
