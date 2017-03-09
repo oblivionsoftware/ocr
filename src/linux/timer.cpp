@@ -18,30 +18,53 @@
 
 namespace ocr {
 
-struct Timer::Impl {
-    u64 start;
+static u64 ns_time();
+
+class Timer::Impl {
+public:
+
+    Impl()
+    {
+        _start = ns_time();
+    }
+
+    void reset()
+    {
+        _start = ns_time();
+    }
+
+    r32 time() const
+    {
+        u64 elapsed = ns_time() - _start;
+        return elapsed / 1000000.0f;
+    }
+
+private:
+
+    u64 _start;
 };
 
-static u64 ns_time(void) {
+Timer::Timer()
+    : _impl {new Impl()}
+{
+}
+
+void Timer::reset()
+{
+    _impl->reset();
+}
+
+r32 Timer::time() const
+{
+    return _impl->time();
+}
+
+static u64 ns_time()
+{
     struct timespec ts;
     clock_gettime(CLOCK_REALTIME, &ts);
 
     return ts.tv_nsec + ts.tv_sec * 1000000;
-}
-
-Timer::Timer()
-        : _impl {new Impl()} {
-
-    _impl->start = ns_time();
-}
-
-void Timer::reset() {
-    _impl->start = ns_time();
-}
-
-r32 Timer::time() {
-    u64 elapsed = ns_time() - _impl->start;
-    return elapsed / 1000000.0f;
 }
 
 }

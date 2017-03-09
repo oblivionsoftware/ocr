@@ -25,36 +25,55 @@
 
 namespace ocr {
 
-struct EventLoop::Impl {
-    int efd;
-    bool running;
+class EventLoop::Impl {
+public:
+
+    Impl()
+    {
+        if ((_efd = epoll_create1(0)) == -1) {
+            OCR_ERROR("epoll_create1 failed: %s", ::strerror(errno));
+            throw std::runtime_error("epoll_create1 failed");
+        }
+    }
+
+    ~Impl()
+    {
+        close(_efd);
+    }
+
+    void run()
+    {
+        _running = true;
+
+        struct epoll_event events[64];
+
+        for (int i = 0; i < 10; ++i) {
+            int event_count = epoll_wait(_efd, events, 64, 100);
+            OCR_INFO("found %d events", event_count);
+        }
+    }
+
+private:
+
+    int _efd;
+    bool _running;
 };
 
 
 EventLoop::EventLoop()
-        : _impl{new Impl()} {
-
-    if ((_impl->efd = epoll_create1(0)) == -1) {
-        OCR_ERROR("epoll_create1 failed: %s", ::strerror(errno));
-        throw std::runtime_error("epoll_create1 failed");
-    }
+    : _impl{new Impl()}
+{
 }
 
 
-EventLoop::~EventLoop() {
-    close(_impl->efd);
+EventLoop::~EventLoop()
+{
 }
 
 
-void EventLoop::run() {
-    _impl->running = true;
-
-    struct epoll_event events[64];
-
-    for (int i = 0; i < 10; ++i) {
-        int event_count = epoll_wait(_impl->efd, events, 64, 100);
-        OCR_INFO("found %d events", event_count);
-    }
+void EventLoop::run()
+{
+    _impl->run();
 }
 
 }

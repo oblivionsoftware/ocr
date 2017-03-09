@@ -96,7 +96,7 @@ void Window::doEvents() {
 
 }
 
-bool Window::isClosed() {
+bool Window::isClosed() const {
     return _impl->closed;
 }
 
