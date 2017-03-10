@@ -51,6 +51,8 @@ ocr_window_t *ocr_window_create(ocr_pool_t *pool, ocr_window_settings_t *setting
     Window x11_window = XCreateWindow(display, root, 0, 0, settings->width, settings->height,
                                       0, vi->depth, InputOutput, vi->visual, CWColormap | CWEventMask, &swa);
 
+    XFree(vi);
+
     XSizeHints hints = {
         .flags = PMinSize | PMaxSize,
         .min_width = settings->width,
@@ -96,7 +98,7 @@ void ocr_window_do_events(ocr_window_t *window)
         switch (event.type) {
 
         case ClientMessage:
-            if (event.xclient.data.l[0] == window->delete_message) {
+            if ((Atom)event.xclient.data.l[0] == window->delete_message) {
                 window->closed = true;
             }
             break;

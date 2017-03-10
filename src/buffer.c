@@ -26,8 +26,3 @@ ocr_buffer_t *ocr_buffer_create(ocr_pool_t *pool, size_t size)
 }
 
 
-void ocr_buffer_destroy(ocr_buffer_t *buffer)
-{
-}
-
-

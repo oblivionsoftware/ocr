@@ -29,16 +29,16 @@ struct ocr_gl_context {
 
 ocr_gl_context_t *ocr_gl_context_create(ocr_pool_t *pool, ocr_window_t *window)
 {
-    GLXFBConfig *fb_configs = NULL;
     int fb_config_count = 0;
-
-    fb_configs = glXGetFBConfigs(window->display, 0, &fb_config_count);
+    GLXFBConfig *fb_configs = glXGetFBConfigs(window->display, 0, &fb_config_count);
 
     int visual_id = 0;
     GLXFBConfig fb_config = fb_configs[0];
     glXGetFBConfigAttrib(window->display, fb_config, GLX_VISUAL_ID, &visual_id);
 
     GLXContext context = glXCreateNewContext(window->display, fb_config, GLX_RGBA_TYPE, 0, true);
+
+    free(fb_configs);
 
     glXMakeContextCurrent(window->display, window->window, window->window, context);
 
