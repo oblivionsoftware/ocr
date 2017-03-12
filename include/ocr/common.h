@@ -33,11 +33,11 @@
 #elif __APPLE__
     #define OCR_PLATFORM OCR_PLATFORM_MAC
     #define OCR_PLATFORM_NAME "Mac OSX"
-    #define OCR_NO_RETURN __attribute__(noreturn)
+    #define OCR_NO_RETURN __attribute__ ((noreturn))
 #elif __linux__
     #define OCR_PLATFORM OCR_PLATFORM_LINUX
     #define OCR_PLATFORM_NAME "Linux"
-    #define OCR_NO_RETURN __attribute__(noreturn)
+    #define OCR_NO_RETURN __attribute__ ((noreturn))
 #else
     #error "Unsupported Platform"
 #endif
