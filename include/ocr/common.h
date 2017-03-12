@@ -29,12 +29,15 @@
 #ifdef _WIN32
     #define OCR_PLATFORM OCR_PLATFORM_WINDOWS
     #define OCR_PLATFORM_NAME "Windows"
+    #define OCR_NO_RETURN __declspec(noreturn)
 #elif __APPLE__
     #define OCR_PLATFORM OCR_PLATFORM_MAC
     #define OCR_PLATFORM_NAME "Mac OSX"
+    #define OCR_NO_RETURN __attribute__(noreturn)
 #elif __linux__
     #define OCR_PLATFORM OCR_PLATFORM_LINUX
     #define OCR_PLATFORM_NAME "Linux"
+    #define OCR_NO_RETURN __attribute__(noreturn)
 #else
     #error "Unsupported Platform"
 #endif
@@ -62,6 +65,11 @@
  * @return Non-zero if the status is not OCR_OK, false otherwise.
  */
 #define OCR_FAILED(status) ((status) != OCR_OK)
+
+/**
+ * Logs an error and aborts the program.
+ */
+#define OCR_PANIC(...) ocr_panic(__FILE__, __LINE__, __VA_ARGS__)
 
 OCR_EXTERN_C_BEGIN
 
@@ -131,5 +139,14 @@ OCR_INLINE size_t ocr_gb(size_t gb)
 {
     return ocr_mb(gb) * 1024;
 }
+
+/**
+ * Logs an error and aborts the program.
+ *
+ * @param file The name of the file.
+ * @param line The line number.
+ * @param format The printf-style format string to log.
+ */
+OCR_NO_RETURN void ocr_panic(const char *file, int line, const char *format, ...);
 
 OCR_EXTERN_C_END

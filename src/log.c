@@ -48,19 +48,25 @@ static const char *ocr_clrlevel(u8 level)
 }
 
 
-void ocr_log(u8 level, const char *file, int line, const char *format, ...)
+void ocr_logv(u8 level, const char *file, int line, const char *format, va_list args)
 {
-    va_list args;
-    va_start(args, format);
-
     char buffer[MAX_LOG + 1];
     vsnprintf(buffer, sizeof(buffer), format, args);
     buffer[MAX_LOG] = '\0';
-
-    va_end(args);
 
     printf("%s[%s]\x1b[0m\t%s (%s:%d)\n",
            ocr_clrlevel(level),
            ocr_strlevel(level),
            buffer, file, line);
+}
+
+
+void ocr_log(u8 level, const char *file, int line, const char *format, ...)
+{
+    va_list args;
+    va_start(args, format);
+
+    ocr_logv(level, file, line, format, args);
+
+    va_end(args);
 }

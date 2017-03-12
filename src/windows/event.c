@@ -33,7 +33,7 @@ ocr_event_loop_t *ocr_event_loop_create(ocr_pool_t *pool)
     loop->completion_port = CreateIoCompletionPort(INVALID_HANDLE_VALUE, NULL, (ULONG_PTR)loop, 1);
 
     if (loop->completion_port == NULL) {
-        return NULL;
+        OCR_PANIC("error creating completion port");
     }
 
     return loop;

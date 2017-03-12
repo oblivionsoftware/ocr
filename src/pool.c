@@ -37,8 +37,7 @@ ocr_pool_t *ocr_pool_create(size_t size, ocr_pool_t *parent)
     }
 
     if (!pool) {
-        OCR_ERROR("pool allocation failed, size: %zu", size);
-        return NULL;
+        OCR_PANIC("pool allocation failed, size: %zu", size);
     }
 
     pool->size = size;

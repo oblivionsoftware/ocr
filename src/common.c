@@ -16,6 +16,10 @@
 
 #include "ocr/common.h"
 
+#include <stdarg.h>
+
+#include "ocr/log.h"
+
 
 const char *ocr_strerror(ocr_status_t status)
 {
@@ -26,4 +30,17 @@ const char *ocr_strerror(ocr_status_t status)
     case OCR_GENERAL_ERROR: return "general error";
     default: return "unknown error";
     }
+}
+
+
+OCR_NO_RETURN void ocr_panic(const char *file, int line, const char *format, ...)
+{
+    va_list args;
+    va_start(args, format);
+
+    ocr_logv(OCR_LOG_ERROR, file, line, format, args);
+
+    va_end(args);
+
+    abort();
 }

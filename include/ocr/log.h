@@ -16,7 +16,10 @@
 
 #pragma once
 
+#include <stdarg.h>
+
 #include "ocr/common.h"
+
 
 OCR_EXTERN_C_BEGIN
 
@@ -85,5 +88,16 @@ OCR_EXTERN_C_BEGIN
  * @param format The message format.
  */
 void ocr_log(u8 level, const char *file, int line, const char *format, ...);
+
+/**
+ * Logs the specified output to the default log sink.
+ *
+ * @param level The log message level.
+ * @param file The file name.
+ * @param line The line number.
+ * @param form The message format.
+ * @parmm args The varargs structure.
+ */
+void ocr_logv(u8 level, const char *file, int line, const char *format, va_list args);
 
 OCR_EXTERN_C_END
