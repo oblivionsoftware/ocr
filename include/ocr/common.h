@@ -30,14 +30,20 @@
     #define OCR_PLATFORM OCR_PLATFORM_WINDOWS
     #define OCR_PLATFORM_NAME "Windows"
     #define OCR_NO_RETURN __declspec(noreturn)
+
+    #include <malloc.h>
 #elif __APPLE__
     #define OCR_PLATFORM OCR_PLATFORM_MAC
     #define OCR_PLATFORM_NAME "Mac OSX"
     #define OCR_NO_RETURN __attribute__ ((noreturn))
+
+    #include <alloca.h>
 #elif __linux__
     #define OCR_PLATFORM OCR_PLATFORM_LINUX
     #define OCR_PLATFORM_NAME "Linux"
     #define OCR_NO_RETURN __attribute__ ((noreturn))
+
+    #include <alloca.h>
 #else
     #error "Unsupported Platform"
 #endif
