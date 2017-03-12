@@ -16,10 +16,9 @@
 
 #include "ocr/log.h"
 
+#include <malloc.h>
 #include <stdarg.h>
 #include <stdio.h>
-
-#define MAX_LOG 4096
 
 
 static const char *ocr_strlevel(u8 level)
@@ -50,9 +49,11 @@ static const char *ocr_clrlevel(u8 level)
 
 void ocr_logv(u8 level, const char *file, int line, const char *format, va_list args)
 {
-    char buffer[MAX_LOG + 1];
-    vsnprintf(buffer, sizeof(buffer), format, args);
-    buffer[MAX_LOG] = '\0';
+    int buffer_size = vsnprintf(NULL, 0, format, args);
+
+    char *buffer = alloca(buffer_size + 1);
+    vsnprintf(buffer, buffer_size + 1, format, args);
+    buffer[buffer_size] = '\0';
 
     printf("%s[%s]\x1b[0m\t%s (%s:%d)\n",
            ocr_clrlevel(level),
