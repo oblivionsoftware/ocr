@@ -48,7 +48,12 @@ static const char *ocr_clrlevel(u8 level)
 
 void ocr_logv(u8 level, const char *file, int line, const char *format, va_list args)
 {
-    int buffer_size = vsnprintf(NULL, 0, format, args);
+    va_list args_copy;
+    va_copy(args_copy, args);
+
+    int buffer_size = vsnprintf(NULL, 0, format, args_copy);
+
+    va_end(args_copy);
 
     char *buffer = alloca(buffer_size + 1);
     vsnprintf(buffer, buffer_size + 1, format, args);

@@ -20,7 +20,7 @@
 
 #include "ocr/log.h"
 
-ocr_status_t ocr_read_file(const char *path, ocr_pool_t *pool, ocr_buffer_t **buffer_out)
+ocr_status_t ocr_read_file(ocr_pool_t *pool, const char *path, ocr_buffer_t **buffer_out)
 {
     FILE *file = fopen(path, "rb");
     if (!file) {

@@ -14,7 +14,7 @@ TEST_CASE("read entire file uses a pool correctly", "[file]")
     ocr_pool_t *pool = ocr_pool_create(ocr_mb(32), NULL);
     REQUIRE(pool);
     ocr_buffer_t *buffer;
-    if (OCR_SUCCEEDED(ocr_read_file(__FILE__, pool, &buffer))) {
+    if (OCR_SUCCEEDED(ocr_read_file(pool, __FILE__, &buffer))) {
         OCR_INFO("Read Buffer: %s", buffer->data);
     }
 
@@ -22,7 +22,7 @@ TEST_CASE("read entire file uses a pool correctly", "[file]")
 
     ocr_pool_clear(pool);
 
-    if (OCR_SUCCEEDED(ocr_read_file(__FILE__, pool, &buffer))) {
+    if (OCR_SUCCEEDED(ocr_read_file(pool, __FILE__, &buffer))) {
         OCR_INFO("Read Buffer: %s", buffer->data);
     }
 
@@ -77,5 +77,30 @@ TEST_CASE("window runs", "[window]")
 
     ocr_gl_context_destroy(gl_context);
     ocr_window_destroy(window);
+    ocr_pool_destroy(pool);
+}
+
+TEST_CASE("image loads", "[image]")
+{
+    ocr_pool *pool = ocr_pool_create(ocr_mb(32), NULL);
+
+    ocr_image_t *image = ocr_image_create(pool, 64, 128);
+    REQUIRE(image);
+    REQUIRE(image->width == 64);
+    REQUIRE(image->height == 128);
+
+    ocr_image_fill(image, 2, 4, 8, 16);
+    u8 *pixel = image->pixels;
+    for (u32 i = 0; i < (image->width * image->height); ++i) {
+        REQUIRE(pixel[0] == 2);
+        REQUIRE(pixel[1] == 4);
+        REQUIRE(pixel[2] == 8);
+        REQUIRE(pixel[3] == 16);
+
+        pixel += 4;
+    }
+
+    OCR_INFO("image dimensions: %u x %u", image->width, image->height);
+
     ocr_pool_destroy(pool);
 }

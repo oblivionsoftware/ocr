@@ -17,18 +17,20 @@
 #pragma once
 
 #include "ocr/common.h"
-#include "ocr/buffer.h"
+#include "ocr/pool.h"
 
 OCR_EXTERN_C_BEGIN
 
-/**
- * Reads the entire contents of a file into a buffer.
- *
- * @param pool The pool to use to allocate the buffer.
- * @param path The path to the file.
- * @param buffer_out The output buffer.
- * @return OK on success, IO_ERROR on failure.
- */
-ocr_status_t ocr_read_file(ocr_pool_t *pool, const char *path, ocr_buffer_t **buffer_out);
+typedef struct {
+    u32 width;
+    u32 height;
+    u8 pixels[1];
+} ocr_image_t;
+
+ocr_image_t *ocr_image_create(ocr_pool_t *pool, u32 width, u32 height);
+
+ocr_image_t *ocr_image_load(ocr_pool_t *pool, const char *path);
+
+void ocr_image_fill(ocr_image_t *image, u8 r, u8 g, u8 b, u8 a);
 
 OCR_EXTERN_C_END

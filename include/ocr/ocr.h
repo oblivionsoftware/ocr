@@ -19,6 +19,7 @@
 #include "ocr/buffer.h"
 #include "ocr/event.h"
 #include "ocr/file.h"
+#include "ocr/image.h"
 #include "ocr/log.h"
 #include "ocr/math.h"
 #include "ocr/opengl.h"

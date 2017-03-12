@@ -10,6 +10,7 @@ set(OCR_SOURCES
     src/buffer.c
     src/common.c
     src/file.c
+    src/image.c
     src/log.c
     src/pool.c
     src/gl3w.c
@@ -56,7 +57,7 @@ target_include_directories(ocr PUBLIC
 
 if ((${CMAKE_COMPILER_IS_GNUCC}) OR (${CMAKE_C_COMPILER_ID} MATCHES "Clang"))
     target_compile_options(ocr PRIVATE
-        -std=gnu99 -O2 -Wall -Wextra -Werror -Wshadow -Wpedantic -march=native -Wstrict-overflow -fno-strict-aliasing)
+        -std=gnu99 -O2 -Wall -Wextra -Werror -Wshadow -Wpedantic -march=native -fno-strict-aliasing)
 else()
     target_compile_options(ocr PRIVATE
         /W3 /WX)

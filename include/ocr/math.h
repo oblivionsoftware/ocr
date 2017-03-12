@@ -42,6 +42,7 @@ typedef struct {
     r32 m[16];
 } ocr_mat4_t;
 
+
 OCR_INLINE ocr_vec4_t ocr_vec4(r32 x, r32 y, r32 z, r32 w)
 {
     ocr_vec4_t result;
@@ -52,6 +53,7 @@ OCR_INLINE ocr_vec4_t ocr_vec4(r32 x, r32 y, r32 z, r32 w)
 
     return result;
 }
+
 
 OCR_INLINE ocr_mat4_t ocr_mat4_ortho(r32 left, r32 right, r32 bottom, r32 top, r32 z_near, r32 z_far)
 {
@@ -70,5 +72,6 @@ OCR_INLINE ocr_mat4_t ocr_mat4_ortho(r32 left, r32 right, r32 bottom, r32 top, r
 
     return result;
 }
+
 
 OCR_EXTERN_C_END
