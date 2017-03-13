@@ -16,6 +16,8 @@
 
 #include "ocr/window.h"
 
+#include <assert.h>
+
 #include "ocr/log.h"
 
 struct ocr_window {
@@ -24,6 +26,8 @@ struct ocr_window {
 
 ocr_window_t *ocr_window_create(ocr_pool_t *pool, ocr_window_settings_t *settings)
 {
+    assert(settings);
+
     ocr_window_t *window = ocr_pool_alloc(pool, sizeof(*window));
     window->closed = true;
 
@@ -33,11 +37,13 @@ ocr_window_t *ocr_window_create(ocr_pool_t *pool, ocr_window_settings_t *setting
 
 void ocr_window_destroy(ocr_window_t *window)
 {
+    assert(window);
 }
 
 
 void ocr_window_do_events(ocr_window_t *window)
 {
+    assert(window);
 }
 
 

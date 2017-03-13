@@ -16,12 +16,120 @@
 
 #include "ocr/json.h"
 
+#include <string.h>
+
 #include "ocr/log.h"
+
+static const char *parse_element(ocr_json_t *json, const char *text);
 
 static const char *skip_ws(const char *text)
 {
-    while (text[0] == ' ' || text[0] == '\t' || text[0] == '\r' || text[0] == '\n' || text[0] == ':' || text[0] == ',')
+    while (text[0] == ' '
+           || text[0] == '\t'
+           || text[0] == '\r'
+           || text[0] == '\n'
+           || text[0] == ':'
+           || text[0] == ',') {
+
         ++text;
+    }
+
+    return text;
+}
+
+static const char *parse_string(ocr_json_string_t *string, const char *text)
+{
+    assert(string);
+    return text;
+}
+
+static const char *parse_number(ocr_json_number_t *number, const char *text)
+{
+    number->value = atof(text);
+    return text;
+}
+
+const char *parse_boolean(ocr_json_boolean_t *boolean, const char *text)
+{
+    if (strncmp("true", text, 4) == 0) {
+        boolean->value = true;
+        text += 4;
+    } else if (strncmp("false", text, 5) == 0) {
+        boolean->value = false;
+        text += 5;
+    } else {
+        OCR_PANIC("unable to parse boolean from text: %s", text);
+    }
+
+    return text;
+}
+
+static void ensure_capacity(ocr_json_array_t *array, u32 capacity)
+{
+    if (array->capacity < capacity) {
+        u32 new_capacity = array->capacity * 2;
+        if (new_capacity < capacity) {
+            new_capacity = capacity;
+        }
+
+        array->items = realloc(array->items, new_capacity);
+    }
+}
+
+static const char *parse_array(ocr_json_array_t *array, const char *text)
+{
+    assert(text[0] == '[');
+
+    array->size = 0;
+    array->capacity = 0;
+    array->items = NULL;
+
+    while (text && text[0] != ']') {
+        ensure_capacity(array, array->size + 1);
+
+        text = parse_element(&array->items[0], text);
+        ++array->size;
+    }
+
+    assert(array);
+    return text;
+}
+
+static const char *parse_object(ocr_json_object_t *object, const char *text)
+{
+    assert(object);
+    return text;
+}
+
+static const char *parse_element(ocr_json_t *json, const char *text)
+{
+    assert(json);
+
+    char first = text[0];
+
+    if (first == '\"') {
+        json->type = OCR_JSON_STRING;
+        text = parse_string(&json->data.string, text);
+    } else if ('0' <= first && first < '9') {
+        json->type = OCR_JSON_NUMBER;
+        text = parse_number(&json->data.number, text);
+    } else if (first == '[') {
+        json->type = OCR_JSON_ARRAY;
+        text = parse_array(&json->data.array, text);
+    } else if (first == '{') {
+        json->type = OCR_JSON_OBJECT;
+        text = parse_object(&json->data.object, text);
+    } else if (strncmp("true", text, 4) == 0) {
+        json->type = OCR_JSON_BOOLEAN;
+        text = parse_boolean(&json->data.boolean, text);
+    } else if (strncmp("false", text, 5) == 0) {
+        json->type = OCR_JSON_BOOLEAN;
+        text = parse_boolean(&json->data.boolean, text);
+    } else if (strncmp("null", text, 5) == 0) {
+        json->type = OCR_JSON_NULL;
+    } else {
+        OCR_PANIC("unrecognized input: %c", first);
+    }
 
     return text;
 }
@@ -34,25 +142,22 @@ ocr_json_t *ocr_json_parse(ocr_pool_t *pool, const char *text)
     }
 
     ocr_json_t *json = ocr_pool_alloc(pool, sizeof(ocr_json_t));
-
-    char first = text[0];
-
-    if (first == '\"') {
-        json->type = OCR_JSON_STRING;
-        OCR_INFO("parsing string");
-    } else if ('0' <= first && first < '9') {
-        OCR_INFO("parsing number");
-        json->type = OCR_JSON_NUMBER;
-        json->data.number.value = atof(text);
-    } else if (first == '[') {
-        json->type = OCR_JSON_ARRAY;
-        OCR_INFO("parsing array");
-    } else if (first == '{') {
-        json->type = OCR_JSON_OBJECT;
-        OCR_INFO("parsing object");
-    } else {
-        OCR_PANIC("unrecognized input: %c", first);
-    }
+    parse_element(json, text);
 
     return json;
+}
+
+ocr_json_t *ocr_json_get(ocr_json_t *json, const char *key)
+{
+    assert(json->type == OCR_JSON_OBJECT);
+
+    ocr_json_object_entry_t *entry = json->data.object.entries;
+
+    for (u32 i = 0; i < json->data.object.size; ++i) {
+        if (strcmp(key, entry->name) == 0) {
+            return &entry->value;
+        }
+    }
+
+    return NULL;
 }

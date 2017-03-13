@@ -27,6 +27,7 @@ struct ocr_gl_context {
 ocr_gl_context_t *ocr_gl_context_create(ocr_pool_t *pool, ocr_window_t *window)
 {
     ocr_gl_context_t *ctx = ocr_pool_alloc(pool, sizeof(*ctx));
+    ctx->dummy = window ? 1 : 0;
 
     return ctx;
 }
@@ -34,10 +35,12 @@ ocr_gl_context_t *ocr_gl_context_create(ocr_pool_t *pool, ocr_window_t *window)
 
 void ocr_gl_context_destroy(ocr_gl_context_t *ctx)
 {
+    OCR_INFO("destroying context: %d", ctx->dummy);
 }
 
 
 void ocr_gl_context_present(ocr_gl_context_t *ctx)
 {
+    OCR_INFO("presenting context: %d", ctx->dummy);
 }
 

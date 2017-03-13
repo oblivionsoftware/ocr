@@ -22,7 +22,9 @@
 OCR_EXTERN_C_BEGIN
 
 typedef enum {
+    OCR_JSON_NULL,
     OCR_JSON_NUMBER,
+    OCR_JSON_BOOLEAN,
     OCR_JSON_STRING,
     OCR_JSON_ARRAY,
     OCR_JSON_OBJECT
@@ -36,23 +38,29 @@ typedef struct {
 } ocr_json_number_t;
 
 typedef struct {
+    bool value;
+} ocr_json_boolean_t;
+
+typedef struct {
     const char *value;
 } ocr_json_string_t;
 
 typedef struct {
     struct ocr_json *items;
-    u32 item_count;
+    u32 size;
+    u32 capacity;
 } ocr_json_array_t;
 
 typedef struct {
     struct ocr_json_object_entry *entries;
-    u32 entry_count;
+    u32 size;
 } ocr_json_object_t;
 
-typedef struct {
+typedef struct ocr_json {
     ocr_json_type_t type;
     union {
         ocr_json_number_t number;
+        ocr_json_boolean_t boolean;
         ocr_json_string_t string;
         ocr_json_array_t array;
         ocr_json_object_t object;
@@ -65,5 +73,7 @@ typedef struct ocr_json_object_entry {
 } ocr_json_object_entry_t;
 
 ocr_json_t *ocr_json_parse(ocr_pool_t *pool, const char *text);
+
+ocr_json_t *ocr_json_get(ocr_json_t *json, const char *key);
 
 OCR_EXTERN_C_END

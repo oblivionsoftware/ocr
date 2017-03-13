@@ -105,14 +105,3 @@ TEST_CASE("image loads", "[image]")
     ocr_pool_destroy(pool);
 }
 
-TEST_CASE("json parses", "[json]")
-{
-    ocr_pool *pool = ocr_pool_create(ocr_mb(32), NULL);
-
-    ocr_json_t *json = ocr_json_parse(pool, "1234");
-    REQUIRE(json);
-    REQUIRE(json->type == OCR_JSON_NUMBER);
-    REQUIRE((u32)json->data.number.value == 1234);
-
-    ocr_pool_destroy(pool);
-}

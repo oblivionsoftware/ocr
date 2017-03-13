@@ -78,6 +78,7 @@ export(TARGETS ocr FILE OcrConfig.cmake)
 
 add_executable(ocr_test
     test/main.cpp
+    test/test_json.cpp
     test/test_window.cpp)
 target_link_libraries(ocr_test ocr ${CMAKE_THREAD_LIBS_INIT})
 
