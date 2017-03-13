@@ -56,7 +56,7 @@ typedef struct {
         ocr_json_string_t string;
         ocr_json_array_t array;
         ocr_json_object_t object;
-    };
+    } data;
 } ocr_json_t;
 
 typedef struct ocr_json_object_entry {

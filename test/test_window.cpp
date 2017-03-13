@@ -112,7 +112,7 @@ TEST_CASE("json parses", "[json]")
     ocr_json_t *json = ocr_json_parse(pool, "1234");
     REQUIRE(json);
     REQUIRE(json->type == OCR_JSON_NUMBER);
-    REQUIRE((u32)json->number.value == 1234);
+    REQUIRE((u32)json->data.number.value == 1234);
 
     ocr_pool_destroy(pool);
 }

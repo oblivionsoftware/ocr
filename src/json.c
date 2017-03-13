@@ -41,8 +41,9 @@ ocr_json_t *ocr_json_parse(ocr_pool_t *pool, const char *text)
         json->type = OCR_JSON_STRING;
         OCR_INFO("parsing string");
     } else if ('0' <= first && first < '9') {
-        json->type = OCR_JSON_NUMBER;
         OCR_INFO("parsing number");
+        json->type = OCR_JSON_NUMBER;
+        json->data.number.value = atof(text);
     } else if (first == '[') {
         json->type = OCR_JSON_ARRAY;
         OCR_INFO("parsing array");
