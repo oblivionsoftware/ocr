@@ -11,6 +11,7 @@ set(OCR_SOURCES
     src/common.c
     src/file.c
     src/image.c
+    src/json.c
     src/log.c
     src/pool.c
     src/gl3w.c
