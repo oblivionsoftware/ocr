@@ -42,7 +42,7 @@ typedef struct {
 } ocr_json_boolean_t;
 
 typedef struct {
-    const char *value;
+    char *value;
 } ocr_json_string_t;
 
 typedef struct {
@@ -70,10 +70,16 @@ typedef struct ocr_json {
 typedef struct ocr_json_object_entry {
     char name[256];
     ocr_json_t value;
+
+    struct ocr_json_object_entry *next;
 } ocr_json_object_entry_t;
 
 ocr_json_t *ocr_json_parse(ocr_pool_t *pool, const char *text);
 
 ocr_json_t *ocr_json_get(ocr_json_t *json, const char *key);
+
+i32 ocr_json_get_int(ocr_json_t *json, const char *key);
+
+const char *ocr_json_get_string(ocr_json_t *json, const char *key);
 
 OCR_EXTERN_C_END

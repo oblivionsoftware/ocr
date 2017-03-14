@@ -1,8 +1,35 @@
 #include "catch.hpp"
 
+#include <string.h>
+
 #include <ocr/ocr.h>
 
 namespace {
+
+const char * MAP_JSON = R"(
+{ "height":4,
+ "layers":[
+        {
+         "data":[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+         "height":4,
+         "name":"Tile Layer 1",
+         "opacity":1,
+         "type":"tilelayer",
+         "visible":true,
+         "width":4,
+         "x":0,
+         "y":0
+        }],
+ "nextobjectid":1,
+ "orientation":"orthogonal",
+ "renderorder":"right-down",
+ "tileheight":32,
+ "tilesets":[],
+ "tilewidth":32,
+ "version":1,
+ "width":4
+}
+)";
 
 struct Fixture {
 
@@ -76,6 +103,16 @@ TEST_CASE_METHOD(Fixture, "simple object", "[json]")
     REQUIRE(enabled);
     REQUIRE(enabled->type == OCR_JSON_BOOLEAN);
     REQUIRE(enabled->data.boolean.value == true);
+}
+
+TEST_CASE_METHOD(Fixture, "tiled map", "[json]")
+{
+    ocr_json_t *json = ocr_json_parse(_pool, MAP_JSON);
+    REQUIRE(json);
+
+    REQUIRE(4 == ocr_json_get_int(json, "width"));
+    REQUIRE(4 == ocr_json_get_int(json, "height"));
+    REQUIRE(strcmp("orthogonal", ocr_json_get_string(json, "orientation")) == 0);
 }
 
 }

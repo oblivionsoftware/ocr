@@ -41,24 +41,64 @@ static const char *skip_ws(const char *text)
     return text;
 }
 
-static const char *skip_until_ws(const char *text) {
-    while (text && !is_ws(text[0])) {
+static size_t string_size(const char *text)
+{
+    assert(text[0] == '"');
+    ++text;
+
+    size_t size = 0;
+    while (text && text[0] != '"') {
+        ++size;
         ++text;
     }
 
+    OCR_INFO("text size: %zu", size);
+
+    assert(text[0] == '"');
+    return size;
+}
+
+static const char *read_string(char *buffer, size_t buffer_size, const char *text)
+{
+    assert(text[0] == '"');
+    ++text;
+
+    size_t count = 0;
+    while (text && text[0] != '"' && count < buffer_size) {
+        char c = text[0];
+        ++text;
+
+        buffer[count++] = c;
+    }
+
+    buffer[count] = 0;
+
+    OCR_INFO("read string: %s", buffer);
+
+    if (text[0] != '"') {
+        OCR_WARN("expected text to be quote, but was %c", text[0]);
+    }
+
+    ++text;
     return text;
 }
 
 static const char *parse_string(ocr_json_string_t *string, const char *text)
 {
-    assert(string);
+    size_t size = string_size(text);
+
+    string->value = malloc(size + 1);
+    text = read_string(string->value, size + 1, text);
+
     return text;
 }
 
 static const char *parse_number(ocr_json_number_t *number, const char *text)
 {
-    number->value = atof(text);
-    return skip_until_ws(text);
+    char *end;
+    number->value = strtod(text, &end);
+
+    return end;
 }
 
 const char *parse_boolean(ocr_json_boolean_t *boolean, const char *text)
@@ -85,6 +125,7 @@ static void ensure_capacity(ocr_json_array_t *array, u32 capacity)
         }
 
         array->items = realloc(array->items, new_capacity * sizeof(ocr_json_t));
+        array->capacity = new_capacity;
     }
 }
 
@@ -108,6 +149,8 @@ static const char *parse_array(ocr_json_array_t *array, const char *text)
         text = skip_ws(text);
     }
 
+    OCR_INFO("parsed array with %u elements", array->size);
+
     assert(text[0] == ']');
 
     ++text;
@@ -121,8 +164,26 @@ static const char *parse_object(ocr_json_object_t *object, const char *text)
 
     object->size = 0;
 
+    text = skip_ws(text);
+
     while (text && text[0] != '}') {
-        ++text;
+        ocr_json_object_entry_t *entry = malloc(sizeof(ocr_json_object_entry_t));
+        text = read_string(entry->name, sizeof(entry->name), text);
+        OCR_INFO("property name: %s", entry->name);
+
+        text = skip_ws(text);
+        text = parse_element(&entry->value, text);
+
+        if (object->entries == NULL) {
+            object->entries = entry;
+        } else {
+            entry->next = object->entries;
+            object->entries = entry;
+        }
+        ++object->size;
+        OCR_INFO("added object property: %s", entry->name);
+
+        text = skip_ws(text);
     }
 
     assert(text[0] == '}');
@@ -135,14 +196,14 @@ static const char *parse_element(ocr_json_t *json, const char *text)
 {
     assert(json);
 
-    OCR_INFO("parsing element from text: %s", text);
+    //OCR_INFO("parsing element from text: %s", text);
 
     char first = text[0];
 
-    if (first == '\"') {
+    if (first == '"') {
         json->type = OCR_JSON_STRING;
         text = parse_string(&json->data.string, text);
-    } else if (first == '+' || first == '-' || ('0' <= first && first < '9')) {
+    } else if (first == '+' || first == '-' || ('0' <= first && first <= '9')) {
         json->type = OCR_JSON_NUMBER;
         text = parse_number(&json->data.number, text);
     } else if (first == '[') {
@@ -186,11 +247,37 @@ ocr_json_t *ocr_json_get(ocr_json_t *json, const char *key)
 
     ocr_json_object_entry_t *entry = json->data.object.entries;
 
-    for (u32 i = 0; i < json->data.object.size; ++i) {
+    while (entry) {
         if (strcmp(key, entry->name) == 0) {
             return &entry->value;
         }
+
+        entry = entry->next;
     }
 
     return NULL;
+}
+
+i32 ocr_json_get_int(ocr_json_t *json, const char *key)
+{
+    ocr_json_t *value = ocr_json_get(json, key);
+    if (value == NULL) {
+        return 0;
+    }
+
+    assert(value->type == OCR_JSON_NUMBER);
+
+    return (int)value->data.number.value;
+}
+
+const char *ocr_json_get_string(ocr_json_t *json, const char *key)
+{
+    ocr_json_t *value = ocr_json_get(json, key);
+    if (value == NULL) {
+        return 0;
+    }
+
+    assert(value->type == OCR_JSON_STRING);
+
+    return value->data.string.value;
 }
