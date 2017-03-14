@@ -57,6 +57,14 @@ TEST_CASE_METHOD(Fixture, "simple array", "[json]")
     REQUIRE(json->data.array.size == 4);
 }
 
+TEST_CASE_METHOD(Fixture, "empty object", "[json]")
+{
+    ocr_json_t *json = ocr_json_parse(_pool, "{ }");
+    REQUIRE(json);
+    REQUIRE(json->type == OCR_JSON_OBJECT);
+    REQUIRE(json->data.object.size == 0);
+}
+
 TEST_CASE_METHOD(Fixture, "simple object", "[json]")
 {
     ocr_json_t *json = ocr_json_parse(_pool, "{\"enabled\": true}");

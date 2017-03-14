@@ -22,15 +22,27 @@
 
 static const char *parse_element(ocr_json_t *json, const char *text);
 
+static bool is_ws(char c)
+{
+    return c == ' '
+           || c == '\t'
+           || c == '\r'
+           || c == '\n'
+           || c == ':'
+           || c == ',';
+}
+
 static const char *skip_ws(const char *text)
 {
-    while (text[0] == ' '
-           || text[0] == '\t'
-           || text[0] == '\r'
-           || text[0] == '\n'
-           || text[0] == ':'
-           || text[0] == ',') {
+    while (is_ws(text[0])) {
+        ++text;
+    }
 
+    return text;
+}
+
+static const char *skip_until_ws(const char *text) {
+    while (text && !is_ws(text[0])) {
         ++text;
     }
 
@@ -46,7 +58,7 @@ static const char *parse_string(ocr_json_string_t *string, const char *text)
 static const char *parse_number(ocr_json_number_t *number, const char *text)
 {
     number->value = atof(text);
-    return text;
+    return skip_until_ws(text);
 }
 
 const char *parse_boolean(ocr_json_boolean_t *boolean, const char *text)
@@ -72,32 +84,50 @@ static void ensure_capacity(ocr_json_array_t *array, u32 capacity)
             new_capacity = capacity;
         }
 
-        array->items = realloc(array->items, new_capacity);
+        array->items = realloc(array->items, new_capacity * sizeof(ocr_json_t));
     }
 }
 
 static const char *parse_array(ocr_json_array_t *array, const char *text)
 {
     assert(text[0] == '[');
+    ++text;
 
     array->size = 0;
     array->capacity = 0;
     array->items = NULL;
 
+    text = skip_ws(text);
+
     while (text && text[0] != ']') {
         ensure_capacity(array, array->size + 1);
 
-        text = parse_element(&array->items[0], text);
+        text = parse_element(&array->items[array->size], text);
         ++array->size;
+
+        text = skip_ws(text);
     }
 
-    assert(array);
+    assert(text[0] == ']');
+
+    ++text;
     return text;
 }
 
 static const char *parse_object(ocr_json_object_t *object, const char *text)
 {
-    assert(object);
+    assert(text[0] == '{');
+    ++text;
+
+    object->size = 0;
+
+    while (text && text[0] != '}') {
+        ++text;
+    }
+
+    assert(text[0] == '}');
+
+    ++text;
     return text;
 }
 
@@ -105,12 +135,14 @@ static const char *parse_element(ocr_json_t *json, const char *text)
 {
     assert(json);
 
+    OCR_INFO("parsing element from text: %s", text);
+
     char first = text[0];
 
     if (first == '\"') {
         json->type = OCR_JSON_STRING;
         text = parse_string(&json->data.string, text);
-    } else if ('0' <= first && first < '9') {
+    } else if (first == '+' || first == '-' || ('0' <= first && first < '9')) {
         json->type = OCR_JSON_NUMBER;
         text = parse_number(&json->data.number, text);
     } else if (first == '[') {
@@ -125,8 +157,9 @@ static const char *parse_element(ocr_json_t *json, const char *text)
     } else if (strncmp("false", text, 5) == 0) {
         json->type = OCR_JSON_BOOLEAN;
         text = parse_boolean(&json->data.boolean, text);
-    } else if (strncmp("null", text, 5) == 0) {
+    } else if (strncmp("null", text, 4) == 0) {
         json->type = OCR_JSON_NULL;
+        text += 4;
     } else {
         OCR_PANIC("unrecognized input: %c", first);
     }
